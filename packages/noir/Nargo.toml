@@ -1,0 +1,6 @@
+[package]
+name = "ethmobile_noir"
+type = "bin"
+authors = [""]
+
+[dependencies]

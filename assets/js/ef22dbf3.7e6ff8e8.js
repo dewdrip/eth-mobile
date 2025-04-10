@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunketh_mobile=self.webpackChunketh_mobile||[]).push([[189],{8583:t=>{t.exports=JSON.parse('{"title":"\ud83d\ude80 QuickStart","slug":"quick-start","permalink":"/quick-start","navigation":{"previous":{"title":"\u2696\ufe0f Welcome to ETH Mobile","permalink":"/"},"next":{"title":"Installation","permalink":"/quick-start/installation"}}}')}}]);

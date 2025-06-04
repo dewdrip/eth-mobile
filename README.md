@@ -4,7 +4,7 @@
 
 [Watch me mint a Snowman NFT!☃️](https://youtu.be/CaJTnRtLOK8)
 
-⚙️ **Tech Stack**: Built with React Native, Hardhat, Ethers, and TypeScript to streamline mobile dApp development.
+⚙️ **Tech Stack**: Built with React Native, Foundry, Ethers, and TypeScript to streamline mobile dApp development.
 
 ### Key Features
 
@@ -55,7 +55,7 @@ npx pod-install
 yarn chain
 ```
 
-This command starts a local Ethereum network hosted on your local IP address. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
+This command starts a local Ethereum network hosted on your local IP address. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `foundry.toml`.
 
 Alternatively, you can use [Ganache](https://archive.trufflesuite.com/ganache/) to persist the blockchain state during development
 
@@ -65,7 +65,7 @@ Alternatively, you can use [Ganache](https://archive.trufflesuite.com/ganache/) 
 yarn deploy
 ```
 
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
+This command deploys a test smart contract to the local network. The contract is located in `packages/foundry/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/foundry/script` to deploy the contract to the network. You can also customize the deploy script.
 
 5. Set the `ALCHEMY_KEY` and `localhost.provider`(port **8545**) variables in `packages/reactnative/ethmobile.config.ts`
 
@@ -103,11 +103,11 @@ yarn ios
 
 You can interact with your smart contract using the `DebugContracts` tab. You can configure your supported networks in `packages/reactnative/ethmobile.config.ts`.
 
-Run smart contract test with `yarn hardhat:test`
+Run smart contract test with `yarn foundry:test`
 
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
+- Edit your smart contract `YourContract.sol` in `packages/foundry/contracts`
 - Edit your frontend in `packages/reactnative/src/screens`
-- Edit your deployment scripts in `packages/hardhat/deploy`
+- Edit your deployment scripts in `packages/foundry/script`
 
 ## Contributing to ETH Mobile
 

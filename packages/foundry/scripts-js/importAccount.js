@@ -39,10 +39,10 @@ async function importAccount() {
       }
     }
 
-    // Check if account name is scaffold-eth-default
-    if (accountName === "scaffold-eth-default") {
+    // Check if account name is eth-mobile-default
+    if (accountName === "eth-mobile-default") {
       console.error(
-        "\n❌ Cannot use 'scaffold-eth-default' as account name. This is reserved for local development."
+        "\n❌ Cannot use 'eth-mobile-default' as account name. This is reserved for local development."
       );
       process.exit(1);
     }

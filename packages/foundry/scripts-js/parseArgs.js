@@ -49,7 +49,7 @@ for (let i = 0; i < args.length; i++) {
 
 // Function to check if a keystore exists
 function validateKeystore(keystoreName) {
-  if (keystoreName === "scaffold-eth-default") {
+  if (keystoreName === "eth-mobile-default") {
     return true; // Default keystore is always valid
   }
 
@@ -81,7 +81,7 @@ try {
 }
 
 if (
-  process.env.LOCALHOST_KEYSTORE_ACCOUNT !== "scaffold-eth-default" &&
+  process.env.LOCALHOST_KEYSTORE_ACCOUNT !== "eth-mobile-default" &&
   network === "localhost"
 ) {
   console.log(`
@@ -91,7 +91,7 @@ You can either:
 1. Enter the password for ${process.env.LOCALHOST_KEYSTORE_ACCOUNT} account
    OR
 2. Set the localhost keystore account in your .env and re-run the command to skip password prompt:
-   LOCALHOST_KEYSTORE_ACCOUNT='scaffold-eth-default'
+   LOCALHOST_KEYSTORE_ACCOUNT='eth-mobile-default'
 `);
 }
 
@@ -132,7 +132,7 @@ if (network !== "localhost") {
 }
 
 // Check for default account on live network
-if (selectedKeystore === "scaffold-eth-default" && network !== "localhost") {
+if (selectedKeystore === "eth-mobile-default" && network !== "localhost") {
   console.log(`
 ❌ Error: Cannot deploy to live network using default keystore account!
 
@@ -143,7 +143,7 @@ To deploy to ${network}, please follow these steps:
 
 2. Run the deployment command again.
 
-The default account (scaffold-eth-default) can only be used for localhost deployments.
+The default account (eth-mobile-default) can only be used for localhost deployments.
 `);
   process.exit(0);
 }

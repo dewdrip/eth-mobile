@@ -7,7 +7,7 @@
     "account:generate": "node scripts-js/generateKeystore.js",
     "account:import": "node scripts-js/importAccount.js",
     "account:reveal-pk": "node scripts-js/revealPK.js",
-    "chain": "make chain",
+    "chain": "anvil --host 0.0.0.0",
     "clean": "forge clean",
     "compile": "make compile",
     "deploy": "node scripts-js/parseArgs.js",

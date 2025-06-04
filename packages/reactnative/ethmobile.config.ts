@@ -30,8 +30,8 @@ const config: Config = {
   networks: {
     localhost: {
       name: 'Localhost',
-      provider: 'http://192.168.0.124:8545',
-      id: 1337,
+      provider: 'http://172.20.10.3:8545',
+      id: 31337,
       currencySymbol: 'ETH',
       coingeckoPriceId: 'ethereum',
       blockExplorer: null

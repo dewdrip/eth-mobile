@@ -63,26 +63,19 @@ export function useSecureStorage(): UseSecureStorageReturn {
    */
   const saveItemWithBiometrics = useCallback(
     async <T>(key: string, value: T): Promise<void> => {
-      try {
-        setLoading(true);
-        setError(null);
-        const stringValue =
-          typeof value === 'object' ? JSON.stringify(value) : String(value);
+      setLoading(true);
+      setError(null);
+      const stringValue =
+        typeof value === 'object' ? JSON.stringify(value) : String(value);
 
-        await Keychain.setGenericPassword(key, stringValue, {
-          service: key,
-          accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
-          accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED,
-          authenticationPrompt: {
-            title: 'Authenticate to store item securely'
-          }
-        });
-      } catch (err) {
-        setError((err as Error).message || 'Failed to save item.');
-        console.error('useSecureStorage saveItemWithBiometrics error:', err);
-      } finally {
-        setLoading(false);
-      }
+      await Keychain.setGenericPassword(key, stringValue, {
+        service: key,
+        accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
+        accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED,
+        authenticationPrompt: {
+          title: 'Authenticate'
+        }
+      });
     },
     []
   );

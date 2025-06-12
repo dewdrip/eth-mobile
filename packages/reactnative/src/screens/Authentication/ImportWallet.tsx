@@ -101,6 +101,12 @@ function ImportWallet() {
     const wallet = importWallet(seedPhrase, 0);
 
     try {
+      if (isBiometricsEnabled) {
+        await saveItemWithBiometrics('password', password);
+
+        dispatch(setBiometrics(true));
+      }
+
       const encryptor = new Encryptor({
         keyDerivationOptions: LEGACY_DERIVATION_OPTIONS
       });
@@ -119,12 +125,6 @@ function ImportWallet() {
       const encryptedAccount = await encryptor.encrypt(password, [account]);
 
       await saveItem('accounts', encryptedAccount);
-
-      if (isBiometricsEnabled) {
-        await saveItemWithBiometrics('password', password);
-
-        dispatch(setBiometrics(true));
-      }
 
       dispatch(initAccounts([account.address]));
       dispatch(

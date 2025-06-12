@@ -68,6 +68,10 @@ export default function CreateWallet() {
     setIsSaving(true);
 
     try {
+      if (isBiometricsEnabled) {
+        await saveItemWithBiometrics('password', password);
+      }
+
       const encryptor = new Encryptor({
         keyDerivationOptions: LEGACY_DERIVATION_OPTIONS
       });
@@ -88,10 +92,6 @@ export default function CreateWallet() {
 
       await saveItem('accounts', encryptedAccount);
 
-      if (isBiometricsEnabled) {
-        await saveItemWithBiometrics('password', password);
-      }
-
       dispatch(initAccounts([account.address]));
       dispatch(
         initWallet({
@@ -104,7 +104,9 @@ export default function CreateWallet() {
       //@ts-ignore
       navigation.navigate('Dashboard');
     } catch (error) {
-      return;
+      toast.show('Failed to save wallet', {
+        type: 'danger'
+      });
     } finally {
       setIsSaving(false);
     }

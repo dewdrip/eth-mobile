@@ -34,10 +34,14 @@ export default function Settings() {
   };
 
   const toggleBiometrics = async () => {
-    dispatch(setBiometrics(!isBiometricsEnabled));
+    try {
+      if (!isBiometricsEnabled) {
+        await saveItemWithBiometrics('password', wallet.password);
+      }
 
-    if (!isBiometricsEnabled) {
-      await saveItemWithBiometrics('password', wallet.password);
+      dispatch(setBiometrics(!isBiometricsEnabled));
+    } catch (error) {
+      return;
     }
   };
 

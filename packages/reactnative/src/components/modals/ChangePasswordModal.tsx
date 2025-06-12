@@ -1,173 +1,125 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
-import { useToast } from 'react-native-toast-notifications';
+import { useIsFocused } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import * as Keychain from 'react-native-keychain';
+import { useModal } from 'react-native-modalfy';
+import { Switch, Text } from 'react-native-paper';
 //@ts-ignore
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '../../core/Encryptor';
-import { useSecureStorage } from '../../hooks/eth-mobile';
-import { setPassword as setWalletPassword } from '../../store/reducers/Wallet';
+import Header from '../../components/Header';
+import { useNetwork, useSecureStorage } from '../../hooks/eth-mobile';
+import { setBiometrics } from '../../store/reducers/Settings';
 import globalStyles from '../../styles/globalStyles';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
-import Button from '../buttons/CustomButton';
-import PasswordInput from '../forms/PasswordInput';
+import { COLORS } from '../../utils/constants';
+import { FONT_SIZE } from '../../utils/styles';
 
-type Props = {
-  modal: {
-    closeModal: () => void;
-  };
-};
-
-export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
-  const toast = useToast();
-  const { saveItem, saveItemWithBiometrics } = useSecureStorage();
-  const wallet = useSelector((state: any) => state.wallet);
+export default function Settings() {
+  const { openModal } = useModal();
+  const isFocused = useIsFocused();
+  const [biometricType, setBiometricType] =
+    useState<Keychain.BIOMETRY_TYPE | null>(null);
+  const network = useNetwork();
   const dispatch = useDispatch();
+
+  const { saveItemWithBiometrics } = useSecureStorage();
+
   const isBiometricsEnabled = useSelector(
     (state: any) => state.settings.isBiometricsEnabled as boolean
   );
+  const wallet = useSelector((state: any) => state.wallet);
 
-  const [password, setPassword] = useState({
-    current: '',
-    new: '',
-    confirm: ''
-  });
+  const switchNetwork = () => {
+    openModal('SwitchNetworkModal');
+  };
 
-  const change = async () => {
+  const toggleBiometrics = async () => {
     try {
-      const existingPassword = wallet.password;
-      const currentPassword = password.current.trim();
-      const newPassword = password.new.trim();
-      const confirmPassword = password.confirm.trim();
-
-      if (!currentPassword || !newPassword || !confirmPassword) {
-        toast.show('Password cannot be empty!', { type: 'warning' });
-        return;
+      if (!isBiometricsEnabled) {
+        await saveItemWithBiometrics('password', wallet.password);
       }
 
-      if (newPassword.length < 8) {
-        toast.show('Password must be at least 8 characters', {
-          type: 'warning'
-        });
-        return;
-      }
-
-      if (currentPassword !== existingPassword) {
-        toast.show('Incorrect password!', { type: 'warning' });
-        return;
-      }
-
-      if (currentPassword === newPassword) {
-        toast.show('Cannot use current password', { type: 'warning' });
-        return;
-      }
-
-      if (newPassword !== confirmPassword) {
-        toast.show('Passwords do not match!', { type: 'warning' });
-        return;
-      }
-
-      // @ts-ignore
-      dispatch(setWalletPassword(newPassword));
-
-      const encryptor = new Encryptor({
-        keyDerivationOptions: LEGACY_DERIVATION_OPTIONS
-      });
-
-      const encryptedMnemonic = await encryptor.encrypt(
-        newPassword,
-        wallet.mnemonic
-      );
-
-      await saveItem('seedPhrase', encryptedMnemonic);
-
-      const encryptedAccounts = await encryptor.encrypt(
-        newPassword,
-        wallet.accounts
-      );
-
-      await saveItem('accounts', encryptedAccounts);
-
-      if (isBiometricsEnabled) {
-        await saveItemWithBiometrics('password', newPassword);
-      }
-
-      closeModal();
-      toast.show('Password Changed Successfully', { type: 'success' });
+      dispatch(setBiometrics(!isBiometricsEnabled));
     } catch (error) {
-      toast.show('Failed to change password', { type: 'danger' });
+      return;
     }
   };
 
+  useEffect(() => {
+    Keychain.getSupportedBiometryType().then(type => {
+      setBiometricType(type);
+    });
+  }, []);
+
+  if (!isFocused) return;
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text variant="titleLarge" style={globalStyles.text}>
-          Change Password
-        </Text>
+      <Header title="Settings" />
 
-        <Ionicons
-          name="close-outline"
-          size={FONT_SIZE['xl'] * 1.7}
-          onPress={closeModal}
-        />
-      </View>
+      <ScrollView style={{ flex: 1, backgroundColor: 'white', padding: 15 }}>
+        {biometricType && (
+          <View style={styles.settingWrapper}>
+            <Ionicons
+              name="finger-print-outline"
+              size={FONT_SIZE['xl'] * 1.2}
+            />
+            <View style={styles.row}>
+              <Text style={styles.settingTitle}>
+                Sign in with {biometricType}
+              </Text>
+              <Switch
+                value={isBiometricsEnabled}
+                onValueChange={toggleBiometrics}
+                color={COLORS.primary}
+              />
+            </View>
+          </View>
+        )}
 
-      <View style={styles.content}>
-        <PasswordInput
-          label="Current Password"
-          value={password.current}
-          infoText={
-            password.current.length < 8 && 'Must be at least 8 characters'
-          }
-          onChange={value => setPassword(prev => ({ ...prev, current: value }))}
-          onSubmit={change}
-          labelStyle={styles.label}
-        />
-        <PasswordInput
-          label="New Password"
-          value={password.new}
-          infoText={password.new.length < 8 && 'Must be at least 8 characters'}
-          onChange={value => setPassword(prev => ({ ...prev, new: value }))}
-          onSubmit={change}
-          labelStyle={styles.label}
-        />
-        <PasswordInput
-          label="Confirm Password"
-          value={password.confirm}
-          infoText={
-            password.confirm.length < 8 && 'Must be at least 8 characters'
-          }
-          onChange={value => setPassword(prev => ({ ...prev, confirm: value }))}
-          onSubmit={change}
-          labelStyle={styles.label}
-        />
+        <TouchableOpacity
+          onPress={() => openModal('ChangePasswordModal')}
+          style={styles.settingWrapper}
+        >
+          <Ionicons name="lock-closed-outline" size={FONT_SIZE['xl'] * 1.2} />
+          <Text style={styles.settingTitle}>Change Password</Text>
+        </TouchableOpacity>
 
-        <Button text="Change Password" onPress={change} style={styles.button} />
-      </View>
+        <TouchableOpacity onPress={switchNetwork} style={styles.settingWrapper}>
+          <Ionicons name="git-network-outline" size={FONT_SIZE['xl'] * 1.2} />
+          <Text style={styles.settingTitle}>
+            Change Network<Text style={styles.network}>({network.name})</Text>
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    width: WINDOW_WIDTH * 0.9
+    flex: 1,
+    backgroundColor: 'white'
   },
-  header: {
+  row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20
+    justifyContent: 'space-between',
+    flex: 1
   },
-  content: {
-    gap: 16
+  settingWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 4,
+    paddingVertical: 16
   },
-  label: { fontSize: FONT_SIZE.lg, ...globalStyles.text },
-  button: {
-    marginTop: 10
+  settingTitle: {
+    fontSize: FONT_SIZE['xl'],
+    ...globalStyles.text
+  },
+  network: {
+    fontSize: FONT_SIZE['md'],
+    ...globalStyles.text,
+    color: COLORS.primary
   }
 });

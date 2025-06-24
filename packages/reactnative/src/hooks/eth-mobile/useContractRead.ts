@@ -10,6 +10,7 @@ interface UseContractReadConfig {
   functionName?: string;
   args?: any[];
   enabled?: boolean;
+  watch?: boolean;
   onError?: (error: any) => void;
 }
 
@@ -26,6 +27,7 @@ export function useContractRead({
   functionName,
   args,
   enabled = true,
+  watch = false,
   onError
 }: Partial<UseContractReadConfig> = {}) {
   const network = useNetwork();
@@ -108,10 +110,23 @@ export function useContractRead({
   }
 
   useEffect(() => {
-    if (enabled) {
-      fetchData();
+    if (!enabled) return;
+
+    const provider = new JsonRpcProvider(network.provider);
+
+    provider.off('block');
+
+    fetchData();
+
+    if (watch) {
+      provider.on('block', blockNumber => {
+        fetchData();
+      });
     }
-  }, [enabled]);
+    return () => {
+      provider.off('block');
+    };
+  }, [enabled, watch, network]);
 
   return {
     data,

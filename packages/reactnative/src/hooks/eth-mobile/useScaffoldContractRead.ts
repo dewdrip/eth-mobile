@@ -1,4 +1,4 @@
-import { Contract, JsonRpcProvider, Wallet } from 'ethers';
+import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAccount, useDeployedContractInfo, useNetwork } from '.';
@@ -8,6 +8,7 @@ type Props = {
   contractName: string;
   functionName: string;
   args?: any[];
+  watch?: boolean;
 };
 
 /**
@@ -21,7 +22,8 @@ type Props = {
 export function useScaffoldContractRead({
   contractName,
   functionName,
-  args: _args
+  args: _args,
+  watch
 }: Props) {
   const args = _args || [];
 
@@ -53,7 +55,7 @@ export function useScaffoldContractRead({
       const activeWallet = new Wallet(activeAccount.privateKey, provider);
       const contract = new Contract(
         deployedContractData.address,
-        deployedContractData.abi,
+        deployedContractData.abi as InterfaceAbi,
         activeWallet
       );
 
@@ -71,8 +73,21 @@ export function useScaffoldContractRead({
   }
 
   useEffect(() => {
+    const provider = new JsonRpcProvider(network.provider);
+
+    provider.off('block');
+
     fetchData();
-  }, [isLoadingDeployedContractData]);
+
+    if (watch) {
+      provider.on('block', blockNumber => {
+        fetchData();
+      });
+    }
+    return () => {
+      provider.off('block');
+    };
+  }, [isLoadingDeployedContractData, watch, network, connectedAccount]);
 
   return {
     data,

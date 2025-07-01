@@ -30,7 +30,7 @@ const config: Config = {
   networks: {
     localhost: {
       name: 'Localhost',
-      provider: 'http://172.20.10.3:8545',
+      provider: 'http://192.168.0.52:8545',
       id: 1337,
       currencySymbol: 'ETH',
       coingeckoPriceId: 'ethereum',
@@ -38,7 +38,7 @@ const config: Config = {
     },
     hardhat: {
       name: 'Hardhat',
-      provider: 'http://172.20.10.3:8545',
+      provider: 'http://192.168.0.52:8545',
       id: 31337,
       currencySymbol: 'ETH',
       coingeckoPriceId: 'ethereum',

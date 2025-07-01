@@ -10,6 +10,7 @@ export * from './useERC721Metadata';
 export * from './useNFTs';
 export * from './useScaffoldContractRead';
 export * from './useScaffoldContractWrite';
+export * from './useScaffoldEventHistory';
 export * from './useSecureStorage';
 export * from './useSignMessage';
 export * from './useERC20Balance';

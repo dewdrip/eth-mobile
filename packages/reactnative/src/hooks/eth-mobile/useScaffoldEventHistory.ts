@@ -45,7 +45,6 @@ interface EventHistoryState {
 const getEvents = async (
   provider: JsonRpcProvider,
   contractAddress: string,
-  eventName: string,
   fromBlock: bigint,
   toBlock?: bigint,
   filters?: Record<string, any>,
@@ -238,7 +237,6 @@ export const useScaffoldEventHistory = <
       const data = await getEvents(
         provider,
         String(deployedContractData.address),
-        eventName,
         fromBlockToUse,
         toBlock,
         filters,
@@ -248,9 +246,11 @@ export const useScaffoldEventHistory = <
       // Create contract interface for proper event decoding
       const contractInterface = new Interface(deployedContractData.abi as any);
 
-      const processedData = data.map(event =>
-        addIndexedArgsToEvent(event, contractInterface, eventName)
-      );
+      const processedData = data
+        .map(event =>
+          addIndexedArgsToEvent(event, contractInterface, eventName)
+        )
+        .filter(event => event.eventName === eventName);
 
       setState(prev => {
         // Create a Set of existing transaction hashes to avoid duplicates

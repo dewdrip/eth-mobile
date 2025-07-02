@@ -4,14 +4,16 @@ import { useNetwork } from '.';
 
 interface UseBalanceConfig {
   address: string;
+  watch?: boolean;
 }
 
 /**
  *
  * @param config - The config settings
  * @param config.address - account address
+ * @param config.watch - watch for balance changes
  */
-export function useBalance({ address }: UseBalanceConfig) {
+export function useBalance({ address, watch = true }: UseBalanceConfig) {
   const network = useNetwork();
 
   const [balance, setBalance] = useState<bigint | null>(null);
@@ -51,14 +53,16 @@ export function useBalance({ address }: UseBalanceConfig) {
 
     getBalance();
 
-    provider.on('block', blockNumber => {
-      getBalance();
-    });
+    if (watch) {
+      provider.on('block', blockNumber => {
+        getBalance();
+      });
+    }
 
     return () => {
       provider.off('block');
     };
-  }, [address, network]);
+  }, [address, network, watch]);
 
   return {
     balance,

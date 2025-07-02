@@ -308,8 +308,6 @@ export const useScaffoldEventHistory = <
       provider.on('block', blockNumber => {
         fetchEvents();
       });
-    } else {
-      provider.off('block');
     }
 
     return () => {

@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@inquirer/password": "^4.0.9",
-    "@openzeppelin/contracts": "^4.8.1",
+    "@openzeppelin/contracts": "5.0.2",
     "@typechain/ethers-v6": "^0.5.1",
     "dotenv": "^16.0.3",
     "envfile": "^6.18.0",

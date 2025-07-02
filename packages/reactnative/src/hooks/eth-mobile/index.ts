@@ -8,6 +8,7 @@ export * from './useDeployedContractInfo';
 export * from './useNetwork';
 export * from './useERC721Metadata';
 export * from './useNFTs';
+export * from './useScaffoldContract';
 export * from './useScaffoldContractRead';
 export * from './useScaffoldContractWrite';
 export * from './useScaffoldEventHistory';

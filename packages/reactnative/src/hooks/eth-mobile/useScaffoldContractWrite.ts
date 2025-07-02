@@ -1,4 +1,10 @@
-import { Contract, formatEther, JsonRpcProvider, Wallet } from 'ethers';
+import {
+  Contract,
+  formatEther,
+  InterfaceAbi,
+  JsonRpcProvider,
+  Wallet
+} from 'ethers';
 import { useModal } from 'react-native-modalfy';
 import { useToast } from 'react-native-toast-notifications';
 import { useSelector } from 'react-redux';
@@ -92,7 +98,7 @@ export function useScaffoldContractWrite({
         const activeWallet = new Wallet(activeAccount.privateKey, provider);
         const contract = new Contract(
           deployedContractData.address,
-          deployedContractData.abi,
+          deployedContractData.abi as InterfaceAbi,
           activeWallet
         );
 
@@ -126,7 +132,7 @@ export function useScaffoldContractWrite({
           const activeWallet = new Wallet(activeAccount.privateKey, provider);
           const contract = new Contract(
             deployedContractData!.address,
-            deployedContractData!.abi,
+            deployedContractData!.abi as InterfaceAbi,
             activeWallet
           );
 

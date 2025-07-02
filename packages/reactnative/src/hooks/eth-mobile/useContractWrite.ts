@@ -1,5 +1,11 @@
 import { Abi } from 'abitype';
-import { Contract, formatEther, JsonRpcProvider, Wallet } from 'ethers';
+import {
+  Contract,
+  formatEther,
+  InterfaceAbi,
+  JsonRpcProvider,
+  Wallet
+} from 'ethers';
 import { useState } from 'react';
 import { useModal } from 'react-native-modalfy';
 import { useToast } from 'react-native-toast-notifications';
@@ -84,7 +90,11 @@ export function useContractWrite({
         );
 
         const activeWallet = new Wallet(activeAccount.privateKey, provider);
-        const contract = new Contract(address, abi, activeWallet);
+        const contract = new Contract(
+          address,
+          abi as InterfaceAbi,
+          activeWallet
+        );
 
         openModal('SignTransactionModal', {
           contract,
@@ -116,7 +126,11 @@ export function useContractWrite({
           );
 
           const activeWallet = new Wallet(activeAccount.privateKey, provider);
-          const contract = new Contract(address, abi, activeWallet);
+          const contract = new Contract(
+            address,
+            abi as InterfaceAbi,
+            activeWallet
+          );
 
           const tx = await contract[functionName](..._args, {
             value: _value,

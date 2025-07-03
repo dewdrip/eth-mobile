@@ -9,18 +9,20 @@ import { useAccount, useContractRead, useNetwork } from '.';
  * @param {Object} options - Optional parameters.
  * @param {Address} options.token - The ERC20 token contract address.
  * @param {Address} options.userAddress - The address of the user to fetch the token balance for.
- * @returns {Object} - An object containing loading state, error, balance, and the `getERC20Balance` function.
+ * @param {boolean} options.watch - Whether to watch for balance changes.
+ * @returns {Object} - An object containing loading state, error, balance, and the `getBalance` function.
  */
 interface UseERC20BalanceOptions {
   token?: Address;
   userAddress?: Address;
+  watch?: boolean;
 }
 
 interface UseERC20BalanceResult {
   isLoading: boolean;
   error: Error | null;
   balance: bigint | null;
-  getERC20Balance: (
+  getBalance: (
     token?: Address,
     userAddress?: Address
   ) => Promise<bigint | undefined>;
@@ -28,7 +30,8 @@ interface UseERC20BalanceResult {
 
 export function useERC20Balance({
   token: defaultToken,
-  userAddress: defaultUserAddress
+  userAddress: defaultUserAddress,
+  watch = false
 }: UseERC20BalanceOptions = {}): UseERC20BalanceResult {
   const { address: connectedAddress } = useAccount();
   const network = useNetwork();
@@ -45,7 +48,7 @@ export function useERC20Balance({
    * @param {Address} userAddress - The user's address. Defaults to the provided `userAddress` or the connected address.
    * @returns {Promise<bigint>} - The token balance of the user.
    */
-  const getERC20Balance = useCallback(
+  const getBalance = useCallback(
     async (
       token: Address = defaultToken!,
       userAddress: Address = defaultUserAddress ||
@@ -90,24 +93,26 @@ export function useERC20Balance({
     provider.off('block');
 
     if (defaultToken) {
-      getERC20Balance();
+      getBalance();
     }
 
-    provider.on('block', blockNumber => {
-      if (defaultToken) {
-        getERC20Balance();
-      }
-    });
+    if (watch) {
+      provider.on('block', blockNumber => {
+        if (defaultToken) {
+          getBalance();
+        }
+      });
+    }
 
     return () => {
       provider.off('block');
     };
-  }, [defaultToken, defaultUserAddress, connectedAddress, getERC20Balance]);
+  }, [defaultToken, defaultUserAddress, connectedAddress, watch]);
 
   return {
     isLoading,
     error,
     balance,
-    getERC20Balance
+    getBalance
   };
 }

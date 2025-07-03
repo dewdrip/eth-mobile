@@ -13,7 +13,7 @@ interface UseBalanceConfig {
  * @param config.address - account address
  * @param config.watch - watch for balance changes
  */
-export function useBalance({ address, watch = true }: UseBalanceConfig) {
+export function useBalance({ address, watch = false }: UseBalanceConfig) {
   const network = useNetwork();
 
   const [balance, setBalance] = useState<bigint | null>(null);

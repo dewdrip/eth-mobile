@@ -14,13 +14,15 @@ type Props = {
   containerStyle?: ViewStyle;
   textStyle?: TextStyle;
   iconStyle?: TextStyle;
+  copyable?: boolean;
 };
 
 export function Address({
   address,
   containerStyle,
   textStyle,
-  iconStyle
+  iconStyle,
+  copyable = true
 }: Props) {
   const toast = useToast();
 
@@ -37,13 +39,15 @@ export function Address({
       <Text variant="bodyMedium" style={[styles.text, textStyle]}>
         {truncateAddress(address)}
       </Text>
-      <IconButton
-        icon="content-copy"
-        size={20}
-        iconColor={COLORS.primary}
-        onPress={copy}
-        style={[styles.icon, iconStyle]}
-      />
+      {copyable && (
+        <IconButton
+          icon="content-copy"
+          size={20}
+          iconColor={COLORS.primary}
+          onPress={copy}
+          style={[styles.icon, iconStyle]}
+        />
+      )}
     </View>
   );
 }

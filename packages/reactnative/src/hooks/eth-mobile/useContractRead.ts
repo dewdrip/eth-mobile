@@ -21,6 +21,8 @@ interface ReadContractConfig {
   args?: any[];
 }
 
+type ReadContractResult = any | any[] | null;
+
 export function useContractRead({
   abi,
   address,
@@ -34,11 +36,11 @@ export function useContractRead({
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
 
-  const [data, setData] = useState<any | null>(null);
+  const [data, setData] = useState<ReadContractResult>(null);
   const [isLoading, setIsLoading] = useState(enabled);
   const [error, setError] = useState<any>(null);
 
-  async function fetchData() {
+  async function fetchData(): Promise<ReadContractResult> {
     if (!abi || !address || !functionName) {
       console.warn(
         'Missing required parameters: abi, address, or functionName'

@@ -4,14 +4,13 @@
   "private": true,
   "scripts": {
     "android": "npx react-native run-android",
-    "ios": "npx react-native run-ios",
+    "format": "prettier src --write",
     "lint": "eslint .",
-    "start": "npx react-native start",
-    "test": "jest",
+    "ios": "npx react-native run-ios",
     "patch-ethers": "npx patch-package",
-    "format:write": "prettier src --write",
-    "format:check": "prettier src --check",
-    "rename": "npx react-native-rename@latest"
+    "rename": "npx react-native-rename@latest",
+    "start": "npx react-native start",
+    "test": "jest"
   },
   "dependencies": {
     "@ethersproject/shims": "5.7.0",

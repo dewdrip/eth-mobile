@@ -40,7 +40,7 @@ export default function ImportTokenModal({ modal: { closeModal } }: Props) {
   const network = useNetwork();
 
   const { getERC20Metadata } = useERC20Metadata();
-  const { getERC20Balance } = useERC20Balance();
+  const { getBalance: getERC20Balance } = useERC20Balance();
 
   const { tokens } = useTokens();
 

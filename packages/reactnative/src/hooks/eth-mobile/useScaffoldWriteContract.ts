@@ -5,6 +5,7 @@ import {
   JsonRpcProvider,
   Wallet
 } from 'ethers';
+import { useState } from 'react';
 import { useModal } from 'react-native-modalfy';
 import { useToast } from 'react-native-toast-notifications';
 import { useSelector } from 'react-redux';
@@ -20,39 +21,29 @@ import { parseFloat } from '../../utils/eth-mobile';
 
 interface UseScaffoldWriteContractConfig {
   contractName: string;
-  functionName: string;
-  args?: any[];
-  value?: BigInt | undefined;
   blockConfirmations?: number | undefined;
   gasLimit?: BigInt | undefined;
 }
 
-interface SendTxConfig {
-  args?: any[] | undefined;
-  value?: BigInt | undefined;
+interface WriteContractArgs {
+  functionName: string;
+  args?: any[];
+  value?: BigInt;
 }
 
 /**
- * This returns a function which returns the transaction receipt after contract call
+ * Hook for writing to deployed scaffold contracts
  * @param config - The config settings
  * @param config.contractName - deployed contract name
- * @param config.functionName - name of the function to be called
- * @param config.args - arguments for the function
- * @param config.value - value in ETH that will be sent with transaction
  * @param config.blockConfirmations - number of block confirmations to wait for (default: 1)
  * @param config.gasLimit - transaction gas limit
  */
-
 export function useScaffoldWriteContract({
   contractName,
-  functionName,
-  args,
-  value,
   blockConfirmations,
   gasLimit
 }: UseScaffoldWriteContractConfig) {
-  const writeArgs = args;
-  const writeValue = value;
+  const _gasLimit = gasLimit || BigInt(1000000);
 
   const { openModal } = useModal();
   const { data: deployedContractData } = useDeployedContractInfo({
@@ -62,26 +53,16 @@ export function useScaffoldWriteContract({
   const toast = useToast();
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMining, setIsMining] = useState(false);
 
   const { addTx } = useTransactions();
-  /**
-   *
-   * @param config Optional param settings
-   * @param config.args - arguments for the function
-   * @param config.value - value in ETH that will be sent with transaction
-   * @returns The transaction receipt
-   */
-  const sendTransaction = async (
-    config: SendTxConfig = {
-      args: undefined,
-      value: undefined
-    }
-  ): Promise<TransactionReceipt> => {
-    const { args, value } = config;
-    const _args = args || writeArgs || [];
-    const _value = value || writeValue || 0n;
-    const _gasLimit = gasLimit || 1000000;
 
+  const executeTransaction = async ({
+    functionName,
+    args = [],
+    value = BigInt(0)
+  }: WriteContractArgs): Promise<TransactionReceipt> => {
     if (!deployedContractData) {
       throw new Error(
         'Target Contract is not deployed, did you forget to run `yarn deploy`?'
@@ -108,8 +89,8 @@ export function useScaffoldWriteContract({
           contract,
           contractAddress: deployedContractData.address,
           functionName,
-          args: _args,
-          value: _value,
+          args,
+          value,
           gasLimit: _gasLimit,
           onConfirm,
           onReject
@@ -123,6 +104,8 @@ export function useScaffoldWriteContract({
       }
 
       async function onConfirm() {
+        setIsLoading(true);
+        setIsMining(true);
         try {
           const provider = new JsonRpcProvider(network.provider);
           const activeAccount = wallet.accounts.find(
@@ -138,8 +121,8 @@ export function useScaffoldWriteContract({
             activeWallet
           );
 
-          const tx = await contract[functionName](..._args, {
-            value: _value,
+          const tx = await contract[functionName](...args, {
+            value,
             gasLimit: _gasLimit
           });
           const receipt = await tx.wait(blockConfirmations || 1);
@@ -170,12 +153,39 @@ export function useScaffoldWriteContract({
           resolve(receipt);
         } catch (error) {
           reject(error);
+        } finally {
+          setIsLoading(false);
+          setIsMining(false);
         }
       }
     });
   };
 
+  /**
+   * Write to contract without returning a promise
+   */
+  const writeContract = (args: WriteContractArgs) => {
+    executeTransaction(args).catch(error => {
+      console.error('Transaction failed:', error);
+      toast.show('Transaction Failed!', {
+        type: 'danger'
+      });
+    });
+  };
+
+  /**
+   * Write to contract and return a promise
+   */
+  const writeContractAsync = (
+    args: WriteContractArgs
+  ): Promise<TransactionReceipt> => {
+    return executeTransaction(args);
+  };
+
   return {
-    write: sendTransaction
+    isLoading,
+    isMining,
+    writeContract,
+    writeContractAsync
   };
 }

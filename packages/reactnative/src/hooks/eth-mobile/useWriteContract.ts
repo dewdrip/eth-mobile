@@ -18,40 +18,30 @@ import { parseFloat } from '../../utils/eth-mobile';
 interface UseWriteContractConfig {
   abi: Abi;
   address: string;
-  functionName: string;
-  args?: any[];
-  value?: bigint;
   blockConfirmations?: number;
   gasLimit?: bigint;
 }
 
-interface SendTxConfig {
+interface WriteContractArgs {
+  functionName: string;
   args?: any[];
   value?: bigint;
 }
 
 /**
- * This sends a transaction to the contract and returns the transaction receipt
+ * Hook for writing to smart contracts
  * @param config - The config settings
  * @param config.abi - contract abi
  * @param config.address - contract address
- * @param config.functionName - name of the function to be called
- * @param config.args - arguments for the function
- * @param config.value - value in ETH that will be sent with transaction
  * @param config.blockConfirmations - number of block confirmations to wait for (default: 1)
  * @param config.gasLimit - transaction gas limit
  */
 export function useWriteContract({
   abi,
   address,
-  functionName,
-  args,
-  value,
   blockConfirmations,
   gasLimit
 }: UseWriteContractConfig) {
-  const writeArgs = args;
-  const writeValue = value;
   const _gasLimit = gasLimit || BigInt(1000000);
 
   const { openModal } = useModal();
@@ -60,25 +50,15 @@ export function useWriteContract({
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMining, setIsMining] = useState(false);
 
   const { addTx } = useTransactions();
 
-  /**
-   * @param config Optional param settings
-   * @param config.args - arguments for the function
-   * @param config.value - value in ETH that will be sent with transaction
-   * @returns The transaction receipt
-   */
-  const sendTransaction = async (
-    config: SendTxConfig = {
-      args: undefined,
-      value: undefined
-    }
-  ): Promise<TransactionReceipt> => {
-    const { args, value } = config;
-    const _args = args || writeArgs || [];
-    const _value = value || writeValue || BigInt(0);
-
+  const executeTransaction = async ({
+    functionName,
+    args = [],
+    value = BigInt(0)
+  }: WriteContractArgs): Promise<TransactionReceipt> => {
     return new Promise(async (resolve, reject) => {
       try {
         const provider = new JsonRpcProvider(network.provider);
@@ -100,8 +80,8 @@ export function useWriteContract({
           contract,
           contractAddress: address,
           functionName,
-          args: _args,
-          value: _value,
+          args,
+          value,
           gasLimit: _gasLimit,
           onConfirm,
           onReject
@@ -116,6 +96,7 @@ export function useWriteContract({
 
       async function onConfirm() {
         setIsLoading(true);
+        setIsMining(true);
         try {
           const provider = new JsonRpcProvider(network.provider);
 
@@ -132,8 +113,8 @@ export function useWriteContract({
             activeWallet
           );
 
-          const tx = await contract[functionName](..._args, {
-            value: _value,
+          const tx = await contract[functionName](...args, {
+            value,
             gasLimit: _gasLimit
           });
 
@@ -167,13 +148,37 @@ export function useWriteContract({
           reject(error);
         } finally {
           setIsLoading(false);
+          setIsMining(false);
         }
       }
     });
   };
 
+  /**
+   * Write to contract without returning a promise
+   */
+  const writeContract = (args: WriteContractArgs) => {
+    executeTransaction(args).catch(error => {
+      console.error('Transaction failed:', error);
+      toast.show('Transaction Failed!', {
+        type: 'danger'
+      });
+    });
+  };
+
+  /**
+   * Write to contract and return a promise
+   */
+  const writeContractAsync = (
+    args: WriteContractArgs
+  ): Promise<TransactionReceipt> => {
+    return executeTransaction(args);
+  };
+
   return {
     isLoading,
-    write: sendTransaction
+    isMining,
+    writeContract,
+    writeContractAsync
   };
 }

@@ -38,16 +38,18 @@ export default function WriteOnlyFunctionForm({
   const [txReceipt, setTxReceipt] = useState<TransactionReceipt | undefined>();
   const { openModal } = useModal();
 
-  const { isLoading, write } = useWriteContract({
+  const { isLoading, writeContractAsync } = useWriteContract({
     address: contractAddress,
-    functionName: abiFunction.name,
-    abi: abi,
-    args: getParsedContractFunctionArgs(form)
+    abi: abi
   });
 
   const handleWrite = async () => {
     try {
-      const receipt = await write({ value: BigInt(txValue || 0) });
+      const receipt = await writeContractAsync({
+        functionName: abiFunction.name,
+        args: getParsedContractFunctionArgs(form),
+        value: BigInt(txValue || 0)
+      });
       setTxReceipt(receipt);
       onChange();
     } catch (error) {

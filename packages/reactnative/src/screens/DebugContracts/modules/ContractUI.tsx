@@ -22,7 +22,9 @@ export default function ContractUI() {
   );
   const network = useNetwork();
   const { data: deployedContractData, isLoading: isDeployedContractLoading } =
-    useDeployedContractInfo(contractName);
+    useDeployedContractInfo({
+      contractName
+    });
 
   if (isDeployedContractLoading || !isFocused) {
     return (

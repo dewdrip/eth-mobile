@@ -55,7 +55,9 @@ export function useScaffoldContractWrite({
   const writeValue = value;
 
   const { openModal } = useModal();
-  const { data: deployedContractData } = useDeployedContractInfo(contractName);
+  const { data: deployedContractData } = useDeployedContractInfo({
+    contractName
+  });
   const network = useNetwork();
   const toast = useToast();
   const connectedAccount = useAccount();

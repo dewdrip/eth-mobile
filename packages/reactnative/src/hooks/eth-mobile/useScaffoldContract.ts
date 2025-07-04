@@ -59,7 +59,9 @@ export function useScaffoldContract({
 
   const { openModal } = useModal();
 
-  const { data: deployedContractData } = useDeployedContractInfo(contractName);
+  const { data: deployedContractData } = useDeployedContractInfo({
+    contractName
+  });
 
   const getContract = useCallback(() => {
     if (

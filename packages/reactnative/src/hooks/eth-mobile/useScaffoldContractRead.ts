@@ -38,7 +38,9 @@ export function useScaffoldContractRead({
   const {
     data: deployedContractData,
     isLoading: isLoadingDeployedContractData
-  } = useDeployedContractInfo(contractName);
+  } = useDeployedContractInfo({
+    contractName
+  });
   const network = useNetwork();
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);

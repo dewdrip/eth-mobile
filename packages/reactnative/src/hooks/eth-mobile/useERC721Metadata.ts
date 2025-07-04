@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Address, erc721Abi } from 'viem';
 import { useReadContract } from '.';
+import { getParsedError } from '../../utils/eth-mobile';
 
 /**
  * Options for the `useERC721Metadata` hook.
@@ -24,7 +25,7 @@ export interface ERC721Metadata {
  */
 interface UseERC721MetadataResult {
   isLoading: boolean;
-  error: Error | null;
+  error: string | null;
   data: ERC721Metadata | null;
   getERC721Metadata: (
     nft?: Address,
@@ -46,7 +47,7 @@ export function useERC721Metadata({
 
   const [data, setData] = useState<ERC721Metadata | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   /**
    * Fetch and set metadata (name, symbol, tokenURI) for the given NFT.
@@ -57,7 +58,7 @@ export function useERC721Metadata({
       tokenId: string | number = defaultTokenId!
     ) => {
       if (!nft || tokenId === undefined) {
-        setError(new Error('NFT contract address and token ID are required'));
+        setError('NFT contract address and token ID are required');
         return;
       }
 
@@ -91,8 +92,8 @@ export function useERC721Metadata({
         };
         setData(metadata);
         return metadata;
-      } catch (err) {
-        setError(err as Error);
+      } catch (error) {
+        setError(getParsedError(error));
         setData(null);
       } finally {
         setIsLoading(false);

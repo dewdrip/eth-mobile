@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { Address, TransactionReceipt } from 'viem';
 import { useAccount, useNetwork, useTransactions } from '.';
 import { Account } from '../../store/reducers/Wallet';
-import { parseFloat } from '../../utils/eth-mobile';
+import { getParsedError, parseFloat } from '../../utils/eth-mobile';
 
 interface UseWriteContractConfig {
   abi: Abi;
@@ -145,7 +145,7 @@ export function useWriteContract({
           });
           resolve(receipt);
         } catch (error) {
-          reject(error);
+          reject(getParsedError(error));
         } finally {
           setIsLoading(false);
           setIsMining(false);
@@ -159,8 +159,8 @@ export function useWriteContract({
    */
   const writeContract = (args: WriteContractArgs) => {
     executeTransaction(args).catch(error => {
-      console.error('Transaction failed:', error);
-      toast.show('Transaction Failed!', {
+      console.error('Transaction failed: ', getParsedError(error));
+      toast.show(getParsedError(error), {
         type: 'danger'
       });
     });

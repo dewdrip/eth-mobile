@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAccount, useDeployedContractInfo, useNetwork } from '.';
 import { Account } from '../../store/reducers/Wallet';
+import { getParsedError } from '../../utils/eth-mobile';
 
 type Props = {
   contractName: string;
@@ -77,7 +78,7 @@ export function useScaffoldReadContract({
       setData(result);
       return result;
     } catch (error) {
-      setError(error);
+      setError(getParsedError(error));
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +108,7 @@ export function useScaffoldReadContract({
 
       return result;
     } catch (error) {
-      console.error(error);
+      console.error(getParsedError(error));
     } finally {
       setIsLoading(false);
     }

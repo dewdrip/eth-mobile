@@ -20,6 +20,9 @@ contract YourContract {
     uint256 public totalCounter = 0;
     mapping(address => uint) public userGreetingCounter;
 
+    error YourContract__NotOwner();
+    error YourContract__TransferFailed();
+
     // Events: a way to emit log statements from smart contract that can be listened to by external parties
     event GreetingChange(address indexed greetingSetter, string newGreeting, bool premium, uint256 value);
 
@@ -33,7 +36,9 @@ contract YourContract {
     // Check the withdraw() function
     modifier isOwner() {
         // msg.sender: predefined variable that represents address of the account that called the current function
-        require(msg.sender == owner, "Not the Owner");
+        if (msg.sender != owner) {
+            revert YourContract__NotOwner();
+        }
         _;
     }
 
@@ -68,7 +73,9 @@ contract YourContract {
      */
     function withdraw() public isOwner {
         (bool success, ) = owner.call{ value: address(this).balance }("");
-        require(success, "Failed to send Ether");
+        if (!success) {
+            revert YourContract__TransferFailed();
+        }
     }
 
     /**

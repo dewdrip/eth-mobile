@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Address, erc20Abi } from 'viem';
 import { useReadContract } from '.';
+import { getParsedError } from '../../utils/eth-mobile';
 
 /**
  * Options for the `useERC20Metadata` hook.
@@ -23,7 +24,7 @@ export interface ERC20Metadata {
  */
 interface UseERC20MetadataResult {
   isLoading: boolean;
-  error: Error | null;
+  error: string | null;
   data: ERC20Metadata | null;
   getERC20Metadata: (token?: Address) => Promise<ERC20Metadata | undefined>;
 }
@@ -41,7 +42,7 @@ export function useERC20Metadata({
 
   const [data, setData] = useState<ERC20Metadata | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   /**
    * Fetch and set metadata (name, symbol, decimals) for the given ERC20 token.
@@ -49,7 +50,7 @@ export function useERC20Metadata({
   const getERC20Metadata = useCallback(
     async (token: Address = defaultToken!) => {
       if (!token) {
-        setError(new Error('Token address is required'));
+        setError('Token address is required');
         return;
       }
 
@@ -82,8 +83,8 @@ export function useERC20Metadata({
         };
         setData(metadata);
         return metadata;
-      } catch (err) {
-        setError(err as Error);
+      } catch (error) {
+        setError(getParsedError(error));
         setData(null);
       } finally {
         setIsLoading(false);

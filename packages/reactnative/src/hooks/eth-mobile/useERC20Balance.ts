@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import { useCallback, useEffect, useState } from 'react';
 import { Address, erc20Abi } from 'viem';
 import { useAccount, useNetwork, useReadContract } from '.';
+import { getParsedError } from '../../utils/eth-mobile';
 
 /**
  * Hook to retrieve the balance of a specified ERC20 token for a user.
@@ -20,7 +21,7 @@ interface UseERC20BalanceOptions {
 
 interface UseERC20BalanceResult {
   isLoading: boolean;
-  error: Error | null;
+  error: string | null;
   balance: bigint | null;
   getBalance: (
     token?: Address,
@@ -39,7 +40,7 @@ export function useERC20Balance({
 
   const [balance, setBalance] = useState<bigint | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   /**
    * Fetch the token balance for a specified user and token.
@@ -75,9 +76,8 @@ export function useERC20Balance({
         const balanceBigInt = balance as bigint;
         setBalance(balanceBigInt);
         return balanceBigInt;
-      } catch (err) {
-        const error = err as Error;
-        setError(error);
+      } catch (error) {
+        setError(getParsedError(error));
         setBalance(null);
       } finally {
         setIsLoading(false);

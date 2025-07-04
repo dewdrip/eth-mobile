@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { useAccount, useBalance, useNetwork } from '../../../hooks/eth-mobile';
 import globalStyles from '../../../styles/globalStyles';
 import { COLORS } from '../../../utils/constants';
+import { getParsedError } from '../../../utils/eth-mobile';
 import { FONT_SIZE } from '../../../utils/styles';
 
 // Number of ETH faucet sends to an address
@@ -51,8 +52,8 @@ export default function FaucetButton() {
         type: 'success'
       });
     } catch (error) {
-      console.error('Faucet error:', error);
-      toast.show('Failed to get ETH from faucet', {
+      console.error('Faucet error:', getParsedError(error));
+      toast.show(getParsedError(error), {
         type: 'danger'
       });
     } finally {

@@ -17,7 +17,7 @@ import {
   useTransactions
 } from '.';
 import { Account } from '../../store/reducers/Wallet';
-import { parseFloat } from '../../utils/eth-mobile';
+import { getParsedError, parseFloat } from '../../utils/eth-mobile';
 
 interface UseScaffoldWriteContractConfig {
   contractName: string;
@@ -96,7 +96,7 @@ export function useScaffoldWriteContract({
           onReject
         });
       } catch (error) {
-        reject(error);
+        reject(getParsedError(error));
       }
 
       function onReject() {
@@ -152,7 +152,7 @@ export function useScaffoldWriteContract({
           });
           resolve(receipt);
         } catch (error) {
-          reject(error);
+          reject(getParsedError(error));
         } finally {
           setIsLoading(false);
           setIsMining(false);
@@ -166,8 +166,8 @@ export function useScaffoldWriteContract({
    */
   const writeContract = (args: WriteContractArgs) => {
     executeTransaction(args).catch(error => {
-      console.error('Transaction failed:', error);
-      toast.show('Transaction Failed!', {
+      console.error('Transaction failed:', getParsedError(error));
+      toast.show(getParsedError(error), {
         type: 'danger'
       });
     });

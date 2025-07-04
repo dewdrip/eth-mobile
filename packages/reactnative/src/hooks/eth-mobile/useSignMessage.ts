@@ -3,6 +3,7 @@ import { useModal } from 'react-native-modalfy';
 import { useSelector } from 'react-redux';
 import { useAccount, useNetwork } from '.';
 import { Account } from '../../store/reducers/Wallet';
+import { getParsedError } from '../../utils/eth-mobile';
 
 interface UseSignMessageConfig {
   message?: string | Uint8Array<ArrayBufferLike>;
@@ -75,7 +76,7 @@ export function useSignMessage({
           const signature = await activeWallet.signMessage(messageToSign!);
           resolve(signature);
         } catch (error) {
-          reject(error instanceof Error ? error : new Error(String(error)));
+          reject(getParsedError(error));
         }
       }
     });

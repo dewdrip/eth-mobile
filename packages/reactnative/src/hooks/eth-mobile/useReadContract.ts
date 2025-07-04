@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAccount, useNetwork } from '.';
 import { Account } from '../../store/reducers/Wallet';
+import { getParsedError } from '../../utils/eth-mobile';
 
 interface UseReadContractConfig {
   abi?: InterfaceAbi;
@@ -71,10 +72,10 @@ export function useReadContract({
 
       return result;
     } catch (error) {
-      setError(error);
+      setError(getParsedError(error));
 
       if (onError) {
-        onError(error);
+        onError(getParsedError(error));
       }
     } finally {
       setIsLoading(false);
@@ -105,7 +106,7 @@ export function useReadContract({
 
       return result;
     } catch (error) {
-      console.error(error);
+      console.error(getParsedError(error));
     } finally {
       setIsLoading(false);
     }

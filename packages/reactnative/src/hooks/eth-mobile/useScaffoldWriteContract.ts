@@ -18,7 +18,7 @@ import {
 import { Account } from '../../store/reducers/Wallet';
 import { parseFloat } from '../../utils/eth-mobile';
 
-interface UseScaffoldWriteConfig {
+interface UseScaffoldWriteContractConfig {
   contractName: string;
   functionName: string;
   args?: any[];
@@ -43,14 +43,14 @@ interface SendTxConfig {
  * @param config.gasLimit - transaction gas limit
  */
 
-export function useScaffoldContractWrite({
+export function useScaffoldWriteContract({
   contractName,
   functionName,
   args,
   value,
   blockConfirmations,
   gasLimit
-}: UseScaffoldWriteConfig) {
+}: UseScaffoldWriteContractConfig) {
   const writeArgs = args;
   const writeValue = value;
 

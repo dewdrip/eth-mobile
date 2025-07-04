@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useAccount, useNetwork } from '.';
 import { Account } from '../../store/reducers/Wallet';
 
-interface UseContractReadConfig {
+interface UseReadContractConfig {
   abi?: InterfaceAbi;
   address?: string;
   functionName?: string;
@@ -23,7 +23,7 @@ interface ReadContractConfig {
 
 type ReadContractResult = any | any[] | null;
 
-export function useContractRead({
+export function useReadContract({
   abi,
   address,
   functionName,
@@ -31,7 +31,7 @@ export function useContractRead({
   enabled = true,
   watch = false,
   onError
-}: Partial<UseContractReadConfig> = {}) {
+}: Partial<UseReadContractConfig> = {}) {
   const network = useNetwork();
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);

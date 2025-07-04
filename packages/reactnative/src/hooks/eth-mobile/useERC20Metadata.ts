@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Address, erc20Abi } from 'viem';
-import { useContractRead } from '.';
+import { useReadContract } from '.';
 
 /**
  * Options for the `useERC20Metadata` hook.
@@ -37,7 +37,7 @@ interface UseERC20MetadataResult {
 export function useERC20Metadata({
   token: defaultToken
 }: UseERC20MetadataOptions = {}): UseERC20MetadataResult {
-  const { readContract } = useContractRead();
+  const { readContract } = useReadContract();
 
   const [data, setData] = useState<ERC20Metadata | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);

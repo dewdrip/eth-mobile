@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Address, erc721Abi } from 'viem';
-import { useContractRead } from '.';
+import { useReadContract } from '.';
 
 /**
  * Options for the `useERC721Metadata` hook.
@@ -42,7 +42,7 @@ export function useERC721Metadata({
   nft: defaultNFT,
   tokenId: defaultTokenId
 }: UseERC721MetadataOptions = {}): UseERC721MetadataResult {
-  const { readContract } = useContractRead();
+  const { readContract } = useReadContract();
 
   const [data, setData] = useState<ERC721Metadata | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);

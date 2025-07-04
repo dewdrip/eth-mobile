@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { Button, Card, Text } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
 import { Address } from 'viem';
-import { useContractRead } from '../../../hooks/eth-mobile';
+import { useReadContract } from '../../../hooks/eth-mobile';
 import globalStyles from '../../../styles/globalStyles';
 import { COLORS } from '../../../utils/constants';
 import { FONT_SIZE } from '../../../utils/styles';
@@ -33,7 +33,7 @@ export default function ReadOnlyFunctionForm({
   const [result, setResult] = useState<any>();
   const toast = useToast();
 
-  const { isLoading: isFetching, refetch } = useContractRead({
+  const { isLoading: isFetching, refetch } = useReadContract({
     address: contractAddress,
     functionName: abiFunction.name,
     abi: abi,

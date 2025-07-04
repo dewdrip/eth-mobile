@@ -28,7 +28,7 @@ type ReadContractResult = any | any[] | null;
  * @param config.enable - enable the contract read (Optional)
  * @param config.watch - watch the contract read (Optional)
  */
-export function useScaffoldContractRead({
+export function useScaffoldReadContract({
   contractName,
   functionName,
   args,

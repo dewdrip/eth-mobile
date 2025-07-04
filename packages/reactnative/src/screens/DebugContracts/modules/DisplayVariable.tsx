@@ -8,7 +8,7 @@ import { useToast } from 'react-native-toast-notifications';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import { Address, isAddress } from 'viem';
 import { Address as AddressComp } from '../../../components/eth-mobile';
-import { useContractRead } from '../../../hooks/eth-mobile';
+import { useReadContract } from '../../../hooks/eth-mobile';
 import globalStyles from '../../../styles/globalStyles';
 import { COLORS } from '../../../utils/constants';
 import { FONT_SIZE } from '../../../utils/styles';
@@ -32,7 +32,7 @@ export default function DisplayVariable({
     data: result,
     isLoading: isFetching,
     refetch
-  } = useContractRead({
+  } = useReadContract({
     address: contractAddress,
     functionName: abiFunction.name,
     abi: abi,

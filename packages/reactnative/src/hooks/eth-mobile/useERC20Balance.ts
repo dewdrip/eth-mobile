@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { useCallback, useEffect, useState } from 'react';
 import { Address, erc20Abi } from 'viem';
-import { useAccount, useContractRead, useNetwork } from '.';
+import { useAccount, useNetwork, useReadContract } from '.';
 
 /**
  * Hook to retrieve the balance of a specified ERC20 token for a user.
@@ -35,7 +35,7 @@ export function useERC20Balance({
 }: UseERC20BalanceOptions = {}): UseERC20BalanceResult {
   const { address: connectedAddress } = useAccount();
   const network = useNetwork();
-  const { readContract } = useContractRead();
+  const { readContract } = useReadContract();
 
   const [balance, setBalance] = useState<bigint | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);

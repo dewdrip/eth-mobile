@@ -15,7 +15,7 @@ import { useAccount, useNetwork, useTransactions } from '.';
 import { Account } from '../../store/reducers/Wallet';
 import { parseFloat } from '../../utils/eth-mobile';
 
-interface UseWriteConfig {
+interface UseWriteContractConfig {
   abi: Abi;
   address: string;
   functionName: string;
@@ -41,7 +41,7 @@ interface SendTxConfig {
  * @param config.blockConfirmations - number of block confirmations to wait for (default: 1)
  * @param config.gasLimit - transaction gas limit
  */
-export function useContractWrite({
+export function useWriteContract({
   abi,
   address,
   functionName,
@@ -49,7 +49,7 @@ export function useContractWrite({
   value,
   blockConfirmations,
   gasLimit
-}: UseWriteConfig) {
+}: UseWriteContractConfig) {
   const writeArgs = args;
   const writeValue = value;
   const _gasLimit = gasLimit || BigInt(1000000);

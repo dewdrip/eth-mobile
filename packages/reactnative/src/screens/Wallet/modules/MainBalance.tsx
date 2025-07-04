@@ -27,7 +27,8 @@ function MainBalance() {
   const network = useNetwork();
   const account = useAccount();
   const { balance, isRefetching, refetch } = useBalance({
-    address: account.address
+    address: account.address,
+    watch: true
   });
   const { price, fetchPrice } = useCryptoPrice({
     priceID: network.coingeckoPriceId,

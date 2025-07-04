@@ -1,5 +1,6 @@
 export * from './useAccount';
 export * from './useBalance';
+export * from './useContract';
 export * from './useReadContract';
 export * from './useWriteContract';
 export * from './useCryptoPrice';
@@ -7,6 +8,7 @@ export * from './useDeployedContractInfo';
 export * from './useNetwork';
 export * from './useERC721Metadata';
 export * from './useNFTs';
+export * from './useScaffoldContract';
 export * from './useScaffoldEventHistory';
 export * from './useScaffoldReadContract';
 export * from './useScaffoldWriteContract';

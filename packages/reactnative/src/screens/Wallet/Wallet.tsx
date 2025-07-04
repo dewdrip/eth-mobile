@@ -1,14 +1,18 @@
 import { useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
+import { useNetwork } from '../../hooks/eth-mobile';
+import FaucetButton from './modules/FaucetButton';
 import Footer from './modules/Footer';
 import Header from './modules/Header';
 import MainBalance from './modules/MainBalance';
 
-type Props = {};
+// Hardhat network ID
+const HARDHAT_NETWORK_ID = 31337;
 
-export default function Wallet({}: Props) {
+export default function Wallet() {
   const isFocused = useIsFocused();
+  const network = useNetwork();
 
   if (!isFocused) return;
 
@@ -16,6 +20,9 @@ export default function Wallet({}: Props) {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Header />
       <MainBalance />
+
+      {network.id === HARDHAT_NETWORK_ID ? <FaucetButton /> : null}
+
       <Footer />
     </ScrollView>
   );

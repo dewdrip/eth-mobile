@@ -55,3 +55,27 @@ export function parseTimestamp(timestamp: bigint | number): string {
   const timestampInMs = Number(timestamp);
   return moment(timestampInMs).fromNow();
 }
+
+// Utility function to multiply a value by 1e18 (for token amounts)
+export function multiplyTo1e18(value: string | number): bigint {
+  if (typeof value === 'string') {
+    return BigInt(Math.round(Number(value) * 10 ** 18));
+  }
+  return BigInt(Math.round(value * 10 ** 18));
+}
+
+// Utility function to calculate token price in ETH
+export function getTokenPrice(
+  tokenAmount: string | bigint,
+  tokensPerEth: bigint | number
+): bigint {
+  const amount =
+    typeof tokenAmount === 'string' ? Number(tokenAmount) : Number(tokenAmount);
+  const rate =
+    typeof tokensPerEth === 'bigint' ? Number(tokensPerEth) : tokensPerEth;
+
+  if (rate === 0) return 0n;
+
+  const ethAmount = amount / rate;
+  return multiplyTo1e18(ethAmount);
+}

@@ -1,5 +1,5 @@
-import { useNetwork } from '.';
-import { contracts, GenericContract } from '../../utils/eth-mobile';
+import { contracts, GenericContract } from '.';
+import { useNetwork } from '../../hooks/eth-mobile';
 
 export function useAllContracts(): {
   [contractName: string]: GenericContract;

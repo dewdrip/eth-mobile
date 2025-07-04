@@ -1,5 +1,4 @@
 export * from './useAccount';
-export * from './useAllContracts';
 export * from './useBalance';
 export * from './useContractRead';
 export * from './useContractWrite';

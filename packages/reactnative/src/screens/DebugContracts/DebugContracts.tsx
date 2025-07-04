@@ -3,9 +3,9 @@ import { useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { useAllContracts } from '../../hooks/eth-mobile';
 import globalStyles from '../../styles/globalStyles';
 import { COLORS } from '../../utils/constants';
+import { useAllContracts } from '../../utils/eth-mobile/contractsData';
 import { FONT_SIZE } from '../../utils/styles';
 import ContractUI from './modules/ContractUI';
 

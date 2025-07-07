@@ -56,7 +56,10 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
       }
 
       if (nftExists(address, Number(tokenId))) {
-        toast.show('Token already exists!', { type: 'danger' });
+        toast.show('Token already exists!', {
+          type: 'danger',
+          placement: 'top'
+        });
         return;
       }
 

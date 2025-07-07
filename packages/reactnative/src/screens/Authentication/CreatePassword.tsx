@@ -33,21 +33,24 @@ function CreatePassword() {
   const createPassword = async () => {
     if (!password) {
       toast.show('Password cannot be empty!', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return;
     }
 
     if (password.length < 8) {
       toast.show('Password must be at least 8 characters', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return;
     }
 
     if (password !== confirmPassword) {
       toast.show('Passwords do not match!', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return;
     }
@@ -67,7 +70,8 @@ function CreatePassword() {
       navigation.navigate('CreateWallet', { password });
     } catch (error) {
       toast.show('Failed to create password. Please try again', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
     } finally {
       setIsCreating(false);

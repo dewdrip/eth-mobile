@@ -49,7 +49,8 @@ export default function Header({}: Props) {
       );
     } catch (error) {
       toast.show('Cannot open url', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
     }
   };

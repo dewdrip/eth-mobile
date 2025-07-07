@@ -142,7 +142,8 @@ export default function NFTTokenTransfer() {
   const confirm = () => {
     if (!isAddress(recipient)) {
       toast.show('Invalid address', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return;
     }

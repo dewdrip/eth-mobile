@@ -64,27 +64,31 @@ function ImportWallet() {
     // input validation
     if (!isValidMnemonic(seedPhrase)) {
       toast.show('Invalid Seed Phrase', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return false;
     }
     if (!password) {
       toast.show('Password cannot be empty!', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return false;
     }
 
     if (password.length < 8) {
       toast.show('Password must be at least 8 characters', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return false;
     }
 
     if (password !== confirmPassword) {
       toast.show('Passwords do not match!', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return false;
     }
@@ -142,7 +146,8 @@ function ImportWallet() {
       toast.show(
         'Failed to import wallet. Please ensure you have a stable network connection and try again',
         {
-          type: 'danger'
+          type: 'danger',
+          placement: 'top'
         }
       );
     } finally {

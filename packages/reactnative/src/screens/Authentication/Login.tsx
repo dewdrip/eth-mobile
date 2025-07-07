@@ -51,7 +51,8 @@ export default function Login() {
 
     if (!seedPhrase) {
       toast.show('Incorrect password!', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return;
     }
@@ -89,7 +90,8 @@ export default function Login() {
   const unlockWithPassword = async () => {
     if (!password) {
       toast.show('Password cannot be empty!', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return;
     }

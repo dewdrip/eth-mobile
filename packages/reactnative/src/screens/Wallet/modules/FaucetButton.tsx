@@ -31,7 +31,7 @@ export default function FaucetButton() {
 
   const sendETH = async () => {
     if (!connectedAccount.address) {
-      toast.show('No account connected', { type: 'danger' });
+      toast.show('No account connected', { type: 'danger', placement: 'top' });
       return;
     }
 
@@ -49,12 +49,14 @@ export default function FaucetButton() {
       await tx.wait(1);
 
       toast.show('Successfully received 1 ETH from faucet!', {
-        type: 'success'
+        type: 'success',
+        placement: 'top'
       });
     } catch (error) {
       console.error('Faucet error:', getParsedError(error));
       toast.show(getParsedError(error), {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
     } finally {
       setLoading(false);

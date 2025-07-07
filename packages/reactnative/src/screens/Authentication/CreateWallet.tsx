@@ -43,13 +43,14 @@ export default function CreateWallet() {
   const copySeedPhrase = () => {
     if (isLoading) return;
     if (!wallet) {
-      toast.show('Still generating wallet');
+      toast.show('Still generating wallet', { placement: 'top' });
       return;
     }
 
     Clipboard.setString(wallet.mnemonic);
     toast.show('Copied to clipboard', {
-      type: 'success'
+      type: 'success',
+      placement: 'top'
     });
   };
 
@@ -59,7 +60,8 @@ export default function CreateWallet() {
       toast.show(
         "You haven't even seen your seed phrase. Do you want to lose your funds?🤨",
         {
-          type: 'warning'
+          type: 'warning',
+          placement: 'top'
         }
       );
       return;
@@ -105,7 +107,8 @@ export default function CreateWallet() {
       navigation.navigate('Dashboard');
     } catch (error) {
       toast.show('Failed to save wallet', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
     } finally {
       setIsSaving(false);

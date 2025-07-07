@@ -19,7 +19,6 @@ import {
   useAccount,
   useBalance,
   useNetwork,
-  useSecureStorage,
   useTransactions
 } from '../../hooks/eth-mobile';
 import { Account } from '../../store/reducers/Accounts';
@@ -118,14 +117,16 @@ export default function NetworkTokenTransfer() {
   const confirm = () => {
     if (!isAddress(recipient)) {
       toast.show('Invalid address', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return;
     }
 
     if (isNaN(Number(amount)) || Number(amount) < 0) {
       toast.show('Invalid amount', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return;
     }
@@ -133,12 +134,14 @@ export default function NetworkTokenTransfer() {
     if (amount.trim() && balance && gasCost && !isNaN(Number(amount))) {
       if (Number(amount) >= Number(formatEther(balance))) {
         toast.show('Insufficient amount', {
-          type: 'danger'
+          type: 'danger',
+          placement: 'top'
         });
         return;
       } else if (Number(formatEther(balance - gasCost)) < Number(amount)) {
         toast.show('Insufficient amount for gas', {
-          type: 'danger'
+          type: 'danger',
+          placement: 'top'
         });
         return;
       }

@@ -38,7 +38,8 @@ export default function DisplayVariable({
     abi: abi,
     onError: error => {
       toast.show(JSON.stringify(error), {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
     }
   });

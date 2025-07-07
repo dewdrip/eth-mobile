@@ -41,7 +41,8 @@ export default function ReadOnlyFunctionForm({
     enabled: false,
     onError: (error: any) => {
       toast.show(JSON.stringify(error), {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
     }
   });

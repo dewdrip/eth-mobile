@@ -70,7 +70,10 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
     }
 
     if (!newAccount) {
-      toast.show('Failed to create account!', { type: 'danger' });
+      toast.show('Failed to create account!', {
+        type: 'danger',
+        placement: 'top'
+      });
       return;
     }
 

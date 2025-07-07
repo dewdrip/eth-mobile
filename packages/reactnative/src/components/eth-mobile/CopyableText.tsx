@@ -31,7 +31,8 @@ export function CopyableText({
   const copy = () => {
     Clipboard.setString(value);
     toast.show('Copied to clipboard', {
-      type: 'success'
+      type: 'success',
+      placement: 'top'
     });
   };
 

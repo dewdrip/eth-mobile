@@ -51,7 +51,8 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
   const copySeedPhrase = () => {
     Clipboard.setString(seedPhrase);
     toast.show('Copied to clipboard', {
-      type: 'success'
+      type: 'success',
+      placement: 'top'
     });
   };
 

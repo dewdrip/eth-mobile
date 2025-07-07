@@ -72,7 +72,8 @@ export default function NFTTransferConfirmationModal({
       await Linking.openURL(`${network.blockExplorer}/tx/${txReceipt.hash}`);
     } catch (error) {
       toast.show('Cannot open url', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
     }
   };

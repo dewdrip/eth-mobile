@@ -31,7 +31,7 @@ export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
 
   const copyAddress = () => {
     Clipboard.setString(connectedAccount.address);
-    toast.show('Copied to clipboard', { type: 'success' });
+    toast.show('Copied to clipboard', { type: 'success', placement: 'top' });
   };
 
   const shareAddress = async () => {

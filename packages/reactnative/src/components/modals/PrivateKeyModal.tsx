@@ -60,7 +60,8 @@ export default function PrivateKeyModal({ modal: { closeModal } }: Props) {
   const copyPrivateKey = () => {
     Clipboard.setString(privateKey);
     toast.show('Copied to clipboard', {
-      type: 'success'
+      type: 'success',
+      placement: 'top'
     });
   };
 

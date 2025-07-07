@@ -141,7 +141,8 @@ export function useWriteContract({
           addTx(transaction);
 
           toast.show('Transaction Successful!', {
-            type: 'success'
+            type: 'success',
+            placement: 'top'
           });
           resolve(receipt);
         } catch (error) {
@@ -161,7 +162,8 @@ export function useWriteContract({
     executeTransaction(args).catch(error => {
       console.error('Transaction failed: ', getParsedError(error));
       toast.show(getParsedError(error), {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
     });
   };

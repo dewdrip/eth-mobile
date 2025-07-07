@@ -29,7 +29,8 @@ export function Address({
   const copy = () => {
     Clipboard.setString(address);
     toast.show('Copied to clipboard', {
-      type: 'success'
+      type: 'success',
+      placement: 'top'
     });
   };
 

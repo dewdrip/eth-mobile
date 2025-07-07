@@ -143,14 +143,16 @@ export default function ERC20TokenTransfer() {
   const confirm = () => {
     if (!isAddress(recipient)) {
       toast.show('Invalid address', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return;
     }
 
     if (isNaN(Number(amount)) || Number(amount) < 0) {
       toast.show('Invalid amount', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       return;
     }

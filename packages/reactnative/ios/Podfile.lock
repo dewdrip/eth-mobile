@@ -1793,8 +1793,27 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNKeychain (8.0.0):
+  - RNKeychain (10.0.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNReanimated (3.16.7):
     - DoubleConversion
     - glog
@@ -2324,7 +2343,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: a927b768986f83467b635cf6d7559e6edb46db7a
   RNCClipboard: 2463ca770cdd4b11fceb71c401c88310c52371a8
   RNGestureHandler: 4dfa0ea7f0cf94b5b1b4f9ea6b40530696846c8c
-  RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
+  RNKeychain: a79104d490837d47dfc7dc447cc8897c10af8302
   RNReanimated: 9ee6347ca0aa3cf78cae715455e781728ae142e2
   RNScreens: b02af14099030cc1e63f74f2791574e909fc1541
   RNShare: 81213d0388e7fd4c2890a9bb88a46af7f72442cc

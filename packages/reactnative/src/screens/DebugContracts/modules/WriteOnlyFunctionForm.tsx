@@ -53,7 +53,7 @@ export default function WriteOnlyFunctionForm({
       setTxReceipt(receipt);
       onChange();
     } catch (error) {
-      toast.show(JSON.stringify(error), { type: 'danger' });
+      toast.show(JSON.stringify(error), { type: 'danger', placement: 'top' });
     }
   };
 

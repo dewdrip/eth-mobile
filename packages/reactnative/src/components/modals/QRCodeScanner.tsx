@@ -28,7 +28,8 @@ export default function QRCodeScanner({
 
     if (cameraPermission === 'restricted') {
       toast.show('Cannot use camera', {
-        type: 'danger'
+        type: 'danger',
+        placement: 'top'
       });
       closeModal();
     } else if (
@@ -44,7 +45,8 @@ export default function QRCodeScanner({
           toast.show(
             'Camera permission denied. Go to your device settings to Enable Camera',
             {
-              type: 'warning'
+              type: 'warning',
+              placement: 'top'
             }
           );
           closeModal();
@@ -52,7 +54,8 @@ export default function QRCodeScanner({
       } catch (error) {
         toast.show('Go to your device settings to Enable Camera', {
           type: 'normal',
-          duration: 5000
+          duration: 5000,
+          placement: 'top'
         });
         closeModal();
       }

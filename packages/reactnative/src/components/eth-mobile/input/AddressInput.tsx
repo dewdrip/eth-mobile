@@ -101,7 +101,6 @@ export function AddressInput({
         error={!!error}
         outlineStyle={{ ...styles.outline, ...outlineStyle }}
         contentStyle={{ ...styles.content, ...contentStyle }}
-        multiline={false}
       />
       {error && (
         <Text

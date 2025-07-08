@@ -1,6 +1,6 @@
-# 🧠 Think → 👨‍💻 Build → 🚀
+# 📲 Mobile dApps On-Chain! 🚀
 
-✍️ **ETH Mobile** is an open-source toolkit for building decentralized applications (dApps) on Ethereum and other EVM-compatible blockchains. It simplifies mobile dApp development with fast, secure and customizable pre-built components to create, deploy and interact with smart contracts.
+✍️ **ETH Mobile** is an open-source toolkit for building mobile decentralized applications (dApps) on Ethereum and other EVM-compatible blockchains. It simplifies mobile dApp development with fast, secure and customizable pre-built components to create, deploy and interact with smart contracts.
 
 [Watch me mint a Snowman NFT!☃️](https://youtu.be/CaJTnRtLOK8)
 
@@ -47,9 +47,9 @@ cd packages/reactnative
 npx pod-install
 ```
 
-2. Connect your device to your computer via WIFI-HOTSPOT
+2. Connect your WIFI to your computer. if you wish to run your app in a physical device, your device must be connected to the same WIFI
 
-3. Run a local network in the first terminal
+3. From the root folder, run a local network in the first terminal
 
 ```
 yarn chain

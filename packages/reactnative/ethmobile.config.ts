@@ -28,14 +28,6 @@ const ALCHEMY_KEY = 'K18rs5rCTi1A-RDyPUw92tvL7I2cGVUB';
 const config: Config = {
   // The networks on which your DApp is live
   networks: {
-    localhost: {
-      name: 'Localhost',
-      provider: 'http://192.168.0.52:8545',
-      id: 1337,
-      currencySymbol: 'ETH',
-      coingeckoPriceId: 'ethereum',
-      blockExplorer: null
-    },
     hardhat: {
       name: 'Hardhat',
       provider: 'http://192.168.0.52:8545',

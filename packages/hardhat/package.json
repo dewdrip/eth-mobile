@@ -12,7 +12,7 @@
     "compile": "hardhat compile",
     "deploy": "ts-node scripts/runHardhatDeployWithPK.ts",
     "flatten": "hardhat flatten",
-    "fork": "MAINNET_FORKING_ENABLED=true hardhat node --network hardhat --no-deploy",
+    "fork": "MAINNET_FORKING_ENABLED=true hardhat node --network hardhat --no-deploy  --hostname 0.0.0.0",
     "format": "prettier --write './**/*.(ts|sol)'",
     "generate": "yarn account:generate",
     "hardhat-verify": "hardhat verify",

@@ -53,7 +53,7 @@ const config: HardhatUserConfig = {
       }
     },
     ganache: {
-      url: '<YOUR_LOCAL_IP_ADDRESS>:8545',
+      url: 'http://<YOUR_LOCAL_IP_ADDRESS>:8545',
       accounts: [deployerPrivateKey],
       chainId: 1337
     },

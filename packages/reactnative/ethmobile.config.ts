@@ -30,7 +30,7 @@ const config: Config = {
   networks: {
     hardhat: {
       name: 'Hardhat',
-      provider: '<YOUR_LOCAL_IP_ADDR>:8545',
+      provider: 'http://<YOUR_LOCAL_IP_ADDR>:8545',
       id: 31337,
       currencySymbol: 'ETH',
       coingeckoPriceId: 'ethereum',

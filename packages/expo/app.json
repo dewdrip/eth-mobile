@@ -1,0 +1,76 @@
+{
+	"expo": {
+		"name": "ETH Mobile",
+		"slug": "eth-mobile",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/images/logo.png",
+		"scheme": "com.ethmobile",
+		"userInterfaceStyle": "automatic",
+		"splash": {
+			"image": "./assets/images/logo.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.ethmobile"
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/images/logo.png",
+				"backgroundColor": "#ffffff"
+			},
+			"package": "com.ethmobile",
+			"intentFilters": [
+				{
+					"autoVerify": true,
+					"action": "VIEW",
+					"data": {
+						"scheme": "https",
+						"host": "ethmobile.io"
+					},
+					"category": ["BROWSABLE", "DEFAULT"]
+				}
+			]
+		},
+		"web": {
+			"bundler": "metro",
+			"output": "static",
+			"favicon": "./assets/images/logo.png"
+		},
+		"plugins": [
+			"expo-router",
+			[
+				"expo-build-properties",
+				{
+					"android": {
+						"minSdkVersion": 26
+					},
+					"ios": {
+						"extraPods": [
+							{
+								"name": "OpenSSL-Universal",
+								"configurations": ["Release", "Debug"],
+								"modular_headers": true,
+								"version": "3.3.2000"
+							}
+						]
+					}
+				}
+			]
+		],
+		"experiments": {
+			"typedRoutes": true
+		},
+		"extra": {
+			"router": {
+				"origin": false
+			},
+			"eas": {
+				"projectId": "d1d7acaf-b44a-4425-af35-620596448499"
+			}
+		},
+		"owner": "ETH Mobile"
+	}
+}

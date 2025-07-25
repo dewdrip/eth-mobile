@@ -1,34 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import globalStyles from '../styles/globalStyles';
-import { FONT_SIZE } from '../utils/styles';
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import BackButton from './buttons/BackButton';
 
 interface HeaderProps {
   title: string;
+  style?: StyleProp<ViewStyle>;
 }
 
-export default function Header({ title }: HeaderProps) {
+export default function Header({ title, style }: HeaderProps) {
   return (
-    <View style={styles.container}>
+    <View
+      className="flex-row items-center gap-x-4 border-b border-gray-300 p-4"
+      style={style}
+    >
       <BackButton />
-      <Text style={styles.title}>{title}</Text>
+      <Text className="text-xl font-[Poppins]">{title}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'grey'
-  },
-  title: {
-    fontSize: FONT_SIZE.xl,
-    ...globalStyles.textBold,
-    marginBottom: -5
-  }
-});

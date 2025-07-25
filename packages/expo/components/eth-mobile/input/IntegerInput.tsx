@@ -52,7 +52,7 @@ export function IntegerInput({
             disabled={disabled}
             className="px-4 mt-3.5"
           >
-            <Text className="text-lg font-[Poppins] font-bold">*</Text>
+            <Text className="text-3xl font-[Poppins] font-bold">*</Text>
           </Pressable>
         )
       }

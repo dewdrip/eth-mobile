@@ -1,3 +1,4 @@
+import Header from '@/components/Header';
 import ContractUI from '@/components/screens/debugContracts/ContractUI';
 import { useAllContracts } from '@/utils/eth-mobile/contractsData';
 import { FONT_SIZE } from '@/utils/styles';
@@ -17,6 +18,10 @@ export default function DebugContracts() {
   if (!isFocused) return;
   return (
     <SafeAreaView className="flex-1 bg-white">
+      <Header
+        title="Contract Debugger"
+        style={{ borderBottomWidth: 0, paddingBottom: 5 }}
+      />
       {contractNames.length === 0 ? (
         <View className="flex-1 items-center justify-center">
           <Text className="text-xl" style={{ fontFamily: 'Poppins' }}>

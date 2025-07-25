@@ -1,4 +1,6 @@
 import { useReadContract } from '@/hooks/eth-mobile';
+import globalStyles from '@/src/styles/globalStyles';
+import { COLORS } from '@/utils/constants';
 import { AbiFunction, Address } from 'abitype';
 import { InterfaceAbi } from 'ethers';
 import React, { useState } from 'react';
@@ -64,7 +66,13 @@ export default function ReadOnlyFunctionForm({
       <View className="gap-4 mt-4">{inputElements}</View>
 
       {result !== null && result !== undefined && (
-        <View className="bg-primary-light mt-2 p-4 border-2 border-gray-300 rounded-lg">
+        <View
+          className="mt-2 p-4 rounded-lg"
+          style={{
+            backgroundColor: COLORS.primaryLight,
+            ...globalStyles.shadow
+          }}
+        >
           <Text className="text-lg font-[Poppins]">Result:</Text>
           {result.map((data: any) => (
             <Text
@@ -78,9 +86,13 @@ export default function ReadOnlyFunctionForm({
           ))}
         </View>
       )}
+
       <Pressable
-        className="mt-4 gap-x-2 items-center self-end"
-        style={{ backgroundColor: isFetching ? '#008000' : '#008000' }}
+        className="mt-4 gap-x-2 flex-row items-center self-end px-4 py-1 rounded-full"
+        style={{
+          backgroundColor: isFetching ? COLORS.primary : COLORS.primaryLight
+        }}
+        disabled={isFetching}
         onPress={async () => {
           const data = await refetch();
           if (data === undefined) return;
@@ -88,9 +100,17 @@ export default function ReadOnlyFunctionForm({
         }}
       >
         {isFetching && (
-          <ActivityIndicator size="large" className="text-green-500" />
+          <ActivityIndicator
+            size="small"
+            color={isFetching ? 'white' : COLORS.primary}
+          />
         )}
-        <Text className="text-lg font-[Poppins]">Read</Text>
+        <Text
+          className="text-base font-[Poppins]"
+          style={{ color: isFetching ? 'white' : 'black' }}
+        >
+          Read
+        </Text>
       </Pressable>
     </View>
   );

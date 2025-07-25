@@ -1,5 +1,6 @@
 import { IntegerInput } from '@/components/eth-mobile';
 import { useWriteContract } from '@/hooks/eth-mobile';
+import { COLORS } from '@/utils/constants';
 import { Abi, AbiFunction, Address } from 'abitype';
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
@@ -89,29 +90,35 @@ export default function WriteOnlyFunctionForm({
           />
         </View>
       ) : null}
-      <View className="flex-row items-center justify-between">
+      <View className="flex-row items-center justify-between mt-4">
         {txReceipt ? (
-          <Pressable
-            className="mt-4 gap-x-2 items-center self-end bg-green-500"
-            onPress={showReceipt}
-          >
-            Show Receipt
+          <Pressable className="rounded-full px-4 py-1" onPress={showReceipt}>
+            <Text className="text-base font-[Poppins]">Show Receipt</Text>
           </Pressable>
         ) : (
           <View />
         )}
 
         <Pressable
-          className="mt-4 gap-x-2 items-center self-end"
-          style={{ backgroundColor: isLoading ? 'green' : 'green' }}
+          className="gap-x-2 flex-row items-center self-end px-4 py-1 rounded-full"
+          style={{
+            backgroundColor: isLoading ? COLORS.primary : COLORS.primaryLight
+          }}
           disabled={isLoading}
           onPress={handleWrite}
         >
-          {isLoading ? (
-            <ActivityIndicator size="large" className="text-green-500" />
-          ) : (
-            <Text className="text-lg font-[Poppins]">Send</Text>
+          {isLoading && (
+            <ActivityIndicator
+              size="small"
+              color={isLoading ? 'white' : COLORS.primary}
+            />
           )}
+          <Text
+            className="text-base font-[Poppins]"
+            style={{ color: isLoading ? 'white' : 'black' }}
+          >
+            Write
+          </Text>
         </Pressable>
       </View>
     </View>

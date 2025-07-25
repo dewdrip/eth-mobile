@@ -1,3 +1,4 @@
+import { COLORS } from '@/utils/constants';
 import React, { JSX, useCallback } from 'react';
 import { TextInput, View } from 'react-native';
 import { CommonInputProps } from './utils';
@@ -28,14 +29,13 @@ export function InputBase<
   );
 
   return (
-    <View className="flex-row items-center border-2 border-gray-300 rounded-lg">
+    <View className="flex-row items-center bg-gray-100 rounded-full">
       {prefix}
       <TextInput
         value={value?.toString()}
-        className="flex-1 bg-gray-100 rounded-lg"
-        selectionColor="#000000"
-        cursorColor="#000000"
-        // disabled={disabled}
+        className="flex-1 px-4 py-3"
+        selectionColor={COLORS.primary}
+        cursorColor={COLORS.primary}
         placeholder={placeholder}
         onChangeText={handleChange}
       />

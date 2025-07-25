@@ -31,6 +31,7 @@ export default function index() {
               name="bug-outline"
               size={Device.getDeviceWidth() * 0.07}
               color="#555"
+              onPress={() => router.push('/debugContracts')}
             />
             <Ionicons
               name="wallet-outline"

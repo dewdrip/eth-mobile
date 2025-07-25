@@ -1,5 +1,6 @@
 import { Address as AddressComp } from '@/components/eth-mobile';
 import { useReadContract } from '@/hooks/eth-mobile';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AbiFunction, Address } from 'abitype';
 import { InterfaceAbi, isAddress } from 'ethers';
@@ -30,6 +31,7 @@ export default function DisplayVariable({
     functionName: abiFunction.name,
     abi: abi,
     onError: error => {
+      console.log('error: ', error);
       // toast.show(JSON.stringify(error), {
       //   type: 'danger',
       //   placement: 'top'
@@ -67,9 +69,13 @@ export default function DisplayVariable({
         <Text className="text-lg font-[Poppins]">{abiFunction.name}</Text>
         <TouchableOpacity onPress={async () => await refetch()}>
           {isFetching ? (
-            <ActivityIndicator size="large" className="text-green-500" />
+            <ActivityIndicator size={FONT_SIZE.lg} color={COLORS.primary} />
           ) : (
-            <MaterialIcons name="cached" className="text-green-500" size={24} />
+            <MaterialIcons
+              name="cached"
+              color={COLORS.primary}
+              size={FONT_SIZE.lg}
+            />
           )}
         </TouchableOpacity>
       </View>

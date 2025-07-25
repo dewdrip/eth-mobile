@@ -1,5 +1,5 @@
+import Device from '@/utils/device';
 import { StyleSheet } from 'react-native';
-import { WINDOW_WIDTH } from '../utils/styles';
 
 export default StyleSheet.create({
   logo: {
@@ -8,7 +8,7 @@ export default StyleSheet.create({
     left: 10
   },
   scanIcon: {
-    width: WINDOW_WIDTH * 0.07,
+    width: Device.getDeviceWidth() * 0.07,
     aspectRatio: 1
   },
   text: {
@@ -25,5 +25,16 @@ export default StyleSheet.create({
   },
   textSemiBold: {
     fontFamily: 'Poppins-SemiBold'
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3
   }
 });

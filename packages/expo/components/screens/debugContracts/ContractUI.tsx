@@ -1,5 +1,6 @@
 import { Address, Balance } from '@/components/eth-mobile';
 import { useDeployedContractInfo, useNetwork } from '@/hooks/eth-mobile';
+import globalStyles from '@/src/styles/globalStyles';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import React, { useReducer } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
@@ -39,28 +40,28 @@ export default function ContractUI() {
 
   return (
     <ScrollView className="flex-1 bg-white p-4">
-      <View className="bg-white mb-6 p-4 border-2 border-gray-300 rounded-lg">
-        <Text className="text-lg mb-2 font-[Poppins]">{contractName}</Text>
+      <View
+        className="bg-white mb-6 p-4 gap-y-2 rounded-lg"
+        style={globalStyles.shadow}
+      >
+        <Text className="text-lg font-[Poppins]">{contractName}</Text>
         <Address address={deployedContractData.address} />
-        <View className="flex-row items-center mt-2">
+        <View className="flex-row items-center">
           <Text className="text-lg font-[Poppins]">Balance: </Text>
           <Balance address={deployedContractData.address} />
         </View>
         {network && (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 4
-            }}
-          >
+          <View className="flex-row items-center">
             <Text className="text-lg font-[Poppins]">Network: </Text>
             <Text className="text-lg font-[Poppins]">{network.name}</Text>
           </View>
         )}
       </View>
 
-      <View className="bg-primary-light mb-6 p-4 border-2 border-gray-300 rounded-lg">
+      <View
+        className="bg-white mb-6 p-4 rounded-lg"
+        style={globalStyles.shadow}
+      >
         <ContractVariables
           refreshDisplayVariables={refreshDisplayVariables}
           deployedContractData={deployedContractData}
@@ -68,19 +69,19 @@ export default function ContractUI() {
       </View>
 
       <View className="mb-6">
-        <View className="bg-primary-light mb-6 p-4 border-2 border-gray-300 rounded-lg">
+        <View className="bg-green-100 self-start -mb-2 px-2 py-1 rounded-lg">
           <Text className="text-lg mb-2 font-[Poppins]">Read</Text>
         </View>
-        <View className="bg-white p-4 border-2 border-gray-300 rounded-lg">
+        <View className="bg-white p-4 rounded-lg" style={globalStyles.shadow}>
           <ContractReadMethods deployedContractData={deployedContractData} />
         </View>
       </View>
 
       <View className="mb-6">
-        <View className="bg-primary-light mb-6 p-4 border-2 border-gray-300 rounded-lg">
+        <View className="bg-green-100 self-start -mb-2 px-2 py-1 rounded-lg">
           <Text className="text-lg mb-2 font-[Poppins]">Write</Text>
         </View>
-        <View className="bg-white p-4 border-2 border-gray-300 rounded-lg">
+        <View className="bg-white p-4 rounded-lg" style={globalStyles.shadow}>
           <ContractWriteMethods
             deployedContractData={deployedContractData}
             onChange={triggerRefreshDisplayVariables}

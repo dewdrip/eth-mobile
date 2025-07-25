@@ -1,6 +1,12 @@
 import { Account } from '@/store/reducers/Wallet';
 import { getParsedError } from '@/utils/eth-mobile';
-import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
+import {
+  Contract,
+  ContractRunner,
+  InterfaceAbi,
+  JsonRpcProvider,
+  Wallet
+} from 'ethers';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAccount, useDeployedContractInfo, useNetwork } from '.';
@@ -63,11 +69,18 @@ export function useScaffoldReadContract({
           connectedAccount.address.toLowerCase()
       );
 
-      const activeWallet = new Wallet(activeAccount.privateKey, provider);
+      let runner: ContractRunner;
+
+      if (activeAccount) {
+        const activeWallet = new Wallet(activeAccount.privateKey, provider);
+        runner = activeWallet;
+      } else {
+        runner = provider;
+      }
       const contract = new Contract(
         deployedContractData.address,
         deployedContractData.abi as InterfaceAbi,
-        activeWallet
+        runner
       );
 
       const result = await contract[functionName](...(args || []));
@@ -97,11 +110,18 @@ export function useScaffoldReadContract({
           connectedAccount.address.toLowerCase()
       );
 
-      const activeWallet = new Wallet(activeAccount.privateKey, provider);
+      let runner: ContractRunner;
+
+      if (activeAccount) {
+        const activeWallet = new Wallet(activeAccount.privateKey, provider);
+        runner = activeWallet;
+      } else {
+        runner = provider;
+      }
       const contract = new Contract(
         deployedContractData.address,
         deployedContractData.abi as InterfaceAbi,
-        activeWallet
+        runner
       );
 
       const result = await contract[functionName](...(args || []));

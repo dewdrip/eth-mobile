@@ -1,6 +1,12 @@
 import { Account } from '@/store/reducers/Wallet';
 import { getParsedError } from '@/utils/eth-mobile';
-import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
+import {
+  Contract,
+  ContractRunner,
+  InterfaceAbi,
+  JsonRpcProvider,
+  Wallet
+} from 'ethers';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAccount, useNetwork } from '.';
@@ -59,9 +65,16 @@ export function useReadContract({
           connectedAccount.address.toLowerCase()
       );
 
-      const activeWallet = new Wallet(activeAccount.privateKey, provider);
+      let runner: ContractRunner;
 
-      const contract = new Contract(address, abi, activeWallet);
+      if (activeAccount) {
+        const activeWallet = new Wallet(activeAccount.privateKey, provider);
+        runner = activeWallet;
+      } else {
+        runner = provider;
+      }
+
+      const contract = new Contract(address, abi, runner);
 
       const result = await contract[functionName](...(args || []));
 
@@ -98,9 +111,15 @@ export function useReadContract({
           connectedAccount.address.toLowerCase()
       );
 
-      const activeWallet = new Wallet(activeAccount.privateKey, provider);
+      let runner: ContractRunner;
 
-      const contract = new Contract(address, abi, activeWallet);
+      if (activeAccount) {
+        const activeWallet = new Wallet(activeAccount.privateKey, provider);
+        runner = activeWallet;
+      } else {
+        runner = provider;
+      }
+      const contract = new Contract(address, abi, runner);
 
       const result = await contract[functionName](...(args || []));
 

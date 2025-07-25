@@ -5,7 +5,9 @@ import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 function HighlightedText({ children }: { children: string }) {
   return (
     <View className="bg-green-100 py-1 rounded-full px-4">
-      <Text className="text-center text-lg">{children}</Text>
+      <Text className="text-center text-lg" style={{ fontFamily: 'Poppins' }}>
+        {children}
+      </Text>
     </View>
   );
 }
@@ -15,7 +17,12 @@ export default function index() {
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView>
         <View className="flex flex-row items-center justify-between px-4 py-2">
-          <Text className="text-2xl font-bold">ETH Mobile</Text>
+          <Text
+            className="text-2xl font-bold"
+            style={{ fontFamily: 'Poppins-Bold' }}
+          >
+            ETH Mobile
+          </Text>
 
           <View className="flex flex-row items-center gap-x-5">
             <Ionicons
@@ -37,19 +44,24 @@ export default function index() {
         </View>
 
         <View className="items-center p-8 gap-y-2">
-          <Text className="text-3xl text-center font-bold mb-4">
+          <Text
+            className="text-3xl text-center mb-4"
+            style={{ fontFamily: 'Poppins' }}
+          >
             The Building Blocks of Mobile dApps
           </Text>
 
-          <Text className="text-xl">Get started by editing</Text>
+          <Text className="text-xl" style={{ fontFamily: 'Poppins' }}>
+            Get started by editing
+          </Text>
           <HighlightedText>packages/expo/app</HighlightedText>
 
           <View className="flex-row items-center gap-x-1 max-w-full mt-2">
-            <Text className="text-lg">Edit your smart contract</Text>
-            <HighlightedText>YourContract.sol</HighlightedText>
+            <Text className="text-lg" style={{ fontFamily: 'Poppins' }}>
+              Edit your smart contract in
+            </Text>
           </View>
           <View className="flex-row items-center gap-x-1 max-w-full">
-            <Text className="text-lg">in</Text>
             <HighlightedText>packages/hardhat/contracts</HighlightedText>
           </View>
         </View>
@@ -62,12 +74,12 @@ export default function index() {
               size={Device.getDeviceWidth() * 0.09}
             />
 
-            <Text className="text-center text-xl w-[60%]">
+            <Text
+              className="text-center text-xl w-[60%]"
+              style={{ fontFamily: 'Poppins' }}
+            >
               Tinker with your smart contracts in
-              <Text className="underline text-lg font-bold">
-                {' '}
-                DebugContracts{' '}
-              </Text>
+              <Text className="underline text-lg"> DebugContracts </Text>
             </Text>
           </View>
 
@@ -78,7 +90,10 @@ export default function index() {
               size={Device.getDeviceWidth() * 0.09}
             />
 
-            <Text className="text-center text-xl w-[60%]">
+            <Text
+              className="text-center text-xl w-[60%]"
+              style={{ fontFamily: 'Poppins' }}
+            >
               Manage your accounts, funds, and tokens in your
               <Text className="underline text-lg font-bold"> Wallet</Text>
             </Text>

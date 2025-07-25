@@ -11,12 +11,12 @@ import {
 } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
 import { useDispatch } from 'react-redux';
+import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '../../../core/Encryptor';
 import { ethers } from '../../../patches/ethers';
 import BackButton from '../../components/buttons/BackButton';
 import ScanButton from '../../components/buttons/ScanButton';
 import PasswordInput from '../../components/forms/PasswordInput';
 import SeedPhraseInput from '../../components/forms/SeedPhraseInput';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '../../core/Encryptor';
 import { useSecureStorage, useWallet } from '../../hooks/eth-mobile';
 import { initAccounts } from '../../store/reducers/Accounts';
 import { loginUser } from '../../store/reducers/Auth';

@@ -4,7 +4,7 @@ import { Keyboard, StyleSheet, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { IconButton, Text, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '../../../core/Encryptor';
+import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '../../core/Encryptor';
 import { useSecureStorage } from '../../hooks/eth-mobile';
 import {
   Account,

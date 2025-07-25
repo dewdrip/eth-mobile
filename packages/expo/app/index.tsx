@@ -1,8 +1,7 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
+import { Text } from '@/components/nativewind/Text'
 
-type Props = {}
-
-export default function index({}: Props) {
+export default function index() {
   return (
     <View>
         <Text>Hello</Text>

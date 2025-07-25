@@ -6,7 +6,7 @@ import { useToast } from 'react-native-toast-notifications';
 //@ts-ignore
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '../../../core/Encryptor';
+import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '../../core/Encryptor';
 import {
   useAccount,
   useSecureStorage,

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useModal } from 'react-native-modalfy';
-import { IconButton } from 'react-native-paper';
 // @ts-ignore
 import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import { FONT_SIZE } from '../../utils/styles';

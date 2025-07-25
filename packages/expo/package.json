@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "scripts": {
     "android": "expo run:android",
-    "format": "prettier src --write",
+    "format": "prettier app components --write",
     "ios": "expo run:ios",
     "lint": "expo lint",
     "prebuild": "expo prebuild --clean",

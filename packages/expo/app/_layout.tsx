@@ -28,6 +28,7 @@ export default function RootLayout() {
     <Providers>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="debugContracts" options={{ headerShown: false }} />
       </Stack>
     </Providers>
   );

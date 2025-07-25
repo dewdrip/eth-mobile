@@ -1,5 +1,6 @@
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 function HighlightedText({ children }: { children: string }) {
@@ -13,6 +14,7 @@ function HighlightedText({ children }: { children: string }) {
 }
 
 export default function index() {
+  const router = useRouter();
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView>
@@ -79,7 +81,13 @@ export default function index() {
               style={{ fontFamily: 'Poppins' }}
             >
               Tinker with your smart contracts in
-              <Text className="underline text-lg"> DebugContracts </Text>
+              <Text
+                className="underline text-lg"
+                onPress={() => router.push('/debugContracts')}
+              >
+                {' '}
+                DebugContracts
+              </Text>
             </Text>
           </View>
 

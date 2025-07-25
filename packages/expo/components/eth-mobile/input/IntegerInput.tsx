@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Text, TouchableRipple } from 'react-native-paper';
+import { Pressable, Text } from 'react-native';
 import { InputBase } from '.';
-import globalStyles from '../../../styles/globalStyles';
-import { FONT_SIZE } from '../../../utils/styles';
 import { CommonInputProps, IntegerVariant, isValidInteger } from './utils';
 
 type IntegerInputProps = CommonInputProps<string | bigint> & {
@@ -49,18 +47,13 @@ export function IntegerInput({
       suffix={
         !inputError &&
         !disableMultiplyBy1e18 && (
-          <TouchableRipple
+          <Pressable
             onPress={multiplyBy1e18}
             disabled={disabled}
-            style={{ paddingHorizontal: 16, marginTop: 15 }}
+            className="px-4 mt-3.5"
           >
-            <Text
-              variant="headlineSmall"
-              style={{ fontSize: FONT_SIZE['xl'], ...globalStyles.textMedium }}
-            >
-              *
-            </Text>
-          </TouchableRipple>
+            <Text className="text-lg font-[Poppins] font-bold">*</Text>
+          </Pressable>
         )
       }
     />

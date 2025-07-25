@@ -1,5 +1,5 @@
+import ethmobileConfig, { Network } from '@/ethmobile.config';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import ethmobileConfig, { Network } from '../../../ethmobile.config';
 
 const initialState: Network = Object.values(ethmobileConfig.networks)[0];
 

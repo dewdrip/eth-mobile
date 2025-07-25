@@ -1,4 +1,5 @@
-import { Abi } from 'abitype';
+import { Account } from '@/store/reducers/Wallet';
+import { parseFloat } from '@/utils/eth-mobile';
 import {
   Contract,
   formatEther,
@@ -11,8 +12,6 @@ import { useModal } from 'react-native-modalfy';
 import { useSelector } from 'react-redux';
 import { Address } from 'viem';
 import { useAccount, useDeployedContractInfo, useNetwork } from '.';
-import { Account } from '../../store/reducers/Wallet';
-import { parseFloat } from '../../utils/eth-mobile';
 
 interface UseScaffoldContractOptions {
   contractName: string;

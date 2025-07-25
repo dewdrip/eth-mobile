@@ -1,7 +1,7 @@
+import { getParsedError } from '@/utils/eth-mobile';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useNetwork } from '.';
-import { getParsedError } from '../../utils/eth-mobile';
 
 interface UseBalanceConfig {
   address: string;

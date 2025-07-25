@@ -1,9 +1,9 @@
+import { Account } from '@/store/reducers/Wallet';
+import { getParsedError } from '@/utils/eth-mobile';
 import { JsonRpcProvider, Wallet } from 'ethers';
 import { useModal } from 'react-native-modalfy';
 import { useSelector } from 'react-redux';
 import { useAccount, useNetwork } from '.';
-import { Account } from '../../store/reducers/Wallet';
-import { getParsedError } from '../../utils/eth-mobile';
 
 interface UseSignMessageConfig {
   message?: string | Uint8Array<ArrayBufferLike>;

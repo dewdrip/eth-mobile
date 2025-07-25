@@ -1,3 +1,4 @@
+import { ContractName } from '@/utils/eth-mobile';
 import {
   AbiCoder,
   Block,
@@ -9,7 +10,6 @@ import {
 } from 'ethers';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDeployedContractInfo, useNetwork } from '.';
-import { ContractName } from '../../utils/eth-mobile';
 
 interface UseScaffoldEventHistoryConfig<
   TContractName extends ContractName,

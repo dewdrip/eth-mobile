@@ -1,7 +1,7 @@
+import { ContractCodeStatus, contracts } from '@/utils/eth-mobile';
 import { useEffect, useState } from 'react';
 import { useIsMounted } from 'usehooks-ts';
 import { useNetwork } from '.';
-import { ContractCodeStatus, contracts } from '../../utils/eth-mobile';
 
 interface UseDeployedContractInfoConfig {
   contractName: string;

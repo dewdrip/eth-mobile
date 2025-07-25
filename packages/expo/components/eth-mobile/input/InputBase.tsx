@@ -1,8 +1,5 @@
-import React, { useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import globalStyles from '../../../styles/globalStyles';
-import { COLORS } from '../../../utils/constants';
+import React, { JSX, useCallback } from 'react';
+import { TextInput, View } from 'react-native';
 import { CommonInputProps } from './utils';
 
 type Props<T> = CommonInputProps<T> & {
@@ -31,36 +28,18 @@ export function InputBase<
   );
 
   return (
-    <View style={styles.container}>
+    <View className="flex-row items-center border-2 border-gray-300 rounded-lg">
       {prefix}
       <TextInput
         value={value?.toString()}
-        mode="outlined"
-        style={styles.input}
-        contentStyle={globalStyles.text}
-        outlineStyle={{ borderRadius: 24, borderWidth: 0 }}
-        selectionColor={COLORS.primaryLight}
-        cursorColor={COLORS.primary}
-        disabled={disabled}
+        className="flex-1 bg-gray-100 rounded-lg"
+        selectionColor="#000000"
+        cursorColor="#000000"
+        // disabled={disabled}
         placeholder={placeholder}
         onChangeText={handleChange}
-        error={error}
       />
       {suffix}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 24,
-    backgroundColor: '#efefef'
-  },
-  input: {
-    flex: 1,
-    borderRadius: 24,
-    backgroundColor: '#efefef'
-  }
-});

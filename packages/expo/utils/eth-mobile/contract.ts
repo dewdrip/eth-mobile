@@ -1,7 +1,7 @@
+import deployedContractsData from '@/contracts/deployedContracts';
+import externalContractsData from '@/contracts/externalContracts';
 import { Abi } from 'abitype';
 import { Address } from 'viem';
-import deployedContractsData from '../../../contracts/deployedContracts';
-import externalContractsData from '../../../contracts/externalContracts';
 
 export enum ContractCodeStatus {
   'LOADING',
@@ -37,10 +37,10 @@ type ContractsDeclaration = IsContractDeclarationMissing<
   typeof contractsData
 >;
 
-type Contracts = ContractsDeclaration[ConfiguredChainId];
+type Contracts = ContractsDeclaration[number];
 
-const deepMergeContracts = (local, external) => {
-  const result = {};
+const deepMergeContracts = (local: any, external: any) => {
+  const result: any = {} as any;
   const allKeys = Array.from(
     new Set([...Object.keys(external), ...Object.keys(local)])
   );

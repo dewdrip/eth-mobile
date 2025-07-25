@@ -1,5 +1,5 @@
+import { Account } from '@/store/reducers/Accounts';
 import { useSelector } from 'react-redux';
-import { Account } from '../../store/reducers/Accounts';
 
 /**
  *

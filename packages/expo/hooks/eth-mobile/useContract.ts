@@ -1,3 +1,5 @@
+import { Account } from '@/store/reducers/Wallet';
+import { parseFloat } from '@/utils/eth-mobile';
 import { Abi } from 'abitype';
 import {
   Contract,
@@ -11,8 +13,6 @@ import { useModal } from 'react-native-modalfy';
 import { useSelector } from 'react-redux';
 import { Address } from 'viem';
 import { useAccount, useNetwork } from '.';
-import { Account } from '../../store/reducers/Wallet';
-import { parseFloat } from '../../utils/eth-mobile';
 
 interface UseContractOptions {
   abi: Abi;

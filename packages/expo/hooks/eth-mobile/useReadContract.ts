@@ -1,9 +1,9 @@
+import { Account } from '@/store/reducers/Wallet';
+import { getParsedError } from '@/utils/eth-mobile';
 import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAccount, useNetwork } from '.';
-import { Account } from '../../store/reducers/Wallet';
-import { getParsedError } from '../../utils/eth-mobile';
 
 interface UseReadContractConfig {
   abi?: InterfaceAbi;

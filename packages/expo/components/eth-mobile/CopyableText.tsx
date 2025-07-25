@@ -1,15 +1,7 @@
+import { Ionicons } from '@expo/vector-icons';
 import Clipboard from '@react-native-clipboard/clipboard';
 import React from 'react';
-import {
-  StyleSheet,
-  TextStyle,
-  TouchableOpacity,
-  ViewStyle
-} from 'react-native';
-import { Text } from 'react-native-paper';
-import { useToast } from 'react-native-toast-notifications';
-// @ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { Pressable, Text, TextStyle, ViewStyle } from 'react-native';
 
 type Props = {
   value: string;
@@ -26,38 +18,31 @@ export function CopyableText({
   iconStyle,
   displayText
 }: Props) {
-  const toast = useToast();
+  // const toast = useToast();
 
   const copy = () => {
     Clipboard.setString(value);
-    toast.show('Copied to clipboard', {
-      type: 'success',
-      placement: 'top'
-    });
+    // toast.show('Copied to clipboard', {
+    //   type: 'success',
+    //   placement: 'top'
+    // });
   };
 
   return (
-    <TouchableOpacity onPress={copy} style={[styles.container, containerStyle]}>
-      <Text style={[styles.text, textStyle]}>{displayText || value}</Text>
+    <Pressable
+      onPress={copy}
+      className="flex-row items-center"
+      style={containerStyle}
+    >
+      <Text className="text-lg font-[Poppins]" style={textStyle}>
+        {displayText || value}
+      </Text>
       <Ionicons
         name="copy-outline"
         size={20}
-        style={[styles.icon, iconStyle]}
+        className="ml-2"
+        style={iconStyle}
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  text: {
-    textAlign: 'center',
-    fontWeight: '500'
-  },
-  icon: {
-    marginLeft: 4
-  }
-});

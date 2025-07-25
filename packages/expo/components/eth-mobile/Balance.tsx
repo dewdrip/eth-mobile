@@ -1,9 +1,7 @@
+import { useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { parseBalance } from '@/utils/eth-mobile';
 import React from 'react';
-import { StyleSheet, TextStyle, View } from 'react-native';
-import { Text } from 'react-native-paper';
-import { useBalance, useNetwork } from '../../hooks/eth-mobile';
-import globalStyles from '../../styles/globalStyles';
-import { parseBalance } from '../../utils/eth-mobile';
+import { Text, TextStyle, View } from 'react-native';
 
 type Props = {
   address: string;
@@ -17,8 +15,8 @@ export function Balance({ address, style }: Props) {
   if (isLoading) return;
 
   return (
-    <View style={styles.container}>
-      <Text style={[globalStyles.text, style]}>
+    <View className="items-center">
+      <Text className="text-lg font-[Poppins]" style={style}>
         {balance !== null
           ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
           : null}
@@ -26,9 +24,3 @@ export function Balance({ address, style }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center'
-  }
-});

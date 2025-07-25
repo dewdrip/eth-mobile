@@ -1,7 +1,7 @@
+import { getParsedError } from '@/utils/eth-mobile';
 import { useCallback, useEffect, useState } from 'react';
 import { Address, erc721Abi } from 'viem';
 import { useReadContract } from '.';
-import { getParsedError } from '../../utils/eth-mobile';
 
 /**
  * Options for the `useERC721Metadata` hook.

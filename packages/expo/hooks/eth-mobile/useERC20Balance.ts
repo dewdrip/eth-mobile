@@ -1,8 +1,8 @@
+import { getParsedError } from '@/utils/eth-mobile';
 import { ethers } from 'ethers';
 import { useCallback, useEffect, useState } from 'react';
 import { Address, erc20Abi } from 'viem';
 import { useAccount, useNetwork, useReadContract } from '.';
-import { getParsedError } from '../../utils/eth-mobile';
 
 /**
  * Hook to retrieve the balance of a specified ERC20 token for a user.

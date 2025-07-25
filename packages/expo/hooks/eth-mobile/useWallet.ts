@@ -1,4 +1,4 @@
-import { ethers } from '../../../patches/ethers';
+import { ethers } from '@/patches/ethers';
 
 export interface Wallet {
   address: string;

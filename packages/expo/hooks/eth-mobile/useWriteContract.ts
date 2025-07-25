@@ -1,3 +1,5 @@
+import { Account } from '@/store/reducers/Wallet';
+import { getParsedError, parseFloat } from '@/utils/eth-mobile';
 import { Abi } from 'abitype';
 import {
   Contract,
@@ -8,12 +10,9 @@ import {
 } from 'ethers';
 import { useState } from 'react';
 import { useModal } from 'react-native-modalfy';
-import { useToast } from 'react-native-toast-notifications';
 import { useSelector } from 'react-redux';
 import { Address, TransactionReceipt } from 'viem';
 import { useAccount, useNetwork, useTransactions } from '.';
-import { Account } from '../../store/reducers/Wallet';
-import { getParsedError, parseFloat } from '../../utils/eth-mobile';
 
 interface UseWriteContractConfig {
   abi: Abi;
@@ -46,7 +45,7 @@ export function useWriteContract({
 
   const { openModal } = useModal();
   const network = useNetwork();
-  const toast = useToast();
+  // const toast = useToast();
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
   const [isLoading, setIsLoading] = useState(false);
@@ -140,10 +139,10 @@ export function useWriteContract({
           // @ts-ignore
           addTx(transaction);
 
-          toast.show('Transaction Successful!', {
-            type: 'success',
-            placement: 'top'
-          });
+          // toast.show('Transaction Successful!', {
+          //   type: 'success',
+          //   placement: 'top'
+          // });
           resolve(receipt);
         } catch (error) {
           reject(getParsedError(error));
@@ -161,10 +160,10 @@ export function useWriteContract({
   const writeContract = (args: WriteContractArgs) => {
     executeTransaction(args).catch(error => {
       console.error('Transaction failed: ', getParsedError(error));
-      toast.show(getParsedError(error), {
-        type: 'danger',
-        placement: 'top'
-      });
+      // toast.show(getParsedError(error), {
+      //   type: 'danger',
+      //   placement: 'top'
+      // });
     });
   };
 

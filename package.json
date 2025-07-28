@@ -17,6 +17,7 @@
     "chain": "yarn hardhat:chain",
     "clean": "yarn hardhat:clean",
     "compile": "yarn hardhat:compile",
+    "configure-local-network": "yarn workspace @ethmobile/expo configure-local-network",
     "deploy": "yarn hardhat:deploy",
     "expo:add": "yarn workspace @ethmobile/expo add",
     "expo:format": "yarn workspace @ethmobile/expo format",

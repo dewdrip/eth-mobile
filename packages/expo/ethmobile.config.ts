@@ -1,4 +1,5 @@
 export type Config = {
+  defaultNetwork: string;
   networks: NetworkConfig;
 };
 
@@ -26,6 +27,7 @@ const ALCHEMY_KEY = 'K18rs5rCTi1A-RDyPUw92tvL7I2cGVUB';
 */
 
 const config: Config = {
+  defaultNetwork: 'hardhat',
   // The networks on which your DApp is live
   networks: {
     hardhat: {

@@ -29,6 +29,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="debugContracts" options={{ headerShown: false }} />
+        <Stack.Screen name="wallet/index" options={{ headerShown: false }} />
       </Stack>
     </Providers>
   );

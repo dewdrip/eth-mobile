@@ -11,11 +11,11 @@ function HighlightedText({ children }: { children: string }) {
   );
 }
 
-export default function index() {
+export default function Home() {
   const router = useRouter();
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex flex-row items-center justify-between px-4 py-2">
           <Text className="text-2xl font-bold font-[Poppins-Bold]">
             ETH Mobile
@@ -32,6 +32,7 @@ export default function index() {
               name="wallet-outline"
               size={Device.getDeviceWidth() * 0.07}
               color="#555"
+              onPress={() => router.push('/wallet')}
             />
             <Ionicons
               name="settings-outline"

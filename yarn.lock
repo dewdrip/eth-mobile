@@ -1747,6 +1747,7 @@ __metadata:
     react-native-modalfy: 3.5.3
     react-native-pager-view: 6.7.1
     react-native-passkey: ^3.0.0
+    react-native-popup-menu: ^0.18.0
     react-native-qrcode-svg: 6.3.0
     react-native-quick-crypto: 0.7.13
     react-native-reanimated: ~3.17.4
@@ -13179,6 +13180,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 24e39648eae2162bf88c258f421c74a52dea243e9943f5fb89a7a5adc1b201cad61b687d3d0c56c5363fedc8339f6d4e1e160c8076b8a221464514db6b7a2717
+  languageName: node
+  linkType: hard
+
+"react-native-popup-menu@npm:^0.18.0":
+  version: 0.18.0
+  resolution: "react-native-popup-menu@npm:0.18.0"
+  checksum: 5b7888fb61d045e8954f58871ff8aa0a99393c095a7d4e22709a7943ade8ca0405c8e519345aa856ddcc0eb0a961b33291ccaac6ebcef5e19a25157ba62e3b36
   languageName: node
   linkType: hard
 

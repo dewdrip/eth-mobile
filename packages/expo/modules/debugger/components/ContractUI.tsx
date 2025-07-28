@@ -1,6 +1,6 @@
 import { Address, Balance } from '@/components/eth-mobile';
 import { useDeployedContractInfo, useNetwork } from '@/hooks/eth-mobile';
-import globalStyles from '@/src/styles/globalStyles';
+import globalStyles from '@/utils/globalStyles';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import React, { useReducer } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';

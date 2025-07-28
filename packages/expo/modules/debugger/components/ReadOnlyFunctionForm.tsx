@@ -1,6 +1,6 @@
 import { useReadContract } from '@/hooks/eth-mobile';
-import globalStyles from '@/src/styles/globalStyles';
 import { COLORS } from '@/utils/constants';
+import globalStyles from '@/utils/globalStyles';
 import { AbiFunction, Address } from 'abitype';
 import { InterfaceAbi } from 'ethers';
 import React, { useState } from 'react';

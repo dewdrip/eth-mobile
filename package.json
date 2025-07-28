@@ -17,7 +17,7 @@
     "chain": "yarn hardhat:chain",
     "clean": "yarn hardhat:clean",
     "compile": "yarn hardhat:compile",
-    "configure-local-network": "yarn workspace @ethmobile/expo configure-local-network",
+    "configure-network": "yarn workspace @ethmobile/expo configure-network",
     "deploy": "yarn hardhat:deploy",
     "expo:add": "yarn workspace @ethmobile/expo add",
     "expo:format": "yarn workspace @ethmobile/expo format",
@@ -51,7 +51,7 @@
     "postinstall": "husky install",
     "prebuild": "yarn workspace @ethmobile/expo prebuild",
     "precommit": "lint-staged",
-    "setup": "yarn configure-local-network && yarn install",
+    "setup": "yarn configure-network && yarn install",
     "start": "yarn workspace @ethmobile/expo start",
     "test": "yarn hardhat:test",
     "verify": "yarn hardhat:verify"

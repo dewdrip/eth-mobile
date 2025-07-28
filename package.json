@@ -51,6 +51,7 @@
     "postinstall": "husky install",
     "prebuild": "yarn workspace @ethmobile/expo prebuild",
     "precommit": "lint-staged",
+    "setup": "yarn configure-local-network && yarn install",
     "start": "yarn workspace @ethmobile/expo start",
     "test": "yarn hardhat:test",
     "verify": "yarn hardhat:verify"

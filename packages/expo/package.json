@@ -12,6 +12,8 @@
     "prebuild": "expo prebuild --clean",
     "start": "expo start",
     "test": "jest --watchAll",
+    "update-hardhat": "node utils/eth-mobile/configureLocalNetwork.ts",
+    "configure-network": "node utils/eth-mobile/configureLocalNetwork.ts",
     "configure-local-network": "ts-node utils/eth-mobile/configureLocalNetwork.ts"
   },
   "jest": {

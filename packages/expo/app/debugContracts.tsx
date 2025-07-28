@@ -1,5 +1,5 @@
 import Header from '@/components/Header';
-import ContractUI from '@/components/screens/debugContracts/ContractUI';
+import ContractUI from '@/modules/debugger/components/ContractUI';
 import { useAllContracts } from '@/utils/eth-mobile/contractsData';
 import { FONT_SIZE } from '@/utils/styles';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';

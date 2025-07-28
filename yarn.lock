@@ -1724,6 +1724,7 @@ __metadata:
     expo-dev-client: ~5.2.4
     expo-font: 13.3.0
     expo-linking: 7.1.4
+    expo-network: ~7.1.5
     expo-router: 5.0.3
     expo-splash-screen: ~0.30.7
     expo-status-bar: ~2.2.3
@@ -7859,6 +7860,16 @@ __metadata:
   dependencies:
     invariant: ^2.2.4
   checksum: 08bad8ffed47c72ec0ceae79e8d9ebbc1df6d6d4ade65f285b2370198821334330c961ca02eb3316ac4f96191753b96907aca6a0804b5be8f9653eef71452710
+  languageName: node
+  linkType: hard
+
+"expo-network@npm:~7.1.5":
+  version: 7.1.5
+  resolution: "expo-network@npm:7.1.5"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+  checksum: 468a6f00935ff55b4f760d6e417b8232551b5e47f3e863d56fa09a2ef4cfdab5bceb18561e2d30d1d3f2dc7903451dbcd09e28328c859d805217ce4bdb9cdd5e
   languageName: node
   linkType: hard
 

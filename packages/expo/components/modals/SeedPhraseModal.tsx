@@ -1,15 +1,11 @@
+import Button from '@/components/buttons/CustomButton';
+import { COLORS } from '@/utils/constants';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import Clipboard from '@react-native-clipboard/clipboard';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Surface, Text, TextInput } from 'react-native-paper';
-import { useToast } from 'react-native-toast-notifications';
-// @ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
-import Button from '../buttons/CustomButton';
 
 type Props = {
   modal: {
@@ -18,7 +14,7 @@ type Props = {
 };
 
 export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
-  const toast = useToast();
+  // const toast = useToast();
   const wallet = useSelector((state: any) => state.wallet);
 
   const [password, setPassword] = useState('');
@@ -50,10 +46,10 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
 
   const copySeedPhrase = () => {
     Clipboard.setString(seedPhrase);
-    toast.show('Copied to clipboard', {
-      type: 'success',
-      placement: 'top'
-    });
+    //toast.show('Copied to clipboard', {
+    //  type: 'success',
+    //  placement: 'top'
+    //});
   };
 
   const handleOnClose = () => {
@@ -63,11 +59,9 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text variant="headlineMedium" style={styles.headerTitle}>
-          Show seed phrase
-        </Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-row items-center justify-between mb-4">
+        <Text className="text-2xl font-[Poppins]">Show seed phrase</Text>
         <Ionicons
           name="close-outline"
           size={FONT_SIZE['xl'] * 1.7}
@@ -76,57 +70,49 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
       </View>
 
       {seedPhrase ? (
-        <Surface style={styles.seedPhraseContainer}>
-          <Text style={styles.seedPhraseText}>{seedPhrase}</Text>
+        <View className="flex-row items-center border-radius-10 p-4 mb-4 bg-white">
+          <Text className="flex-1 mr-2 text-lg font-[Poppins]">
+            {seedPhrase}
+          </Text>
           <Ionicons
             name="copy-outline"
             size={FONT_SIZE['xl']}
             onPress={copySeedPhrase}
             color={COLORS.primary}
           />
-        </Surface>
+        </View>
       ) : (
-        <View style={styles.passwordContainer}>
-          <Text variant="titleMedium" style={globalStyles.textMedium}>
-            Enter your password
-          </Text>
+        <View className="mb-4">
+          <Text className="text-lg font-[Poppins]">Enter your password</Text>
           <TextInput
             value={password}
-            mode="outlined"
             secureTextEntry
             placeholder="Password"
             placeholderTextColor="#a3a3a3"
-            textColor="black"
             onChangeText={handleInputChange}
             onSubmitEditing={showSeedPhrase}
-            style={styles.input}
-            activeOutlineColor={COLORS.primary}
-            outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
-            contentStyle={globalStyles.text}
+            className="mt-2 mb-1"
           />
           {error && (
-            <Text style={styles.errorText} variant="bodySmall">
-              {error}
-            </Text>
+            <Text className="text-lg font-[Poppins] text-red-500">{error}</Text>
           )}
         </View>
       )}
 
-      <Surface style={styles.warningContainer}>
+      <View className="flex-row items-center border-radius-10 p-4 mb-4 bg-red-100">
         <Ionicons name="eye-off" size={24} color={COLORS.error} />
-        <Text style={styles.warningText}>
+        <Text className="flex-1 ml-2 text-lg font-[Poppins]">
           Never disclose this seed phrase. Anyone with your seed phrase can
           fully control all your accounts created with this seed phrase,
           including transferring away any of your funds.
         </Text>
-      </Surface>
+      </View>
 
       {seedPhrase ? (
         <Button text="Done" onPress={handleOnClose} />
       ) : (
-        <View style={styles.buttonContainer}>
+        <View className="flex-row gap-4">
           <Button
-            type="outline"
             text="Cancel"
             onPress={handleOnClose}
             style={styles.cancelButton}
@@ -143,82 +129,10 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    margin: 20,
-    width: WINDOW_WIDTH * 0.9
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 16
-  },
-  headerTitle: {
-    fontSize: FONT_SIZE['xl'],
-    ...globalStyles.textMedium
-  },
-  seedPhraseContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    padding: 16,
-    marginBottom: 20,
-    backgroundColor: 'white'
-  },
-  seedPhraseText: {
-    flex: 1,
-    marginRight: 10,
-    ...globalStyles.text,
-    fontSize: FONT_SIZE['lg']
-  },
-  passwordContainer: {
-    marginBottom: 16
-  },
-  input: {
-    marginTop: 8,
-    marginBottom: 4
-  },
-  errorText: {
-    color: '#ef4444',
-    ...globalStyles.text
-  },
-  warningContainer: {
-    flexDirection: 'row',
-    borderRadius: 10,
-    padding: 15,
-    backgroundColor: COLORS.lightRed,
-    marginBottom: 20
-  },
-  warningIcon: {
-    margin: 0
-  },
-  warningText: {
-    flex: 1,
-    marginLeft: 16,
-    ...globalStyles.text
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 16
-  },
   cancelButton: {
     flex: 1
   },
   revealButton: {
     flex: 1
-  },
-  addressContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    backgroundColor: COLORS.primaryLight,
-    borderRadius: 15
-  },
-  addressText: {
-    fontWeight: '700',
-    fontSize: FONT_SIZE['md'],
-    color: COLORS.primary
   }
 });

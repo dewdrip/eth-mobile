@@ -1,19 +1,16 @@
+import CustomButton from '@/components/buttons/CustomButton';
+import { Blockie, CopyableText } from '@/components/eth-mobile';
+import EditAccountNameForm from '@/components/forms/EditAccountNameForm';
+import { useAccount } from '@/hooks/eth-mobile';
+import { Account, removeAccount } from '@/store/reducers/Accounts';
+import { COLORS } from '@/utils/constants';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
-import { Text } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
-//@ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAccount } from '../../hooks/eth-mobile';
-import { Account, removeAccount } from '../../store/reducers/Accounts';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
-import CustomButton from '../buttons/CustomButton';
-import { Blockie, CopyableText } from '../eth-mobile';
-import EditAccountNameForm from '../forms/EditAccountNameForm';
 
 type Props = {
   modal: {
@@ -37,8 +34,8 @@ export default function AccountDetailsModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-col items-center gap-4">
         <Blockie
           address={connectedAccount.address}
           size={2.5 * FONT_SIZE['xl']}
@@ -46,8 +43,8 @@ export default function AccountDetailsModal({ modal: { closeModal } }: Props) {
         {isEditingAccountName ? (
           <EditAccountNameForm close={() => setIsEditingAccountName(false)} />
         ) : (
-          <View style={styles.nameContainer}>
-            <Text variant="titleLarge" style={globalStyles.textMedium}>
+          <View className="flex-row items-center gap-2">
+            <Text className="text-2xl font-[Poppins]">
               {connectedAccount.name}
             </Text>
             <Ionicons
@@ -86,22 +83,6 @@ export default function AccountDetailsModal({ modal: { closeModal } }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    padding: 20,
-    margin: 20,
-    borderRadius: 30,
-    width: WINDOW_WIDTH * 0.9
-  },
-  content: {
-    alignItems: 'center',
-    gap: 16
-  },
-  nameContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
-  },
   addressContainer: {
     paddingHorizontal: 15,
     paddingVertical: 5,
@@ -109,7 +90,6 @@ const styles = StyleSheet.create({
     borderRadius: 25
   },
   addressText: {
-    fontSize: FONT_SIZE['xl'],
-    ...globalStyles.text
+    fontSize: FONT_SIZE['xl']
   }
 });

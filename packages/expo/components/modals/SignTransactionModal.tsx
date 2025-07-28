@@ -1,17 +1,11 @@
+import Button from '@/components/buttons/CustomButton';
+import { Blockie } from '@/components/eth-mobile';
+import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { parseBalance, parseFloat, truncateAddress } from '@/utils/eth-mobile';
+import { FONT_SIZE } from '@/utils/styles';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Divider, Text } from 'react-native-paper';
-import { useAccount, useBalance, useNetwork } from '../../hooks/eth-mobile';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import {
-  parseBalance,
-  parseFloat,
-  truncateAddress
-} from '../../utils/eth-mobile';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
-import { Blockie } from '../eth-mobile';
+import { Text, View } from 'react-native';
 
 type Props = {
   modal: {
@@ -123,25 +117,16 @@ export default function SignTransactionModal({
   }
 
   return (
-    <View style={styles.container}>
-      <View style={{ marginBottom: 16 }}>
-        <Text
-          variant="bodyMedium"
-          style={{ textAlign: 'right', ...globalStyles.text }}
-        >
-          {network.name} network
-        </Text>
-        <Text variant="titleMedium" style={globalStyles.text}>
-          From:
-        </Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="mb-4">
+        <Text className="text-lg font-[Poppins]">{network.name} network</Text>
+        <Text className="text-lg font-[Poppins]">From:</Text>
 
-        <View style={styles.accountContainer}>
+        <View className="flex-row items-center justify-between">
           <Blockie address={account.address} size={1.8 * FONT_SIZE.xl} />
-          <View style={{ marginLeft: 12 }}>
-            <Text style={{ fontSize: FONT_SIZE['lg'], ...globalStyles.text }}>
-              {account.name}
-            </Text>
-            <Text variant="bodyMedium" style={globalStyles.text}>
+          <View className="ml-4">
+            <Text className="text-lg font-[Poppins]">{account.name}</Text>
+            <Text className="text-lg font-[Poppins]">
               Balance:{' '}
               {balance !== null
                 ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
@@ -151,88 +136,48 @@ export default function SignTransactionModal({
         </View>
       </View>
 
-      <View style={{ marginBottom: 16 }}>
-        <Text variant="titleMedium" style={globalStyles.text}>
-          To:
-        </Text>
-        <View style={styles.accountContainer}>
+      <View className="mb-4">
+        <Text className="text-lg font-[Poppins]">To:</Text>
+        <View className="flex-row items-center justify-between">
           <Blockie address={params.contractAddress} size={1.8 * FONT_SIZE.xl} />
-          <Text style={styles.recipient}>
+          <Text className="text-lg font-[Poppins]">
             {truncateAddress(params.contractAddress)}
           </Text>
         </View>
       </View>
 
-      <View style={styles.functionName}>
-        <Text
-          style={{
-            fontSize: FONT_SIZE['md'],
-            color: 'blue',
-            ...globalStyles.textMedium
-          }}
-        >
+      <View className="flex-row items-center justify-between">
+        <Text className="text-lg font-[Poppins]">
           {truncateAddress(params.contractAddress)}
         </Text>
-        <Text
-          style={{
-            fontSize: FONT_SIZE['md'],
-            ...globalStyles.textMedium
-          }}
-        >
+        <Text className="text-lg font-[Poppins]">
           {' '}
           : {params.functionName.toUpperCase()}
         </Text>
       </View>
 
-      <Text
-        variant="headlineMedium"
-        style={{ textAlign: 'center', marginBottom: 16, ...globalStyles.text }}
-      >
+      <Text className="text-2xl font-[Poppins]">
         {ethers.formatEther(params.value)} {network.currencySymbol}
       </Text>
 
-      <View
-        style={{
-          borderWidth: 1,
-          borderColor: COLORS.gray,
-          borderRadius: 10,
-          marginBottom: 16
-        }}
-      >
+      <View className="border border-gray-300 rounded-lg p-2">
         {/* Gas Fee Section */}
-        <View style={{ padding: 12 }}>
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
+        <View className="p-4">
+          <View className="flex-row justify-between">
             <View>
-              <Text variant="titleMedium" style={globalStyles.textMedium}>
-                Estimated Gas Fee
-              </Text>
-              <Text
-                variant="bodySmall"
-                style={{ color: 'green', ...globalStyles.text }}
-              >
+              <Text className="text-lg font-[Poppins]">Estimated Gas Fee</Text>
+              <Text className="text-lg font-[Poppins]">
                 Likely in {'<'} 30 seconds
               </Text>
             </View>
             <View>
-              <Text
-                variant="titleMedium"
-                style={{ textAlign: 'right', ...globalStyles.textMedium }}
-              >
+              <Text className="text-lg font-[Poppins]">
                 {estimatedGasCost.min
                   ? parseGasCost(estimatedGasCost.min)
                   : null}{' '}
                 {network.currencySymbol}
               </Text>
-              <Text
-                variant="bodySmall"
-                style={{
-                  color: 'gray',
-                  textAlign: 'right',
-                  ...globalStyles.text
-                }}
-              >
+              <Text className="text-lg font-[Poppins]">
                 Max:{' '}
                 {estimatedGasCost.max
                   ? parseGasCost(estimatedGasCost.max)
@@ -243,39 +188,20 @@ export default function SignTransactionModal({
           </View>
         </View>
 
-        <Divider />
+        <View className="h-px bg-gray-300" />
 
         {/* Total Section */}
-        <View style={{ padding: 12 }}>
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
+        <View className="p-4">
+          <View className="flex-row justify-between">
             <View>
-              <Text variant="titleMedium" style={globalStyles.textMedium}>
-                Total
-              </Text>
-              <Text
-                variant="bodySmall"
-                style={{ color: 'green', ...globalStyles.text }}
-              >
-                Amount + Gas Fee
-              </Text>
+              <Text className="text-lg font-[Poppins]">Total</Text>
+              <Text className="text-lg font-[Poppins]">Amount + Gas Fee</Text>
             </View>
             <View>
-              <Text
-                variant="titleMedium"
-                style={{ textAlign: 'right', ...globalStyles.textMedium }}
-              >
+              <Text className="text-lg font-[Poppins]">
                 {calcTotal().min || ''} {network.currencySymbol}
               </Text>
-              <Text
-                variant="bodySmall"
-                style={{
-                  color: 'gray',
-                  textAlign: 'right',
-                  ...globalStyles.text
-                }}
-              >
+              <Text className="text-lg font-[Poppins]">
                 Max: {calcTotal().max || ''} {network.currencySymbol}
               </Text>
             </View>
@@ -283,61 +209,18 @@ export default function SignTransactionModal({
         </View>
       </View>
 
-      <View style={{ flexDirection: 'row', gap: 12 }}>
+      <View className="flex-row gap-4">
         <Button
-          mode="contained"
           onPress={reject}
-          buttonColor="#FFCDD2"
           style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-          labelStyle={{ fontSize: FONT_SIZE['lg'], ...globalStyles.text }}
-        >
-          Reject
-        </Button>
+          text="Reject"
+        />
         <Button
-          mode="contained"
           onPress={confirm}
           style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-          labelStyle={{
-            fontSize: FONT_SIZE['lg'],
-            ...globalStyles.text,
-            color: 'white'
-          }}
-        >
-          Confirm
-        </Button>
+          text="Confirm"
+        />
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    width: WINDOW_WIDTH * 0.9
-  },
-  accountContainer: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 10,
-    padding: 12,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  recipient: {
-    fontSize: FONT_SIZE['lg'],
-    ...globalStyles.text,
-    marginLeft: 12
-  },
-  functionName: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    paddingHorizontal: 2,
-    paddingVertical: 1,
-    marginBottom: 10
-  }
-});

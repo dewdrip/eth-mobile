@@ -1738,6 +1738,7 @@ __metadata:
     react: 19.0.0
     react-dom: 19.0.0
     react-native: 0.79.2
+    react-native-camera-kit: ^15.1.0
     react-native-device-info: ^14.0.4
     react-native-gesture-handler: 2.25.0
     react-native-get-random-values: 1.11.0
@@ -13030,6 +13031,16 @@ __metadata:
   version: 19.1.0
   resolution: "react-is@npm:19.1.0"
   checksum: 3eb4eac7f09bf178bdc6fa98d384f5f243b85de7c99679a88b0154ead4d818ad94386ccb00ea31ec52409ffd13299057f5ec6ca2eaec06f9f7eddc1ad4832332
+  languageName: node
+  linkType: hard
+
+"react-native-camera-kit@npm:^15.1.0":
+  version: 15.1.0
+  resolution: "react-native-camera-kit@npm:15.1.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: b6480c36c18c3a9ebed79e1fd93f36edbc974e73e431c85e0175ce547070c701d3134f685390a06fa01b7b5fc0be19ebd6fb5222193d3d9a7dc7accc49b2e65a
   languageName: node
   linkType: hard
 

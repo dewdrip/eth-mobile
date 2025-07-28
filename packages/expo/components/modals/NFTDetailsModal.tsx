@@ -1,17 +1,14 @@
+import Button from '@/components/buttons/CustomButton';
+import { useAccount, useNetwork } from '@/hooks/eth-mobile';
+import { removeNFT } from '@/store/reducers/NFTs';
+import { COLORS } from '@/utils/constants';
+import { parseIPFS } from '@/utils/eth-mobile';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import { Address } from 'abitype';
 import React, { useEffect, useState } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
-// @ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { Image, Pressable, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { useAccount, useNetwork } from '../../hooks/eth-mobile';
-import { removeNFT } from '../../store/reducers/NFTs';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { parseIPFS } from '../../utils/eth-mobile';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
-import Button from '../buttons/CustomButton';
 
 type Props = {
   modal: {
@@ -80,32 +77,35 @@ export default function NFTDetailsModal({
   }, [nft]);
 
   return (
-    <Pressable onPress={closeModal} style={styles.container}>
-      <View style={styles.nftImageContainer}>
+    <Pressable
+      onPress={closeModal}
+      className="bg-transparent flex-1 items-center justify-between w-[90%]"
+    >
+      <View className="w-[97%] h-[90%] bg-cyan-500 mt-5">
         {image && (
           <Image
             source={{ uri: image }}
-            style={styles.nftImage}
+            className="w-full h-full"
             resizeMode="cover"
           />
         )}
       </View>
 
-      <View style={styles.nftInfoContainer}>
-        <Text style={styles.nftTitle}>
+      <View className="bg-white w-[90%] p-5">
+        <Text className="text-2xl font-medium">
           {nft.name} #{Number(nft.id).toLocaleString('en-US')}
         </Text>
 
-        <View style={styles.actionButtonsContainer}>
+        <View className="flex-row justify-between items-center mt-5">
           <Button
             type="outline"
             text="Send"
             onPress={send}
-            style={styles.sendBtn}
+            style={{ width: '90%' }}
           />
           <Ionicons
             name="trash-outline"
-            size={WINDOW_WIDTH * 0.07}
+            size={FONT_SIZE.xl * 1.5}
             color={COLORS.primary}
             onPress={remove}
           />
@@ -114,42 +114,3 @@ export default function NFTDetailsModal({
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'transparent',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: WINDOW_WIDTH
-  },
-  nftImageContainer: {
-    width: '97%',
-    height: WINDOW_WIDTH,
-    backgroundColor: 'cyan',
-    marginTop: 10
-  },
-  nftImage: {
-    width: '100%',
-    height: '100%'
-  },
-  nftInfoContainer: {
-    backgroundColor: 'white',
-    width: WINDOW_WIDTH,
-    paddingHorizontal: 10,
-    paddingVertical: 20
-  },
-  nftTitle: {
-    fontSize: FONT_SIZE['xl'],
-    ...globalStyles.textMedium
-  },
-  actionButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 20
-  },
-  sendBtn: {
-    width: '90%'
-  }
-});

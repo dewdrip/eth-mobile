@@ -1,13 +1,11 @@
+import { useNetwork } from '@/hooks/eth-mobile';
+import { Account } from '@/store/reducers/Accounts';
+import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
+import { FONT_SIZE } from '@/utils/styles';
 import { ethers, formatEther, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
-import { Button, Divider, Text } from 'react-native-paper';
-import { useToast } from 'react-native-toast-notifications';
-import { useNetwork } from '../../hooks/eth-mobile';
-import { Account } from '../../store/reducers/Accounts';
-import globalStyles from '../../styles/globalStyles';
-import { parseFloat, truncateAddress } from '../../utils/eth-mobile';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
+import { Linking, Text, View } from 'react-native';
+import Button from '../buttons/CustomButton';
 import { Blockie } from '../eth-mobile';
 import Fail from './modules/Fail';
 import Success from './modules/Success';
@@ -37,7 +35,7 @@ export default function TransferConfirmationModal({
     params: { txData, estimateGasCost, token, isNativeToken, onTransfer }
   }
 }: Props) {
-  const toast = useToast();
+  // const toast = useToast();
 
   const network = useNetwork();
 
@@ -89,35 +87,31 @@ export default function TransferConfirmationModal({
     try {
       await Linking.openURL(`${network.blockExplorer}/tx/${txReceipt.hash}`);
     } catch (error) {
-      toast.show('Cannot open url', {
-        type: 'danger',
-        placement: 'top'
-      });
+      // toast.show('Cannot open url', {
+      //   type: 'danger',
+      //   placement: 'top'
+      // });
     }
   };
 
   return (
-    <View>
-      <View style={styles.container}>
-        <View style={styles.section}>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
-            From:
-          </Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="gap-4">
+        <View className="gap-2">
+          <Text className="text-lg font-[Poppins]">From:</Text>
 
-          <View style={styles.accountContainer}>
-            <View style={styles.accountInfo}>
+          <View className="bg-gray-100 rounded-lg p-2">
+            <View className="flex-row items-center gap-2">
               <Blockie
                 address={txData.from.address}
                 size={1.8 * FONT_SIZE['xl']}
               />
 
-              <View style={styles.accountDetails}>
-                <Text
-                  style={{ fontSize: FONT_SIZE['lg'], ...globalStyles.text }}
-                >
+              <View className="w-3/4">
+                <Text className="text-lg font-[Poppins]">
                   {txData.from.name}
                 </Text>
-                <Text variant="bodyMedium" style={globalStyles.text}>
+                <Text className="text-sm font-[Poppins]">
                   Balance: {formatBalance()} {token}
                 </Text>
               </View>
@@ -125,40 +119,31 @@ export default function TransferConfirmationModal({
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
-            To:
-          </Text>
+        <View className="gap-2">
+          <Text className="text-lg font-[Poppins]">To:</Text>
 
-          <View style={styles.recipientContainer}>
+          <View className="flex-row items-center gap-2 bg-gray-100 rounded-lg p-2">
             <Blockie address={txData.to} size={1.8 * FONT_SIZE['xl']} />
-            <Text style={{ fontSize: FONT_SIZE['lg'], ...globalStyles.text }}>
+            <Text className="text-lg font-[Poppins]">
               {truncateAddress(txData.to)}
             </Text>
           </View>
         </View>
 
-        <Text variant="titleMedium" style={styles.amountLabel}>
-          AMOUNT
-        </Text>
-        <Text variant="headlineLarge" style={styles.amount}>
+        <Text className="text-lg font-[Poppins]">AMOUNT</Text>
+        <Text className="text-2xl font-[Poppins]">
           {txData.amount} {token}
         </Text>
 
-        <View style={styles.detailsContainer}>
-          <View style={styles.detailsRow}>
+        <View className="border border-gray-300 rounded-lg p-2">
+          <View className="flex-row items-center justify-between">
             <View>
-              <Text variant="titleMedium" style={globalStyles.textMedium}>
-                Estimated gas fee
-              </Text>
-              <Text
-                variant="bodySmall"
-                style={{ color: 'green', ...globalStyles.text }}
-              >
+              <Text className="text-lg font-[Poppins]">Estimated gas fee</Text>
+              <Text className="text-sm font-[Poppins]">
                 Likely in &lt; 30 second
               </Text>
             </View>
-            <Text variant="titleMedium" style={styles.detailsValue}>
+            <Text className="text-lg font-[Poppins]">
               {estimateGasCost
                 ? parseFloat(ethers.formatEther(estimateGasCost), 8).toString()
                 : null}{' '}
@@ -168,13 +153,11 @@ export default function TransferConfirmationModal({
 
           {isNativeToken && (
             <>
-              <Divider />
+              <View className="h-px bg-gray-300" />
 
-              <View style={styles.detailsRow}>
-                <Text variant="titleMedium" style={globalStyles.textMedium}>
-                  Total
-                </Text>
-                <Text variant="titleMedium" style={styles.detailsValue}>
+              <View className="flex-row items-center justify-between">
+                <Text className="text-lg font-[Poppins]">Total</Text>
+                <Text className="text-lg font-[Poppins]">
                   {calcTotal()} {network.currencySymbol}
                 </Text>
               </View>
@@ -182,29 +165,19 @@ export default function TransferConfirmationModal({
           )}
         </View>
 
-        <View style={styles.buttonContainer}>
+        <View className="flex-row gap-4">
           <Button
-            mode="contained"
+            type="outline"
             onPress={() => (isTransferring ? null : closeModal())}
-            buttonColor="#FFCDD2"
             style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-            labelStyle={{ fontSize: FONT_SIZE['lg'], ...globalStyles.text }}
-          >
-            Cancel
-          </Button>
+            text="Cancel"
+          />
           <Button
-            mode="contained"
             onPress={transfer}
             loading={isTransferring}
             style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-            labelStyle={{
-              fontSize: FONT_SIZE['lg'],
-              ...globalStyles.text,
-              color: 'white'
-            }}
-          >
-            Confirm
-          </Button>
+            text="Confirm"
+          />
         </View>
       </View>
 
@@ -228,70 +201,3 @@ export default function TransferConfirmationModal({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    width: WINDOW_WIDTH * 0.9,
-    gap: 16
-  },
-  section: {
-    gap: 8
-  },
-  sectionTitle: {
-    fontSize: FONT_SIZE['lg'],
-    ...globalStyles.text
-  },
-  accountContainer: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 10,
-    padding: 8
-  },
-  accountInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
-  },
-  accountDetails: {
-    width: '75%'
-  },
-  recipientContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 10,
-    padding: 8
-  },
-  amountLabel: {
-    textAlign: 'center',
-    marginBottom: -16,
-    ...globalStyles.textMedium
-  },
-  amount: {
-    textAlign: 'center',
-    ...globalStyles.textSemiBold
-  },
-  detailsContainer: {
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 10
-  },
-  detailsRow: {
-    padding: 12,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between'
-  },
-  detailsValue: {
-    width: '50%',
-    textAlign: 'right',
-    ...globalStyles.textMedium
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 12
-  }
-});

@@ -1,13 +1,10 @@
+import { useAccount } from '@/hooks/eth-mobile';
+import { Account, changeName } from '@/store/reducers/Accounts';
+import { COLORS } from '@/utils/constants';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { View } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
-//@ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { Text, TextInput, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAccount } from '../../hooks/eth-mobile';
-import { Account, changeName } from '../../store/reducers/Accounts';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
 
 type Props = {
   close: () => void;
@@ -43,22 +40,15 @@ export default function EditAccountNameForm({ close }: Props) {
   };
 
   return (
-    <View style={{ width: '100%', alignItems: 'center' }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+    <View className="w-full items-center">
+      <View className="flex-row items-center gap-2">
         <Ionicons name="close-outline" size={28} color="red" onPress={close} />
         <TextInput
           placeholder="New account name"
           value={name}
           onChangeText={handleInputChange}
           onSubmitEditing={editName}
-          mode="outlined"
-          style={{ width: '60%' }}
-          outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
-          contentStyle={globalStyles.text}
-          outlineColor={COLORS.primary}
-          activeOutlineColor={COLORS.primary}
-          selectionColor={COLORS.primaryLight}
-          selectTextOnFocus
+          className="w-[60%]"
         />
 
         <Ionicons
@@ -69,11 +59,7 @@ export default function EditAccountNameForm({ close }: Props) {
         />
       </View>
 
-      {error && (
-        <Text variant="bodySmall" style={{ color: 'red' }}>
-          {error}
-        </Text>
-      )}
+      {error && <Text className="text-sm text-red-500">{error}</Text>}
     </View>
   );
 }

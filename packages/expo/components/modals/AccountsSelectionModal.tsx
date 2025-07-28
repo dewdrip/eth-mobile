@@ -1,15 +1,12 @@
+import { Blockie } from '@/components/eth-mobile';
+import { Account } from '@/store/reducers/Accounts';
+import { COLORS } from '@/utils/constants';
+import { truncateAddress } from '@/utils/eth-mobile';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Divider, Text } from 'react-native-paper';
-// @ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Account } from '../../store/reducers/Accounts';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { truncateAddress } from '../../utils/eth-mobile';
-import { FONT_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH } from '../../utils/styles';
-import { Blockie } from '../eth-mobile';
 
 type Props = {
   modal: {
@@ -27,18 +24,22 @@ export default function AccountsSelectionModal({
     params: { selectedAccount, onSelect }
   }
 }: Props) {
-  const accounts: Account[] = useSelector((state: any) => state.accounts);
+  // const accounts: Account[] = useSelector((state: any) => state.accounts);
+  const accounts: any[] = [
+    {
+      address: '0x1234567890123456789012345678901234567890',
+      name: 'Account 1'
+    }
+  ];
 
   const handleSelection = (account: Account) => {
     closeModal();
     onSelect(account);
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text variant="titleLarge" style={globalStyles.textMedium}>
-          Accounts
-        </Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-row justify-between items-center mb-4">
+        <Text className="text-2xl font-[Poppins]">Accounts</Text>
         <Ionicons
           name="close-outline"
           size={FONT_SIZE['xl'] * 1.7}
@@ -46,35 +47,23 @@ export default function AccountsSelectionModal({
         />
       </View>
 
-      <Divider style={{ marginTop: 8 }} />
+      <View className="h-1 bg-gray-200 my-4" />
 
-      <ScrollView style={styles.scrollView}>
+      <ScrollView className="max-h-[20%]">
         {accounts.map((account, index) => (
-          <TouchableOpacity
+          <Pressable
             key={account.address}
-            activeOpacity={0.4}
             onPress={() => handleSelection(account)}
           >
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingVertical: 12,
-                borderBottomWidth: index === accounts.length - 1 ? 0 : 1,
-                borderBottomColor: '#E5E5E5'
-              }}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View className="flex-row items-center justify-between p-2">
+              <View className="flex-row items-center">
                 <Blockie
                   address={account.address}
                   size={1.7 * FONT_SIZE['xl']}
                 />
-                <View style={{ marginLeft: 16 }}>
-                  <Text variant="titleMedium" style={globalStyles.textMedium}>
-                    {account.name}
-                  </Text>
-                  <Text variant="bodyMedium" style={globalStyles.text}>
+                <View className="ml-4">
+                  <Text className="text-lg font-[Poppins]">{account.name}</Text>
+                  <Text className="text-sm font-[Poppins]">
                     {truncateAddress(account.address)}
                   </Text>
                 </View>
@@ -87,27 +76,9 @@ export default function AccountsSelectionModal({
                 />
               )}
             </View>
-          </TouchableOpacity>
+          </Pressable>
         ))}
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    width: WINDOW_WIDTH * 0.9,
-    maxHeight: WINDOW_HEIGHT * 0.5
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  scrollView: {
-    maxHeight: WINDOW_HEIGHT / 4.8
-  }
-});

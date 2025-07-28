@@ -1,13 +1,12 @@
+import { COLORS } from '@/utils/constants';
+import { WINDOW_WIDTH } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { WINDOW_WIDTH } from '../../utils/styles';
+import { StyleSheet, Text, TextStyle, View } from 'react-native';
 import Button from '../buttons/CustomButton';
 
 export interface ConsentModalParams {
-  icon?: JSX.Element;
+  icon?: React.ReactNode;
   title: string;
   subTitle: string;
   okText?: string;
@@ -49,22 +48,22 @@ export default function ConsentModal({
     onAccept();
   };
   return (
-    <View style={styles.container}>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
       {icon || (
-        <IconButton
-          icon="alert"
+        <Ionicons
+          name="alert"
           size={WINDOW_WIDTH * 0.17}
-          iconColor={iconColor || COLORS.primary}
+          color={iconColor || COLORS.primary}
         />
       )}
-      <Text variant="headlineMedium" style={[styles.title, titleStyle]}>
+      <Text className="text-2xl font-[Poppins]" style={titleStyle}>
         {title}
       </Text>
-      <Text variant="bodyLarge" style={[styles.subtitle, subTitleStyle]}>
+      <Text className="text-lg font-[Poppins]" style={subTitleStyle}>
         {subTitle}
       </Text>
 
-      <View style={styles.buttonContainer}>
+      <View className="flex-row gap-4">
         <Button
           type="outline"
           text={cancelText || 'Cancel'}
@@ -84,33 +83,6 @@ export default function ConsentModal({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 28,
-    margin: 20,
-    alignItems: 'center',
-    gap: 8
-  },
-  content: {
-    alignItems: 'center',
-    gap: 16
-  },
-  title: {
-    color: COLORS.primary,
-    textAlign: 'center',
-    ...globalStyles.textSemiBold
-  },
-  subtitle: {
-    textAlign: 'center',
-    ...globalStyles.text
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginTop: 20,
-    gap: 16,
-    width: '100%'
-  },
   button: {
     flex: 1
   }

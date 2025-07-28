@@ -1,15 +1,12 @@
+import ethmobileConfig, { Network } from '@/ethmobile.config';
+import { useNetwork } from '@/hooks/eth-mobile';
+import { switchNetwork } from '@/store/reducers/ConnectedNetwork';
+import { COLORS } from '@/utils/constants';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
-//@ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import ethmobileConfig, { Network } from '../../../ethmobile.config';
-import { useNetwork } from '../../hooks/eth-mobile';
-import { switchNetwork } from '../../store/reducers/ConnectedNetwork';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH } from '../../utils/styles';
 
 type Props = {
   modal: {
@@ -28,11 +25,9 @@ export default function SwitchNetworkModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text variant="titleLarge" style={globalStyles.text}>
-          Switch Network
-        </Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-row items-center justify-between mb-4">
+        <Text className="text-2xl font-[Poppins]">Switch Network</Text>
 
         <Ionicons
           name="close-outline"
@@ -49,27 +44,11 @@ export default function SwitchNetworkModal({ modal: { closeModal } }: Props) {
               !(_network.id === connectedNetwork.id) &&
               handleNetworkSelecttion(_network.id)
             }
-            style={styles.networkContainer}
+            className="flex-row items-center justify-between"
           >
-            <View style={styles.networkInfo}>
-              <Text
-                variant="titleMedium"
-                style={[
-                  styles.networkName,
-                  _network.id === connectedNetwork.id &&
-                    styles.networkNameActive
-                ]}
-              >
-                {_network.name}
-              </Text>
-              <Text
-                variant="bodyMedium"
-                style={[
-                  styles.networkChainId,
-                  _network.id === connectedNetwork.id &&
-                    styles.networkChainIdActive
-                ]}
-              >
+            <View className="gap-2">
+              <Text className="text-lg font-[Poppins]">{_network.name}</Text>
+              <Text className="text-sm font-[Poppins]">
                 Chain ID: {_network.id.toString()}
               </Text>
             </View>
@@ -86,53 +65,3 @@ export default function SwitchNetworkModal({ modal: { closeModal } }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 15,
-    padding: 20,
-    width: WINDOW_WIDTH * 0.9,
-    maxHeight: WINDOW_HEIGHT * 0.7
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20
-  },
-  networkContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 15
-  },
-  networkItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e5e5'
-  },
-  networkItemActive: {
-    backgroundColor: COLORS.primaryLight
-  },
-  networkInfo: {
-    gap: 4
-  },
-  networkName: {
-    fontSize: FONT_SIZE.lg,
-    ...globalStyles.textMedium
-  },
-  networkNameActive: {
-    color: COLORS.primary
-  },
-  networkChainId: {
-    color: '#666',
-    ...globalStyles.text
-  },
-  networkChainIdActive: {
-    color: COLORS.primary
-  }
-});

@@ -1,10 +1,6 @@
+import Button from '@/components/buttons/CustomButton';
 import React from 'react';
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
-import { Modal, Portal, Text } from 'react-native-paper';
-import globalStyles from '../../../styles/globalStyles';
-import { COLORS } from '../../../utils/constants';
-import { FONT_SIZE } from '../../../utils/styles';
-import Button from '../../buttons/CustomButton';
+import { Image, Modal, Text, View } from 'react-native';
 
 type Props = {
   isVisible: boolean;
@@ -14,52 +10,19 @@ type Props = {
 
 export default function Success({ isVisible, onClose, onViewDetails }: Props) {
   return (
-    <Portal>
-      <Modal
-        visible={isVisible}
-        onDismiss={onClose}
-        contentContainerStyle={styles.container}
-      >
-        <View style={styles.content}>
-          <Image
-            source={require('../../../assets/images/success_transfer.png')}
-            style={styles.image}
-          />
-          <Text variant="headlineSmall" style={styles.successText}>
-            Successfully Sent!
-          </Text>
-          <Text variant="bodyLarge" style={styles.message}>
-            Your crypto was sent successfully. You can view transaction below.
-          </Text>
-          <Button text="View Details" onPress={onViewDetails} />
-          <Button type="outline" text="Cancel" onPress={onClose} />
-        </View>
-      </Modal>
-    </Portal>
+    <Modal visible={isVisible} onDismiss={onClose}>
+      <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+        <Image
+          source={require('../../../assets/images/success_transfer.png')}
+          className="w-[25%] h-[25%]"
+        />
+        <Text className="text-2xl font-medium">Successfully Sent!</Text>
+        <Text className="text-lg font-medium">
+          Your crypto was sent successfully. You can view transaction below.
+        </Text>
+        <Button text="View Details" onPress={onViewDetails} />
+        <Button type="outline" text="Cancel" onPress={onClose} />
+      </View>
+    </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 40,
-    margin: 20
-  },
-  content: {
-    padding: 20,
-    alignItems: 'center',
-    gap: 16
-  },
-  image: {
-    width: Dimensions.get('window').height * 0.25,
-    height: Dimensions.get('window').height * 0.25
-  },
-  successText: {
-    color: COLORS.primary,
-    ...globalStyles.textMedium
-  },
-  message: {
-    textAlign: 'center',
-    ...globalStyles.text
-  }
-});

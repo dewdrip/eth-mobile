@@ -1,14 +1,12 @@
+import Button from '@/components/buttons/CustomButton';
+import { Blockie } from '@/components/eth-mobile';
+import { useNetwork } from '@/hooks/eth-mobile';
+import { Account } from '@/store/reducers/Accounts';
+import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
+import { FONT_SIZE } from '@/utils/styles';
 import { ethers, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
-import { useToast } from 'react-native-toast-notifications';
-import { useNetwork } from '../../hooks/eth-mobile';
-import { Account } from '../../store/reducers/Accounts';
-import globalStyles from '../../styles/globalStyles';
-import { parseFloat, truncateAddress } from '../../utils/eth-mobile';
-import { FONT_SIZE } from '../../utils/styles';
-import { Blockie } from '../eth-mobile';
+import { Linking, Text, View } from 'react-native';
 import Fail from './modules/Fail';
 import Success from './modules/Success';
 
@@ -34,7 +32,7 @@ export default function NFTTransferConfirmationModal({
     params: { txData, estimateGasCost, onTransfer }
   }
 }: Props) {
-  const toast = useToast();
+  // const toast = useToast();
 
   const network = useNetwork();
 
@@ -71,68 +69,56 @@ export default function NFTTransferConfirmationModal({
     try {
       await Linking.openURL(`${network.blockExplorer}/tx/${txReceipt.hash}`);
     } catch (error) {
-      toast.show('Cannot open url', {
-        type: 'danger',
-        placement: 'top'
-      });
+      // toast.show('Cannot open url', {
+      //   type: 'danger',
+      //   placement: 'top'
+      // });
     }
   };
 
   return (
     <View>
-      <View style={styles.container}>
-        <View style={styles.section}>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
-            From:
-          </Text>
+      <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+        <View className="flex-row justify-between items-center mb-5">
+          <Text className="text-2xl font-medium">From:</Text>
 
-          <View style={styles.accountContainer}>
-            <View style={styles.accountInfo}>
+          <View className="bg-primary-light rounded-lg p-4">
+            <View className="flex-row items-center gap-8 w-full">
               <Blockie
                 address={txData.from.address}
                 size={1.8 * FONT_SIZE['xl']}
               />
 
-              <View style={styles.accountDetails}>
-                <Text variant="titleLarge" style={styles.accountName}>
-                  {txData.from.name}
-                </Text>
+              <View className="flex-1">
+                <Text className="text-lg font-medium">{txData.from.name}</Text>
               </View>
             </View>
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text variant="titleMedium" style={styles.sectionTitle}>
-            To:
-          </Text>
+        <View className="flex-row justify-between items-center mb-5">
+          <Text className="text-lg font-medium">To:</Text>
 
-          <View style={styles.recipientContainer}>
+          <View className="flex-row items-center gap-8 bg-primary-light rounded-lg p-4">
             <Blockie address={txData.to} size={1.8 * FONT_SIZE['xl']} />
-            <Text variant="titleLarge" style={styles.accountName}>
+            <Text className="text-lg font-medium">
               {truncateAddress(txData.to)}
             </Text>
           </View>
         </View>
 
-        <Text variant="titleMedium" style={styles.amountLabel}>
-          TOKEN ID
-        </Text>
-        <Text variant="headlineLarge" style={styles.amount}>
-          1
-        </Text>
+        <Text className="text-lg font-medium">TOKEN ID</Text>
+        <Text className="text-lg font-medium">1</Text>
 
-        <View style={styles.detailsContainer}>
-          <View style={styles.detailsRow}>
+        <View className="border-2 border-gray-300 rounded-lg p-4">
+          <View className="flex-row justify-between items-center">
             <View>
-              <Text variant="titleMedium" style={globalStyles.textMedium}>
-                Estimated gas fee
-              </Text>
-              <Text variant="bodySmall" style={styles.gasEstimate}>
+              <Text className="text-lg font-medium">Estimated gas fee</Text>
+              <Text className="text-sm font-medium">
                 Likely in &lt; 30 second
               </Text>
             </View>
-            <Text variant="titleMedium" style={styles.detailsValue}>
+            <Text className="text-sm font-medium">
               {String(
                 estimateGasCost &&
                   parseFloat(ethers.formatEther(estimateGasCost), 8)
@@ -142,29 +128,21 @@ export default function NFTTransferConfirmationModal({
           </View>
         </View>
 
-        <View style={styles.buttonContainer}>
+        <View className="flex-row gap-4">
           <Button
-            mode="contained"
+            text="Cancel"
+            type="outline"
             onPress={() => (isTransferring ? null : closeModal())}
-            buttonColor="#FFCDD2"
             style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-            labelStyle={{ fontSize: FONT_SIZE['lg'], ...globalStyles.text }}
-          >
-            Cancel
-          </Button>
+            labelStyle={{ fontSize: FONT_SIZE['lg'] }}
+          />
           <Button
-            mode="contained"
+            text="Confirm"
             onPress={transfer}
             loading={isTransferring}
             style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-            labelStyle={{
-              fontSize: FONT_SIZE['lg'],
-              ...globalStyles.text,
-              color: 'white'
-            }}
-          >
-            Confirm
-          </Button>
+            labelStyle={{ fontSize: FONT_SIZE['lg'] }}
+          />
         </View>
       </View>
 
@@ -188,72 +166,3 @@ export default function NFTTransferConfirmationModal({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    gap: 16
-  },
-  section: {
-    gap: 8
-  },
-  sectionTitle: {
-    fontSize: FONT_SIZE['lg'],
-    ...globalStyles.text
-  },
-  accountContainer: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 10,
-    padding: 8
-  },
-  accountInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
-  },
-  accountDetails: {
-    width: '75%'
-  },
-  accountName: { fontSize: FONT_SIZE['lg'], ...globalStyles.text },
-  recipientContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 10,
-    padding: 8
-  },
-  amountLabel: {
-    textAlign: 'center',
-    marginBottom: -16,
-    fontSize: FONT_SIZE['xl'],
-    ...globalStyles.textMedium
-  },
-  amount: {
-    textAlign: 'center',
-    ...globalStyles.textSemiBold
-  },
-  detailsContainer: {
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 10
-  },
-  detailsRow: {
-    padding: 12,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between'
-  },
-  gasEstimate: { color: 'green', ...globalStyles.text },
-  detailsValue: {
-    width: '50%',
-    textAlign: 'right',
-    ...globalStyles.textMedium
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 12
-  }
-});

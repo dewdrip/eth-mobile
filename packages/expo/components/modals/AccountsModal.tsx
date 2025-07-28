@@ -1,32 +1,20 @@
-import React from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { useModal } from 'react-native-modalfy';
-import { Text } from 'react-native-paper';
-import { useToast } from 'react-native-toast-notifications';
-//@ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { useDispatch, useSelector } from 'react-redux';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '../../core/Encryptor';
-import {
-  useAccount,
-  useSecureStorage,
-  useWallet
-} from '../../hooks/eth-mobile';
-import {
-  Account,
-  addAccount,
-  switchAccount
-} from '../../store/reducers/Accounts';
+import Button from '@/components/buttons/CustomButton';
+import { Blockie } from '@/components/eth-mobile';
+import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '@/core/Encryptor';
+import { useAccount, useSecureStorage, useWallet } from '@/hooks/eth-mobile';
+import { Account, addAccount, switchAccount } from '@/store/reducers/Accounts';
 import {
   addAccount as addWalletAccount,
   Wallet
-} from '../../store/reducers/Wallet';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { truncateAddress } from '../../utils/eth-mobile';
-import { FONT_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH } from '../../utils/styles';
-import Button from '../buttons/CustomButton';
-import { Blockie } from '../eth-mobile';
+} from '@/store/reducers/Wallet';
+import { COLORS } from '@/utils/constants';
+import { truncateAddress } from '@/utils/eth-mobile';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useModal } from 'react-native-modalfy';
+import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
   modal: {
@@ -36,7 +24,7 @@ type Props = {
 
 export default function AccountsModal({ modal: { closeModal } }: Props) {
   const dispatch = useDispatch();
-  const toast = useToast();
+  // const toast = useToast();
   const { importWallet } = useWallet();
   const { saveItem } = useSecureStorage();
 
@@ -70,10 +58,10 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
     }
 
     if (!newAccount) {
-      toast.show('Failed to create account!', {
-        type: 'danger',
-        placement: 'top'
-      });
+      // toast.show('Failed to create account!', {
+      //   type: 'danger',
+      //   placement: 'top'
+      // });
       return;
     }
 
@@ -96,11 +84,9 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text variant="titleLarge" style={globalStyles.textMedium}>
-          Accounts
-        </Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-row justify-between items-center mb-4">
+        <Text className="text-2xl font-[Poppins]">Accounts</Text>
         <Ionicons
           name="close-outline"
           size={FONT_SIZE['xl'] * 1.7}
@@ -108,7 +94,7 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
         />
       </View>
 
-      <ScrollView style={styles.scrollView}>
+      <ScrollView className="max-h-[20%]">
         {accounts.map((account, index) => (
           <Pressable
             key={account.address}
@@ -118,13 +104,11 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
             ]}
             onPress={() => handleAccountSelection(account.address)}
           >
-            <View style={styles.accountInfo}>
+            <View className="flex-row items-center gap-4">
               <Blockie address={account.address} size={1.7 * FONT_SIZE.xl} />
-              <View style={styles.accountDetails}>
-                <Text variant="titleMedium" style={globalStyles.textMedium}>
-                  {account.name}
-                </Text>
-                <Text variant="bodyMedium" style={globalStyles.text}>
+              <View className="flex-col gap-1">
+                <Text className="text-lg font-[Poppins]">{account.name}</Text>
+                <Text className="text-sm font-[Poppins]">
                   {truncateAddress(account.address)}
                 </Text>
               </View>
@@ -140,7 +124,7 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
         ))}
       </ScrollView>
 
-      <View style={styles.buttonContainer}>
+      <View className="flex-row gap-4">
         <Button text="Create" onPress={createAccount} style={styles.button} />
         <Button
           type="outline"
@@ -156,22 +140,6 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    margin: 20,
-    width: WINDOW_WIDTH * 0.9
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16
-  },
-  scrollView: {
-    maxHeight: WINDOW_HEIGHT / 4.8
-  },
   accountItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -181,19 +149,6 @@ const styles = StyleSheet.create({
   accountDivider: {
     borderBottomWidth: 1,
     borderBottomColor: '#e5e5e5'
-  },
-  accountInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16
-  },
-  accountDetails: {
-    gap: 4
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginTop: 20,
-    gap: 16
   },
   button: {
     flex: 1

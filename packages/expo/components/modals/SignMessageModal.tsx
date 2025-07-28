@@ -1,10 +1,10 @@
+import Button from '@/components/buttons/CustomButton';
+import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { Account } from '@/store/reducers/Accounts';
+import { parseBalance } from '@/utils/eth-mobile';
+import { FONT_SIZE } from '@/utils/styles';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
-import { useAccount, useBalance, useNetwork } from '../../hooks/eth-mobile';
-import globalStyles from '../../styles/globalStyles';
-import { parseBalance } from '../../utils/eth-mobile';
-import { FONT_SIZE, WINDOW_HEIGHT, WINDOW_WIDTH } from '../../utils/styles';
+import { ScrollView, Text, View } from 'react-native';
 import { Blockie } from '../eth-mobile';
 
 type Props = {
@@ -21,7 +21,7 @@ type Props = {
 export default function SignMessageModal({
   modal: { closeModal, params }
 }: Props) {
-  const account = useAccount();
+  const account: Account = useAccount();
   const network = useNetwork();
   const { balance } = useBalance({ address: account.address });
 
@@ -35,25 +35,21 @@ export default function SignMessageModal({
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.accountInfo}>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-row items-center justify-between mb-4">
+        <View className="flex-row items-center gap-2">
           <Blockie address={account.address} size={1.8 * FONT_SIZE.xl} />
           <View>
-            <Text variant="bodyMedium" style={styles.networkName}>
+            <Text className="text-lg font-[Poppins]">
               {network.name} network
             </Text>
-            <Text variant="bodyMedium" style={styles.accountName}>
-              {account.name}
-            </Text>
+            <Text className="text-lg font-[Poppins]">{account.name}</Text>
           </View>
         </View>
 
-        <View style={styles.balanceInfo}>
-          <Text variant="bodyMedium" style={globalStyles.text}>
-            Balance
-          </Text>
-          <Text variant="bodyMedium" style={styles.balance}>
+        <View className="flex-row items-center justify-between">
+          <Text className="text-lg font-[Poppins]">Balance</Text>
+          <Text className="text-lg font-[Poppins]">
             {balance !== null
               ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
               : null}
@@ -61,143 +57,38 @@ export default function SignMessageModal({
         </View>
       </View>
 
-      <ScrollView style={styles.content}>
-        <View style={styles.titleContainer}>
-          <Text variant="headlineMedium" style={styles.title}>
-            Signature Request
-          </Text>
+      <ScrollView className="max-h-[50%]">
+        <View className="items-center p-4 gap-4">
+          <Text className="text-2xl font-[Poppins]">Signature Request</Text>
 
-          <Text variant="bodyMedium" style={styles.subtitle}>
+          <Text className="text-lg font-[Poppins]">
             Only sign this message if you fully understand the content and trust
             this platform
           </Text>
 
-          <Text variant="bodyMedium" style={styles.label}>
-            You are signing:
-          </Text>
+          <Text className="text-lg font-[Poppins]">You are signing:</Text>
         </View>
 
-        <View style={styles.messageContainer}>
-          <Text variant="titleLarge" style={styles.messageLabel}>
-            Message:
-          </Text>
-          <Text variant="bodySmall" style={styles.message}>
+        <View className="p-4 gap-2 border-t border-b border-gray-300">
+          <Text className="text-lg font-[Poppins]">Message:</Text>
+          <Text className="text-lg font-[Poppins]">
             {JSON.stringify(params.message)}
           </Text>
         </View>
       </ScrollView>
 
-      <View style={styles.buttonContainer}>
+      <View className="flex-row gap-4">
         <Button
-          mode="contained"
           onPress={reject}
-          buttonColor="#FFCDD2"
           style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-          labelStyle={{ fontSize: FONT_SIZE['lg'], ...globalStyles.text }}
-        >
-          Reject
-        </Button>
+          text="Reject"
+        />
         <Button
-          mode="contained"
           onPress={sign}
           style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-          labelStyle={{
-            fontSize: FONT_SIZE['lg'],
-            ...globalStyles.text,
-            color: 'white'
-          }}
-        >
-          Sign
-        </Button>
+          text="Sign"
+        />
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    width: WINDOW_WIDTH * 0.9
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0'
-  },
-  accountInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
-  },
-  networkName: {
-    fontSize: FONT_SIZE.md,
-    ...globalStyles.text
-  },
-  accountName: {
-    fontSize: FONT_SIZE.md,
-    ...globalStyles.textMedium
-  },
-  balanceInfo: {
-    alignItems: 'flex-end'
-  },
-  balance: {
-    ...globalStyles.textMedium
-  },
-  content: {
-    maxHeight: WINDOW_HEIGHT * 0.5
-  },
-  titleContainer: {
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 16,
-    gap: 16
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: FONT_SIZE.xl * 1.2,
-    ...globalStyles.textMedium
-  },
-  subtitle: {
-    textAlign: 'center',
-    color: 'gray',
-    fontSize: FONT_SIZE.md,
-    ...globalStyles.text
-  },
-  label: {
-    color: 'gray',
-    fontSize: FONT_SIZE.md,
-    ...globalStyles.text
-  },
-  messageContainer: {
-    padding: 16,
-    gap: 8,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#E0E0E0'
-  },
-  messageLabel: {
-    fontSize: FONT_SIZE.lg,
-    ...globalStyles.textMedium
-  },
-  message: {
-    color: 'gray',
-    fontSize: FONT_SIZE.md,
-    ...globalStyles.text
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 12
-  },
-  rejectButton: {
-    width: '50%'
-  },
-  signButton: {
-    width: '50%',
-    borderRadius: 0
-  }
-});

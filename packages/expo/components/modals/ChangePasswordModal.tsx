@@ -1,17 +1,14 @@
+import { useNetwork, useSecureStorage } from '@/hooks/eth-mobile';
+import { setBiometrics } from '@/store/reducers/Settings';
+import { COLORS } from '@/utils/constants';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import * as Keychain from 'react-native-keychain';
 import { useModal } from 'react-native-modalfy';
-import { Switch, Text } from 'react-native-paper';
-//@ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNetwork, useSecureStorage } from '../../hooks/eth-mobile';
-import { setBiometrics } from '../../store/reducers/Settings';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE } from '../../utils/styles';
 import Header from '../Header';
 
 export default function Settings() {
@@ -53,73 +50,48 @@ export default function Settings() {
 
   if (!isFocused) return;
   return (
-    <View style={styles.container}>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
       <Header title="Settings" />
 
-      <ScrollView style={{ flex: 1, backgroundColor: 'white', padding: 15 }}>
+      <ScrollView className="flex-1 bg-white p-5">
         {biometricType && (
-          <View style={styles.settingWrapper}>
+          <View className="flex-row items-center gap-4 mb-4">
             <Ionicons
               name="finger-print-outline"
               size={FONT_SIZE['xl'] * 1.2}
             />
-            <View style={styles.row}>
-              <Text style={styles.settingTitle}>
+            <View className="flex-row items-center justify-between flex-1">
+              <Text className="text-lg font-[Poppins]">
                 Sign in with {biometricType}
               </Text>
               <Switch
                 value={isBiometricsEnabled}
                 onValueChange={toggleBiometrics}
-                color={COLORS.primary}
+                trackColor={{ true: COLORS.primary }}
               />
             </View>
           </View>
         )}
 
-        <TouchableOpacity
+        <Pressable
           onPress={() => openModal('ChangePasswordModal')}
-          style={styles.settingWrapper}
+          className="flex-row items-center gap-4 mb-4"
         >
           <Ionicons name="lock-closed-outline" size={FONT_SIZE['xl'] * 1.2} />
-          <Text style={styles.settingTitle}>Change Password</Text>
-        </TouchableOpacity>
+          <Text className="text-lg font-[Poppins]">Change Password</Text>
+        </Pressable>
 
-        <TouchableOpacity onPress={switchNetwork} style={styles.settingWrapper}>
+        <Pressable
+          onPress={switchNetwork}
+          className="flex-row items-center gap-4 mb-4"
+        >
           <Ionicons name="git-network-outline" size={FONT_SIZE['xl'] * 1.2} />
-          <Text style={styles.settingTitle}>
-            Change Network<Text style={styles.network}>({network.name})</Text>
+          <Text className="text-lg font-[Poppins]">
+            Change Network
+            <Text className="text-sm font-[Poppins]">({network.name})</Text>
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white'
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flex: 1
-  },
-  settingWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 4,
-    paddingVertical: 16
-  },
-  settingTitle: {
-    fontSize: FONT_SIZE['xl'],
-    ...globalStyles.text
-  },
-  network: {
-    fontSize: FONT_SIZE['md'],
-    ...globalStyles.text,
-    color: COLORS.primary
-  }
-});

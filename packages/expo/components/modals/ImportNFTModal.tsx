@@ -1,23 +1,18 @@
-import { Address } from 'abitype';
-import { ethers } from 'ethers';
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
-import { useToast } from 'react-native-toast-notifications';
-//@ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { useDispatch } from 'react-redux';
+import Button from '@/components/buttons/CustomButton';
 import {
   useAccount,
   useERC721Metadata,
   useNetwork,
   useNFTs
-} from '../../hooks/eth-mobile';
-import { addNFT } from '../../store/reducers/NFTs';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
-import Button from '../buttons/CustomButton';
+} from '@/hooks/eth-mobile';
+import { addNFT } from '@/store/reducers/NFTs';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
+import { Address } from 'abitype';
+import { ethers } from 'ethers';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 
 type Props = {
   modal: {
@@ -41,7 +36,7 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
 
   const { nftExists } = useNFTs();
 
-  const toast = useToast();
+  // const toast = useToast();
 
   const importNFT = async () => {
     try {
@@ -56,10 +51,10 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
       }
 
       if (nftExists(address, Number(tokenId))) {
-        toast.show('Token already exists!', {
-          type: 'danger',
-          placement: 'top'
-        });
+        // toast.show('Token already exists!', {
+        //   type: 'danger',
+        //   placement: 'top'
+        // });
         return;
       }
 
@@ -97,11 +92,9 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={{ fontSize: FONT_SIZE['xl'], ...globalStyles.text }}>
-          Import NFT
-        </Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-row items-center justify-between mb-4">
+        <Text className="text-2xl font-[Poppins]">Import NFT</Text>
         <Ionicons
           name="close-outline"
           size={FONT_SIZE['xl'] * 1.7}
@@ -109,62 +102,42 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
         />
       </View>
 
-      <View style={styles.content}>
-        <View style={{ gap: 8 }}>
-          <Text variant="titleMedium" style={globalStyles.textMedium}>
-            Address
-          </Text>
+      <View className="gap-4">
+        <View className="gap-2">
+          <Text className="text-lg font-[Poppins]">Address</Text>
           <TextInput
             value={address}
-            mode="outlined"
-            outlineColor={COLORS.primary}
-            activeOutlineColor={COLORS.primary}
-            outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
-            contentStyle={globalStyles.text}
             placeholder={'0x...'}
             placeholderTextColor="#a3a3a3"
-            textColor="black"
+            className="border border-gray-300 rounded-lg p-2"
             onChangeText={setAddress}
             onSubmitEditing={importNFT}
           />
           {addressError ? (
-            <Text
-              variant="bodySmall"
-              style={{ color: COLORS.error, ...globalStyles.text }}
-            >
+            <Text className="text-sm font-[Poppins] text-red-500">
               {addressError}
             </Text>
           ) : null}
         </View>
 
-        <View style={{ gap: 8 }}>
-          <Text variant="titleMedium" style={globalStyles.textMedium}>
-            Token ID
-          </Text>
+        <View className="gap-2">
+          <Text className="text-lg font-[Poppins]">Token ID</Text>
           <TextInput
             value={tokenId}
-            mode="outlined"
-            outlineColor={COLORS.primary}
-            activeOutlineColor={COLORS.primary}
-            outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
-            contentStyle={globalStyles.text}
             placeholder={'Enter the token id'}
             placeholderTextColor="#a3a3a3"
-            textColor="black"
+            className="border border-gray-300 rounded-lg p-2"
             onChangeText={setTokenId}
             onSubmitEditing={importNFT}
           />
           {tokenIdError ? (
-            <Text
-              variant="bodySmall"
-              style={{ color: COLORS.error, ...globalStyles.text }}
-            >
+            <Text className="text-sm font-[Poppins] text-red-500">
               {tokenIdError}
             </Text>
           ) : null}
         </View>
 
-        <View style={styles.buttonContainer}>
+        <View className="flex-row gap-4">
           <Button
             type="outline"
             text="Cancel"
@@ -185,27 +158,6 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    margin: 20,
-    width: WINDOW_WIDTH * 0.9
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20
-  },
-  content: {
-    gap: 16
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 16,
-    width: '100%'
-  },
   button: {
     marginTop: 10,
     width: '50%'

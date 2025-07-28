@@ -1,24 +1,20 @@
-import { ethers } from 'ethers';
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
-//@ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { useDispatch } from 'react-redux';
-import { Address } from 'viem';
+import Button from '@/components/buttons/CustomButton';
+import { Blockie } from '@/components/eth-mobile';
 import {
   useAccount,
   useERC20Balance,
   useERC20Metadata,
   useNetwork,
   useTokens
-} from '../../hooks/eth-mobile';
-import { addToken, Token } from '../../store/reducers/Tokens';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
-import Button from '../buttons/CustomButton';
-import { Blockie } from '../eth-mobile';
+} from '@/hooks/eth-mobile';
+import { addToken, Token } from '@/store/reducers/Tokens';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
+import { ethers } from 'ethers';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { Address } from 'viem';
 
 type Props = {
   modal: {
@@ -100,11 +96,9 @@ export default function ImportTokenModal({ modal: { closeModal } }: Props) {
     closeModal();
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={{ fontSize: FONT_SIZE['xl'], ...globalStyles.text }}>
-          Import Token
-        </Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-row justify-between items-center mb-5">
+        <Text className="text-2xl font-medium">Import Token</Text>
         <Ionicons
           name="close-outline"
           size={FONT_SIZE['xl'] * 1.7}
@@ -112,59 +106,43 @@ export default function ImportTokenModal({ modal: { closeModal } }: Props) {
         />
       </View>
 
-      <View style={styles.content}>
+      <View className="gap-4">
         {!token ? (
-          <View style={{ gap: 8 }}>
-            <Text variant="titleMedium" style={globalStyles.textMedium}>
-              Address
-            </Text>
+          <View className="gap-2">
+            <Text className="text-lg font-medium">Address</Text>
             <TextInput
               value={address}
-              mode="outlined"
-              outlineColor={COLORS.primary}
-              activeOutlineColor={COLORS.primary}
-              outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
-              contentStyle={globalStyles.text}
+              className="text-black border-2 border-gray-300 rounded-lg p-2"
               placeholder={'0x...'}
               placeholderTextColor="#a3a3a3"
-              textColor="black"
               onChangeText={value => setAddress(value.trim())}
               onSubmitEditing={getTokenData}
             />
             {addressError ? (
-              <Text
-                variant="bodySmall"
-                style={{ color: COLORS.error, ...globalStyles.text }}
-              >
-                {addressError}
-              </Text>
+              <Text className="text-sm text-red-500">{addressError}</Text>
             ) : null}
           </View>
         ) : (
           <>
-            <View style={styles.tokenHeader}>
-              <Text style={{ fontSize: FONT_SIZE['md'], ...globalStyles.text }}>
-                Token
-              </Text>
-              <Text style={{ fontSize: FONT_SIZE['md'], ...globalStyles.text }}>
-                Balance
-              </Text>
+            <View className="flex-row justify-between items-center">
+              <Text className="text-lg font-medium">Token</Text>
+              <Text className="text-lg font-medium">Balance</Text>
             </View>
 
-            <View style={styles.tokenContainer}>
-              <View style={[styles.tokenTitle, { width: '70%' }]}>
+            <View className="flex-row justify-between items-center">
+              <View className="flex-row items-center gap-2">
                 <Blockie address={token.address} size={2.5 * FONT_SIZE['xl']} />
-                <Text style={styles.tokenName}>{token.name}</Text>
+                <Text className="text-lg font-medium">{token.name}</Text>
               </View>
 
-              <Text style={styles.tokenBalance}>
+              <Text className="text-lg font-medium">
                 {balance} {token.symbol}
               </Text>
             </View>
           </>
         )}
 
-        <View style={styles.buttonContainer}>
+        <View className="flex-row gap-4">
           <Button
             type="outline"
             text="Cancel"
@@ -184,52 +162,6 @@ export default function ImportTokenModal({ modal: { closeModal } }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    margin: 20,
-    width: WINDOW_WIDTH * 0.9
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20
-  },
-  content: {
-    gap: 16
-  },
-  tokenContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  tokenTitle: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  tokenHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  tokenName: {
-    marginLeft: 12,
-    fontSize: FONT_SIZE['lg'],
-    ...globalStyles.text
-  },
-  tokenBalance: {
-    marginLeft: 12,
-    fontSize: FONT_SIZE['md'],
-    ...globalStyles.text,
-    flex: 1
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 16,
-    width: '100%'
-  },
   button: {
     marginTop: 10,
     width: '50%'

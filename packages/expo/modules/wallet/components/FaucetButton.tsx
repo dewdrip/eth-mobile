@@ -24,10 +24,7 @@ export default function FaucetButton() {
   // const toast = useToast();
 
   const connectedNetwork = useNetwork();
-  //   const connectedAccount = useAccount();
-  const connectedAccount = {
-    address: '0x0000000000000000000000000000000000000000'
-  };
+  const connectedAccount = useAccount();
 
   const sendETH = async () => {
     if (!connectedAccount.address) {

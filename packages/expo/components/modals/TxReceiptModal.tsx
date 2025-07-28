@@ -1,13 +1,10 @@
+import Button from '@/components/buttons/CustomButton';
+import { useNetwork } from '@/hooks/eth-mobile';
+import { COLORS } from '@/utils/constants';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
-//@ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { useNetwork } from '../../hooks/eth-mobile';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
-import Button from '../buttons/CustomButton';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 
 type Props = {
   modal: {
@@ -32,9 +29,9 @@ export default function TxReceiptModal({
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={{ fontSize: FONT_SIZE['xl'], ...globalStyles.text }}>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-row items-center justify-between mb-4">
+        <Text className="text-2xl font-[Poppins]">
           {isError ? 'Transaction Failed' : 'Transaction Sent'}
         </Text>
         <Ionicons
@@ -44,13 +41,13 @@ export default function TxReceiptModal({
         />
       </View>
 
-      <View style={styles.content}>
-        <IconButton
-          icon={isError ? 'close-circle' : 'check-circle'}
+      <View className="gap-4">
+        <Ionicons
+          name={isError ? 'close-circle' : 'checkmark-circle'}
           size={FONT_SIZE['xl'] * 4}
-          iconColor={isError ? COLORS.error : COLORS.primary}
+          color={isError ? COLORS.error : COLORS.primary}
         />
-        <Text style={styles.message}>
+        <Text className="text-lg font-[Poppins]">
           {isError
             ? 'Something went wrong while sending your transaction.'
             : 'Your transaction has been sent to the network.'}
@@ -68,27 +65,6 @@ export default function TxReceiptModal({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    width: WINDOW_WIDTH * 0.9
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20
-  },
-  content: {
-    alignItems: 'center',
-    gap: 16
-  },
-  message: {
-    textAlign: 'center',
-    fontSize: FONT_SIZE['lg'],
-    ...globalStyles.text
-  },
   button: {
     marginTop: 10
   }

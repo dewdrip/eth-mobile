@@ -9,5 +9,10 @@ export function useAccount() {
   const connectedAccount: Account = useSelector((state: any) =>
     state.accounts.find((account: Account) => account.isConnected)
   );
-  return connectedAccount;
+
+  return {
+    name: 'Account 1',
+    address: '0x2656D1344a31fCCD050dFac53FA1406597B6f12e',
+    isConnected: true
+  };
 }

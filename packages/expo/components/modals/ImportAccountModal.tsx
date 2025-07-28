@@ -1,21 +1,16 @@
+import Button from '@/components/buttons/CustomButton';
+import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '@/core/Encryptor';
+import { useSecureStorage } from '@/hooks/eth-mobile';
+import { Account, addAccount, switchAccount } from '@/store/reducers/Accounts';
+import { addAccount as addWalletAccount } from '@/store/reducers/Wallet';
+import { COLORS } from '@/utils/constants';
+import { FONT_SIZE, WINDOW_WIDTH } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
-import { Keyboard, StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
-import { IconButton, Text, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '../../core/Encryptor';
-import { useSecureStorage } from '../../hooks/eth-mobile';
-import {
-  Account,
-  addAccount,
-  switchAccount
-} from '../../store/reducers/Accounts';
-import { addAccount as addWalletAccount } from '../../store/reducers/Wallet';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
-import Button from '../buttons/CustomButton';
 
 type Props = {
   modal: {
@@ -27,7 +22,7 @@ export default function ImportAccountModal({ modal: { closeModal } }: Props) {
   const [privateKey, setPrivateKey] = useState('');
   const [error, setError] = useState('');
 
-  const { saveItem, getItem } = useSecureStorage();
+  const { saveItem } = useSecureStorage();
   const dispatch = useDispatch();
   const accounts: Account[] = useSelector((state: any) => state.accounts);
   const wallet = useSelector((state: any) => state.wallet);
@@ -80,48 +75,42 @@ export default function ImportAccountModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <IconButton
-        icon="cloud-download"
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <Ionicons
+        name="cloud-download"
         size={4 * FONT_SIZE.xl}
-        iconColor={COLORS.primary}
+        color={COLORS.primary}
       />
-      <Text variant="headlineMedium" style={styles.title}>
-        Import Account
-      </Text>
-      <Text variant="bodyLarge" style={styles.subtitle}>
+      <Text className="text-2xl font-[Poppins]">Import Account</Text>
+      <Text className="text-lg font-[Poppins]">
         Imported accounts won't be associated with your Paux Secret Recovery
         Phrase.
       </Text>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          value={privateKey}
-          onChangeText={handleInputChange}
-          mode="outlined"
-          secureTextEntry
-          placeholder="Enter your private key here"
-          placeholderTextColor="#a3a3a3"
-          textColor="black"
-          right={
-            <TextInput.Icon
-              icon="qrcode-scan"
-              onPress={scanPk}
-              forceTextInputFocus={false}
-            />
-          }
-          error={!!error}
-          outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
-          contentStyle={globalStyles.text}
-        />
+      <View className="w-full gap-4">
+        <View className="flex-row items-center gap-2">
+          <TextInput
+            value={privateKey}
+            onChangeText={handleInputChange}
+            secureTextEntry
+            placeholder="Enter your private key here"
+            placeholderTextColor="#a3a3a3"
+            className="flex-1"
+          />
+          <Ionicons
+            name="scan"
+            size={24}
+            color={COLORS.primary}
+            onPress={scanPk}
+          />
+        </View>
+
         {error && (
-          <Text variant="bodySmall" style={styles.errorText}>
-            {error}
-          </Text>
+          <Text className="text-sm font-[Poppins] text-red-500">{error}</Text>
         )}
       </View>
 
-      <View style={styles.buttonContainer}>
+      <View className="flex-row gap-4">
         <Button
           type="outline"
           text="Cancel"
@@ -145,21 +134,18 @@ const styles = StyleSheet.create({
     width: WINDOW_WIDTH * 0.9
   },
   title: {
-    color: COLORS.primary,
-    ...globalStyles.textSemiBold
+    color: COLORS.primary
   },
   subtitle: {
     textAlign: 'center',
-    fontSize: FONT_SIZE['md'],
-    ...globalStyles.text
+    fontSize: FONT_SIZE['md']
   },
   inputContainer: {
     width: '100%',
     gap: 4
   },
   errorText: {
-    color: COLORS.error,
-    ...globalStyles.text
+    color: COLORS.error
   },
   buttonContainer: {
     flexDirection: 'row',

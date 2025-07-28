@@ -1,19 +1,15 @@
+import Button from '@/components/buttons/CustomButton';
+import { Blockie } from '@/components/eth-mobile';
+import { useAccount } from '@/hooks/eth-mobile';
+import { Account } from '@/store/reducers/Accounts';
+import { COLORS } from '@/utils/constants';
+import { truncateAddress } from '@/utils/eth-mobile';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import Clipboard from '@react-native-clipboard/clipboard';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Surface, Text, TextInput } from 'react-native-paper';
-import { useToast } from 'react-native-toast-notifications';
-//@ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { useAccount } from '../../hooks/eth-mobile';
-import { Account } from '../../store/reducers/Accounts';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { truncateAddress } from '../../utils/eth-mobile';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
-import Button from '../buttons/CustomButton';
-import { Blockie } from '../eth-mobile';
 
 type Props = {
   modal: {
@@ -25,7 +21,7 @@ export default function PrivateKeyModal({ modal: { closeModal } }: Props) {
   const connectedAccount: Account = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
 
-  const toast = useToast();
+  // const toast = useToast();
 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -59,10 +55,10 @@ export default function PrivateKeyModal({ modal: { closeModal } }: Props) {
 
   const copyPrivateKey = () => {
     Clipboard.setString(privateKey);
-    toast.show('Copied to clipboard', {
-      type: 'success',
-      placement: 'top'
-    });
+    // toast.show('Copied to clipboard', {
+    //   type: 'success',
+    //   placement: 'top'
+    // });
   };
 
   const handleOnClose = () => {
@@ -72,11 +68,9 @@ export default function PrivateKeyModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text variant="titleLarge" style={globalStyles.textMedium}>
-          Show private key
-        </Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-row justify-between items-center mb-5">
+        <Text className="text-2xl font-medium">Show private key</Text>
         <Ionicons
           name="close-outline"
           size={FONT_SIZE['xl'] * 1.7}
@@ -84,66 +78,54 @@ export default function PrivateKeyModal({ modal: { closeModal } }: Props) {
         />
       </View>
 
-      <View style={styles.accountInfo}>
+      <View className="items-center mb-5">
         <Blockie address={connectedAccount.address} size={2.5 * FONT_SIZE.xl} />
-        <Text variant="titleMedium" style={styles.accountName}>
-          {connectedAccount.name}
-        </Text>
-        <View style={styles.addressContainer}>
-          <Text style={styles.addressText}>
+        <Text className="text-lg font-medium">{connectedAccount.name}</Text>
+        <View className="px-3 py-1 bg-primary-light rounded-lg mt-5">
+          <Text className="text-sm font-medium">
             {truncateAddress(connectedAccount.address)}
           </Text>
         </View>
       </View>
 
       {privateKey ? (
-        <Surface style={styles.privateKeyContainer}>
-          <Text style={styles.privateKeyText}>{privateKey}</Text>
+        <View className="flex-row items-center rounded-lg p-4 mb-5 bg-white">
+          <Text className="flex-1 mr-2 text-sm font-medium">{privateKey}</Text>
           <Ionicons
             name="copy-outline"
             onPress={copyPrivateKey}
             color={COLORS.primary}
             size={FONT_SIZE['xl']}
           />
-        </Surface>
+        </View>
       ) : (
-        <View style={styles.passwordContainer}>
-          <Text variant="titleMedium" style={globalStyles.textMedium}>
-            Enter your password
-          </Text>
+        <View className="gap-2 mb-5">
+          <Text className="text-lg font-medium">Enter your password</Text>
           <TextInput
             value={password}
             onChangeText={handleInputChange}
             onSubmitEditing={showPrivateKey}
-            mode="outlined"
             secureTextEntry
             placeholder="Password"
             placeholderTextColor="#a3a3a3"
-            textColor="black"
-            error={!!error}
-            outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
-            contentStyle={globalStyles.text}
+            className="text-black border-2 border-gray-300 rounded-lg p-2"
           />
-          {error && (
-            <Text variant="bodySmall" style={styles.errorText}>
-              {error}
-            </Text>
-          )}
+          {error && <Text className="text-sm text-red-500">{error}</Text>}
         </View>
       )}
 
-      <Surface style={styles.warningContainer}>
+      <View className="flex-row items-start bg-red-100 rounded-lg p-4 mb-5">
         <Ionicons name="eye-off" size={24} color={COLORS.error} />
-        <Text style={styles.warningText}>
+        <Text className="flex-1 ml-2">
           Never disclose this key. Anyone with your private key can fully
           control your account, including transferring away any of your funds.
         </Text>
-      </Surface>
+      </View>
 
       {privateKey ? (
         <Button text="Done" onPress={handleOnClose} />
       ) : (
-        <View style={styles.buttonContainer}>
+        <View className="flex-row gap-4">
           <Button
             type="outline"
             text="Cancel"
@@ -162,79 +144,6 @@ export default function PrivateKeyModal({ modal: { closeModal } }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    margin: 20,
-    width: WINDOW_WIDTH * 0.9,
-    elevation: 5
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20
-  },
-  accountInfo: {
-    alignItems: 'center',
-    marginBottom: 20
-  },
-  accountName: {
-    marginTop: 10,
-    ...globalStyles.textMedium
-  },
-  addressContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    backgroundColor: COLORS.primaryLight,
-    borderRadius: 15,
-    marginTop: 5
-  },
-  addressText: {
-    fontSize: FONT_SIZE.md,
-    color: COLORS.primary,
-    ...globalStyles.textMedium
-  },
-  privateKeyContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    padding: 16,
-    marginBottom: 20,
-    backgroundColor: 'white'
-  },
-  privateKeyText: {
-    flex: 1,
-    marginRight: 10,
-    ...globalStyles.text,
-    fontSize: FONT_SIZE['lg']
-  },
-  passwordContainer: {
-    gap: 8,
-    marginBottom: 20
-  },
-  errorText: {
-    color: COLORS.error,
-    ...globalStyles.text
-  },
-  warningContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: COLORS.lightRed,
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 20
-  },
-  warningText: {
-    flex: 1,
-    marginLeft: 10,
-    ...globalStyles.text
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 16
-  },
   cancelButton: {
     flex: 1
   },

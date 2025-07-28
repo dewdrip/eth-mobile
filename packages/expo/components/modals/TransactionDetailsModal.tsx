@@ -1,14 +1,11 @@
+import { useNetwork } from '@/hooks/eth-mobile';
+import { Transaction } from '@/store/reducers/Transactions';
+import { COLORS } from '@/utils/constants';
+import { parseTimestamp, truncateAddress } from '@/utils/eth-mobile';
+import { FONT_SIZE } from '@/utils/styles';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
-import { Divider, Text } from 'react-native-paper';
-//@ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import { useNetwork } from '../../hooks/eth-mobile';
-import { Transaction } from '../../store/reducers/Transactions';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { parseTimestamp, truncateAddress } from '../../utils/eth-mobile';
-import { FONT_SIZE, WINDOW_WIDTH } from '../../utils/styles';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 import { CopyableText } from '../eth-mobile';
 
 type Props = {
@@ -32,11 +29,9 @@ export default function TransactionDetailsModal({
     Linking.openURL(`${network.blockExplorer}/tx/${tx.hash}`);
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={{ fontSize: FONT_SIZE['xl'], ...globalStyles.text }}>
-          {tx.title}
-        </Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="flex-row items-center justify-between mb-4">
+        <Text className="text-2xl font-[Poppins]">{tx.title}</Text>
         <Ionicons
           name="close-outline"
           size={FONT_SIZE['xl'] * 1.7}
@@ -44,10 +39,10 @@ export default function TransactionDetailsModal({
         />
       </View>
 
-      <View style={styles.content}>
-        <View style={styles.row}>
-          <View style={styles.rowLeft}>
-            <Text style={styles.title}>Tx Hash</Text>
+      <View className="gap-4">
+        <View className="flex-row items-center justify-between">
+          <View className="w-1/2">
+            <Text className="text-lg font-[Poppins]">Tx Hash</Text>
             <CopyableText
               displayText={truncateAddress(tx.hash)}
               value={tx.hash}
@@ -56,17 +51,19 @@ export default function TransactionDetailsModal({
               iconStyle={{ color: COLORS.primary }}
             />
           </View>
-          <View style={styles.rowRight}>
-            <Text style={styles.title}>Date</Text>
-            <Text style={styles.info}>{parseTimestamp(tx.timestamp)}</Text>
+          <View className="w-1/2">
+            <Text className="text-lg font-[Poppins]">Date</Text>
+            <Text className="text-lg font-[Poppins]">
+              {parseTimestamp(tx.timestamp)}
+            </Text>
           </View>
         </View>
 
-        <Divider style={styles.divider} />
+        <View className="h-px bg-gray-300" />
 
-        <View style={styles.row}>
-          <View style={styles.rowLeft}>
-            <Text style={styles.title}>From</Text>
+        <View className="flex-row items-center justify-between">
+          <View className="w-1/2">
+            <Text className="text-lg font-[Poppins]">From</Text>
             <CopyableText
               displayText={truncateAddress(tx.from)}
               value={tx.from}
@@ -75,8 +72,8 @@ export default function TransactionDetailsModal({
               iconStyle={{ color: COLORS.primary }}
             />
           </View>
-          <View style={styles.rowRight}>
-            <Text style={styles.title}>To</Text>
+          <View className="w-1/2">
+            <Text className="text-lg font-[Poppins]">To</Text>
             <CopyableText
               displayText={truncateAddress(tx.to)}
               value={tx.to}
@@ -87,41 +84,41 @@ export default function TransactionDetailsModal({
           </View>
         </View>
 
-        <Divider style={styles.divider} />
+        <View className="h-px bg-gray-300" />
 
-        <View style={styles.rowLeft}>
-          <Text style={styles.title}>NONCE</Text>
-          <Text style={styles.info}>#{tx.nonce}</Text>
+        <View className="flex-row items-center justify-between">
+          <Text className="text-lg font-[Poppins]">NONCE</Text>
+          <Text className="text-lg font-[Poppins]">#{tx.nonce}</Text>
         </View>
 
-        <View style={styles.amountContainer}>
-          <View style={styles.row}>
-            <View style={styles.rowLeft}>
-              <Text style={styles.title}>Amount</Text>
-              <Text style={styles.title}>Estimated gas fee</Text>
+        <View className="border border-gray-300 rounded-lg p-2">
+          <View className="flex-row items-center justify-between">
+            <View className="w-1/2">
+              <Text className="text-lg font-[Poppins]">Amount</Text>
+              <Text className="text-lg font-[Poppins]">Estimated gas fee</Text>
             </View>
-            <View style={styles.rowRight}>
-              <Text style={styles.info}>
+            <View className="w-1/2">
+              <Text className="text-lg font-[Poppins]">
                 {tx.value} {network.currencySymbol}
               </Text>
-              <Text style={styles.info}>
+              <Text className="text-lg font-[Poppins]">
                 {tx.gasFee} {network.currencySymbol}
               </Text>
             </View>
           </View>
 
-          <Divider style={styles.divider} />
+          <View className="h-px bg-gray-300" />
 
-          <View style={[styles.row, { alignItems: 'flex-start' }]}>
-            <Text style={styles.title}>Total</Text>
-            <Text style={styles.info}>
+          <View className="flex-row items-center justify-between">
+            <Text className="text-lg font-[Poppins]">Total</Text>
+            <Text className="text-lg font-[Poppins]">
               {tx.total} {network.currencySymbol}
             </Text>
           </View>
         </View>
 
         {network.blockExplorer && (
-          <Text style={styles.footerText} onPress={viewOnExplorer}>
+          <Text className="text-lg font-[Poppins]" onPress={viewOnExplorer}>
             View on Explorer
           </Text>
         )}
@@ -131,39 +128,6 @@ export default function TransactionDetailsModal({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 20,
-    width: WINDOW_WIDTH * 0.9
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20
-  },
-  content: {
-    gap: 8
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  rowLeft: {},
-  rowRight: {
-    alignItems: 'flex-end'
-  },
-  title: {
-    fontSize: FONT_SIZE.md,
-    ...globalStyles.textMedium,
-    color: '#555'
-  },
-  info: {
-    fontSize: FONT_SIZE.md,
-    ...globalStyles.text
-  },
   addressContainer: {
     paddingHorizontal: 15,
     paddingVertical: 4,
@@ -172,26 +136,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: FONT_SIZE['md'],
-    ...globalStyles.textMedium,
     marginBottom: -2,
-    color: COLORS.primary
-  },
-  divider: {
-    backgroundColor: COLORS.divider,
-    marginVertical: 16
-  },
-  amountContainer: {
-    borderWidth: 0.3,
-    borderColor: COLORS.divider,
-    borderRadius: 15,
-    padding: 10,
-    marginTop: 16
-  },
-  footerText: {
-    textAlign: 'center',
-    marginTop: 10,
-    fontSize: FONT_SIZE.lg,
-    ...globalStyles.textSemiBold,
     color: COLORS.primary
   }
 });

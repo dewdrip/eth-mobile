@@ -21,7 +21,11 @@ export default function HomeHeader() {
 
   const connectedNetwork: Network = useNetwork();
 
-  const connectedAccount: Account = useAccount();
+  //   const connectedAccount: Account = useAccount();
+  const connectedAccount = {
+    name: 'Account 1',
+    address: '0x2656D1344a31fCCD050dFac53FA1406597B6f12e'
+  };
 
   // const toast = useToast();
 
@@ -49,7 +53,7 @@ export default function HomeHeader() {
   };
 
   return (
-    <View className="flex-row items-center justify-between px-4 py-2 border-b border-gray-300">
+    <View className="flex-row items-center justify-between px-4 py-2">
       <View className="flex-row items-center gap-x-4">
         <BackButton />
         <Text className="text-xl font-semibold font-[Poppins]">Wallet</Text>

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import Clipboard from '@react-native-clipboard/clipboard';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, Text, TextStyle, ViewStyle } from 'react-native';
 
 type Props = {
@@ -19,14 +19,25 @@ export function CopyableText({
   displayText
 }: Props) {
   // const toast = useToast();
+  const [copied, setCopied] = useState(false);
 
   const copy = () => {
     Clipboard.setString(value);
+    setCopied(true);
     // toast.show('Copied to clipboard', {
     //   type: 'success',
     //   placement: 'top'
     // });
   };
+
+  useEffect(() => {
+    if (copied) {
+      const timer = setTimeout(() => {
+        setCopied(false);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [copied]);
 
   return (
     <Pressable
@@ -38,9 +49,9 @@ export function CopyableText({
         {displayText || value}
       </Text>
       <Ionicons
-        name="copy-outline"
+        name={copied ? 'checkmark-circle-outline' : 'copy-outline'}
         size={20}
-        className="ml-2"
+        className="ml-2 text-[#10b981]"
         style={iconStyle}
       />
     </Pressable>

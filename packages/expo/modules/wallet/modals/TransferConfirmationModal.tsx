@@ -1,19 +1,20 @@
 import Button from '@/components/buttons/CustomButton';
 import { Blockie } from '@/components/eth-mobile';
+import Fail from '@/components/modals/modules/Fail';
+import Success from '@/components/modals/modules/Success';
 import { useNetwork } from '@/hooks/eth-mobile';
 import { Account } from '@/store/reducers/Accounts';
 import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
-import { ethers, TransactionReceipt } from 'ethers';
+import { ethers, formatEther, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
 import { Linking, Text, View } from 'react-native';
-import Fail from './modules/Fail';
-import Success from './modules/Success';
 
 interface TxData {
   from: Account;
   to: string;
-  id: number;
+  amount: number;
+  balance: bigint | null;
 }
 type Props = {
   modal: {
@@ -21,15 +22,17 @@ type Props = {
     params: {
       txData: TxData;
       estimateGasCost: bigint | null;
+      token: string;
+      isNativeToken: boolean;
       onTransfer: () => Promise<TransactionReceipt | undefined>;
     };
   };
 };
 
-export default function NFTTransferConfirmationModal({
+export default function TransferConfirmationModal({
   modal: {
     closeModal,
-    params: { txData, estimateGasCost, onTransfer }
+    params: { txData, estimateGasCost, token, isNativeToken, onTransfer }
   }
 }: Props) {
   // const toast = useToast();
@@ -42,6 +45,21 @@ export default function NFTTransferConfirmationModal({
   const [txReceipt, setTxReceipt] = useState<ethers.TransactionReceipt | null>(
     null
   );
+
+  const formatBalance = () => {
+    return txData.balance && Number(formatEther(txData.balance))
+      ? Number(formatEther(txData.balance)).toLocaleString('en-US')
+      : 0;
+  };
+
+  const calcTotal = () => {
+    return estimateGasCost
+      ? parseFloat(
+          (txData.amount + Number(formatEther(estimateGasCost))).toString(),
+          8
+        )
+      : null;
+  };
 
   const transfer = async () => {
     if (isTransferring) return;
@@ -77,71 +95,88 @@ export default function NFTTransferConfirmationModal({
   };
 
   return (
-    <View>
-      <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
-        <View className="flex-row justify-between items-center mb-5">
-          <Text className="text-2xl font-medium">From:</Text>
+    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+      <View className="gap-4">
+        <View className="gap-2">
+          <Text className="text-lg font-[Poppins]">From:</Text>
 
-          <View className="bg-primary-light rounded-lg p-4">
-            <View className="flex-row items-center gap-8 w-full">
+          <View className="bg-gray-100 rounded-lg p-2">
+            <View className="flex-row items-center gap-2">
               <Blockie
                 address={txData.from.address}
                 size={1.8 * FONT_SIZE['xl']}
               />
 
-              <View className="flex-1">
-                <Text className="text-lg font-medium">{txData.from.name}</Text>
+              <View className="w-3/4">
+                <Text className="text-lg font-[Poppins]">
+                  {txData.from.name}
+                </Text>
+                <Text className="text-sm font-[Poppins]">
+                  Balance: {formatBalance()} {token}
+                </Text>
               </View>
             </View>
           </View>
         </View>
 
-        <View className="flex-row justify-between items-center mb-5">
-          <Text className="text-lg font-medium">To:</Text>
+        <View className="gap-2">
+          <Text className="text-lg font-[Poppins]">To:</Text>
 
-          <View className="flex-row items-center gap-8 bg-primary-light rounded-lg p-4">
+          <View className="flex-row items-center gap-2 bg-gray-100 rounded-lg p-2">
             <Blockie address={txData.to} size={1.8 * FONT_SIZE['xl']} />
-            <Text className="text-lg font-medium">
+            <Text className="text-lg font-[Poppins]">
               {truncateAddress(txData.to)}
             </Text>
           </View>
         </View>
 
-        <Text className="text-lg font-medium">TOKEN ID</Text>
-        <Text className="text-lg font-medium">1</Text>
+        <Text className="text-lg font-[Poppins]">AMOUNT</Text>
+        <Text className="text-2xl font-[Poppins]">
+          {txData.amount} {token}
+        </Text>
 
-        <View className="border-2 border-gray-300 rounded-lg p-4">
-          <View className="flex-row justify-between items-center">
+        <View className="border border-gray-300 rounded-lg p-2">
+          <View className="flex-row items-center justify-between">
             <View>
-              <Text className="text-lg font-medium">Estimated gas fee</Text>
-              <Text className="text-sm font-medium">
+              <Text className="text-lg font-[Poppins]">Estimated gas fee</Text>
+              <Text className="text-sm font-[Poppins]">
                 Likely in &lt; 30 second
               </Text>
             </View>
-            <Text className="text-sm font-medium">
-              {String(
-                estimateGasCost &&
-                  parseFloat(ethers.formatEther(estimateGasCost), 8)
-              )}{' '}
+            <Text className="text-lg font-[Poppins]">
+              {estimateGasCost
+                ? parseFloat(ethers.formatEther(estimateGasCost), 8).toString()
+                : null}{' '}
               {network.currencySymbol}
             </Text>
           </View>
+
+          {isNativeToken && (
+            <>
+              <View className="h-px bg-gray-300" />
+
+              <View className="flex-row items-center justify-between">
+                <Text className="text-lg font-[Poppins]">Total</Text>
+                <Text className="text-lg font-[Poppins]">
+                  {calcTotal()} {network.currencySymbol}
+                </Text>
+              </View>
+            </>
+          )}
         </View>
 
         <View className="flex-row gap-4">
           <Button
-            text="Cancel"
             type="outline"
             onPress={() => (isTransferring ? null : closeModal())}
             style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-            labelStyle={{ fontSize: FONT_SIZE['lg'] }}
+            text="Cancel"
           />
           <Button
-            text="Confirm"
             onPress={transfer}
             loading={isTransferring}
             style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-            labelStyle={{ fontSize: FONT_SIZE['lg'] }}
+            text="Confirm"
           />
         </View>
       </View>

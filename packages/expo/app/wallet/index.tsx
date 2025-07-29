@@ -1,6 +1,6 @@
-import Body from '@/modules/wallet/components/HomeBody';
-import Footer from '@/modules/wallet/components/HomeFooter';
-import Header from '@/modules/wallet/components/HomeHeader';
+import Body from '@/modules/wallet/home/components/Body';
+import Footer from '@/modules/wallet/home/components/Footer';
+import Header from '@/modules/wallet/home/components/Header';
 import React from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 

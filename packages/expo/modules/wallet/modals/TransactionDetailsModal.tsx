@@ -1,3 +1,4 @@
+import { CopyableText } from '@/components/eth-mobile';
 import { useNetwork } from '@/hooks/eth-mobile';
 import { Transaction } from '@/store/reducers/Transactions';
 import { COLORS } from '@/utils/constants';
@@ -6,7 +7,6 @@ import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
-import { CopyableText } from '../eth-mobile';
 
 type Props = {
   modal: {

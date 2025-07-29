@@ -9,7 +9,7 @@ import { COLORS } from '@/utils/constants';
 import { parseBalance, truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import React, { useEffect } from 'react';
 import {
   Pressable,
@@ -34,13 +34,7 @@ function MainBalance() {
     enabled: false
   });
 
-  const navigation = useNavigation();
-
   const { openModal } = useModal();
-
-  const handleNav = () => {
-    // navigation.navigate('NetworkTokenTransfer');
-  };
 
   useEffect(() => {
     if (!!balance && parseBalance(balance).length > 0) return;
@@ -91,7 +85,10 @@ function MainBalance() {
         </View>
 
         <View className="flex-row justify-center items-center my-6">
-          <Pressable className="flex-col items-center gap-y-2">
+          <Pressable
+            className="flex-col items-center gap-y-2"
+            onPress={() => router.push('/wallet/networkTokenTransfer')}
+          >
             <Ionicons
               name="paper-plane-outline"
               size={FONT_SIZE.xl * 1.5}

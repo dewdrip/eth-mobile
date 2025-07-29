@@ -1,6 +1,6 @@
+import { useClipboard } from '@/hooks/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
-import Clipboard from '@react-native-clipboard/clipboard';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Pressable, Text, TextStyle, ViewStyle } from 'react-native';
 
 type Props = {
@@ -18,30 +18,11 @@ export function CopyableText({
   iconStyle,
   displayText
 }: Props) {
-  // const toast = useToast();
-  const [copied, setCopied] = useState(false);
-
-  const copy = () => {
-    Clipboard.setString(value);
-    setCopied(true);
-    // toast.show('Copied to clipboard', {
-    //   type: 'success',
-    //   placement: 'top'
-    // });
-  };
-
-  useEffect(() => {
-    if (copied) {
-      const timer = setTimeout(() => {
-        setCopied(false);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [copied]);
+  const { copy, copied } = useClipboard();
 
   return (
     <Pressable
-      onPress={copy}
+      onPress={() => copy(value)}
       className="flex-row items-center"
       style={containerStyle}
     >

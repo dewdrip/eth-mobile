@@ -1,7 +1,7 @@
+import { useClipboard } from '@/hooks/eth-mobile';
 import { truncateAddress } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
-import Clipboard from '@react-native-clipboard/clipboard';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Pressable, Text, TextStyle, View, ViewStyle } from 'react-native';
 import { Blockie } from '.';
 
@@ -20,21 +20,7 @@ export function Address({
   iconStyle,
   copyable = true
 }: Props) {
-  const [copied, setCopied] = useState(false);
-
-  const copy = () => {
-    Clipboard.setString(address);
-    setCopied(true);
-  };
-
-  useEffect(() => {
-    if (copied) {
-      const timer = setTimeout(() => {
-        setCopied(false);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [copied]);
+  const { copy, copied } = useClipboard();
 
   return (
     <View className="flex-row items-center gap-x-2" style={containerStyle}>
@@ -43,7 +29,7 @@ export function Address({
         {truncateAddress(address)}
       </Text>
       {copyable && (
-        <Pressable onPress={copy}>
+        <Pressable onPress={() => copy(address)}>
           <Ionicons
             name={copied ? 'checkmark-circle-outline' : 'copy-outline'}
             size={20}

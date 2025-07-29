@@ -1,5 +1,6 @@
 export * from './useAccount';
 export * from './useBalance';
+export * from './useClipboard';
 export * from './useContract';
 export * from './useReadContract';
 export * from './useWriteContract';

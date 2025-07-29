@@ -7,7 +7,7 @@
     "configure-network": "ts-node utils/eth-mobile/configureLocalNetwork.ts",
     "expo:install": "expo install",
     "expo:uninstall": "expo uninstall",
-    "format": "prettier app components modules --write",
+    "format": "prettier app components modules core hooks utils store contracts --write",
     "ios": "expo run:ios",
     "lint": "expo lint",
     "prebuild": "expo prebuild --clean",

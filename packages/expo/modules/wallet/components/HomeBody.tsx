@@ -94,7 +94,7 @@ function MainBalance() {
           <Pressable className="flex-col items-center gap-y-2">
             <Ionicons
               name="paper-plane-outline"
-              size={24}
+              size={FONT_SIZE.xl * 1.5}
               color={COLORS.primary}
             />
             <Text className="text-lg font-[Poppins]">Send</Text>
@@ -102,10 +102,13 @@ function MainBalance() {
 
           <View className="w-px h-8 bg-gray-300 mx-6" />
 
-          <Pressable className="flex-col items-center gap-y-2">
+          <Pressable
+            className="flex-col items-center gap-y-2"
+            onPress={() => openModal('ReceiveModal')}
+          >
             <Ionicons
               name="download-outline"
-              size={24}
+              size={FONT_SIZE.xl * 1.5}
               color={COLORS.primary}
             />
             <Text className="text-lg font-[Poppins]">Receive</Text>
@@ -116,7 +119,7 @@ function MainBalance() {
           <Pressable className="flex-col items-center gap-y-2">
             <Ionicons
               name="swap-horizontal-outline"
-              size={24}
+              size={FONT_SIZE.xl * 1.5}
               color={COLORS.primary}
             />
             <Text className="text-lg font-[Poppins]">History</Text>

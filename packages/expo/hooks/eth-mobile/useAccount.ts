@@ -11,8 +11,8 @@ export function useAccount() {
   );
 
   return {
-    name: 'Account 1',
-    address: '0x2656D1344a31fCCD050dFac53FA1406597B6f12e',
+    name: 'Account 0',
+    address: '0x0000000000000000000000000000000000000000',
     isConnected: true
   };
 }

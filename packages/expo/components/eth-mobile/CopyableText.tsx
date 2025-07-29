@@ -1,4 +1,5 @@
 import { useClipboard } from '@/hooks/eth-mobile';
+import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, Text, TextStyle, ViewStyle } from 'react-native';
@@ -23,7 +24,7 @@ export function CopyableText({
   return (
     <Pressable
       onPress={() => copy(value)}
-      className="flex-row items-center"
+      className="flex-row items-center gap-x-2"
       style={containerStyle}
     >
       <Text className="text-lg font-[Poppins]" style={textStyle}>
@@ -31,8 +32,8 @@ export function CopyableText({
       </Text>
       <Ionicons
         name={copied ? 'checkmark-circle-outline' : 'copy-outline'}
-        size={20}
-        className="ml-2 text-[#10b981]"
+        size={FONT_SIZE.xl}
+        className="text-[#10b981]"
         style={iconStyle}
       />
     </Pressable>

@@ -3,7 +3,8 @@ import { Account, changeName } from '@/store/reducers/Accounts';
 import { COLORS } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
@@ -48,7 +49,15 @@ export default function EditAccountNameForm({ close }: Props) {
           value={name}
           onChangeText={handleInputChange}
           onSubmitEditing={editName}
-          className="w-[60%]"
+          mode="outlined"
+          style={{ width: '60%' }}
+          outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
+          contentStyle={{ fontFamily: 'Poppins' }}
+          outlineColor={COLORS.primary}
+          cursorColor={COLORS.primary}
+          activeOutlineColor={COLORS.primary}
+          selectionColor={COLORS.primaryLight}
+          selectTextOnFocus
         />
 
         <Ionicons

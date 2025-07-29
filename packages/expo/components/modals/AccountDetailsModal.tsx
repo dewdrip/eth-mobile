@@ -4,6 +4,7 @@ import EditAccountNameForm from '@/components/forms/EditAccountNameForm';
 import { useAccount } from '@/hooks/eth-mobile';
 import { Account, removeAccount } from '@/store/reducers/Accounts';
 import { COLORS } from '@/utils/constants';
+import Device from '@/utils/device';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
@@ -34,12 +35,12 @@ export default function AccountDetailsModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="bg-white rounded-3xl p-5"
+      style={{ width: Device.getDeviceWidth() * 0.9 }}
+    >
       <View className="flex-col items-center gap-4">
-        <Blockie
-          address={connectedAccount.address}
-          size={2.5 * FONT_SIZE['xl']}
-        />
+        <Blockie address={connectedAccount.address} size={FONT_SIZE.xl * 2.5} />
         {isEditingAccountName ? (
           <EditAccountNameForm close={() => setIsEditingAccountName(false)} />
         ) : (
@@ -49,7 +50,7 @@ export default function AccountDetailsModal({ modal: { closeModal } }: Props) {
             </Text>
             <Ionicons
               name="pencil"
-              size={FONT_SIZE['xl']}
+              size={FONT_SIZE.xl}
               onPress={() => setIsEditingAccountName(true)}
             />
           </View>
@@ -87,9 +88,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     backgroundColor: '#F5F5F5',
-    borderRadius: 25
+    borderRadius: 12,
+    width: '100%'
   },
   addressText: {
-    fontSize: FONT_SIZE['xl']
+    fontSize: FONT_SIZE.xl,
+    width: '92%'
   }
 });

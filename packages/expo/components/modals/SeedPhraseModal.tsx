@@ -109,7 +109,7 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
           color={COLORS.error}
         />
         <Text className="flex-1 ml-2 text-base font-[Poppins]">
-          Never disclose this seed phrase or risk losing ALL YOUR FUNDS.
+          Never disclose this seed phrase or risk losing ALL your funds.
         </Text>
       </View>
 

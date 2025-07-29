@@ -1,9 +1,10 @@
 import { Network } from '@/ethmobile.config';
 import { useAccount, useClipboard, useNetwork } from '@/hooks/eth-mobile';
 import { Account } from '@/store/reducers/Accounts';
+import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Share, Text, View } from 'react-native';
+import { Pressable, Share, Text, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { COLORS } from '../../utils/constants';
 import { FONT_SIZE } from '../../utils/styles';
@@ -45,7 +46,10 @@ export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
       </View>
 
       <View className="items-center gap-4 mb-5">
-        <QRCode value={connectedAccount.address} size={240} />
+        <QRCode
+          value={connectedAccount.address}
+          size={Device.getDeviceWidth() * 0.5}
+        />
         <Text className="text-center text-lg font-[Poppins]">
           {connectedAccount.address}
         </Text>
@@ -55,30 +59,31 @@ export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
         <Text className="text-center text-lg font-[Poppins]">
           Send only {connectedNetwork.name} (
           {params?.tokenSymbol || connectedNetwork.currencySymbol}) to this
-          address. Sending any other coins may result in permanent loss.
+          address or risk losing your funds.
         </Text>
       </View>
 
       <View className="flex-row justify-center gap-10">
-        <View className="flex-col items-center">
+        <Pressable
+          className="flex-col items-center"
+          onPress={() => copy(connectedAccount.address)}
+        >
           <Ionicons
             name={isCopied ? 'checkmark-circle-outline' : 'copy-outline'}
             size={FONT_SIZE['xl'] * 1.7}
             color={COLORS.primary}
-            onPress={() => copy(connectedAccount.address)}
           />
           <Text className="mt-2 text-lg font-[Poppins]">Copy</Text>
-        </View>
+        </Pressable>
 
-        <View className="flex-col items-center">
+        <Pressable className="flex-col items-center" onPress={shareAddress}>
           <Ionicons
             name="paper-plane-outline"
             size={FONT_SIZE['xl'] * 1.7}
             color={COLORS.primary}
-            onPress={shareAddress}
           />
           <Text className="mt-2 text-lg font-[Poppins]">Share</Text>
-        </View>
+        </Pressable>
       </View>
     </View>
   );

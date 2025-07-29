@@ -48,7 +48,7 @@ export default function CustomButton({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 25,
+    borderRadius: 12,
     width: '100%'
   },
   outlineButton: {

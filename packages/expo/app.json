@@ -14,6 +14,9 @@
     },
     "ios": {
       "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "ETH Mobile needs to access your Camera"
+      },
       "bundleIdentifier": "com.ethmobile"
     },
     "android": {

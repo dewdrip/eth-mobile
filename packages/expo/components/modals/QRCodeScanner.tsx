@@ -1,6 +1,8 @@
+import { FONT_SIZE } from '@/utils/constants';
+import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Platform, StyleSheet, View } from 'react-native';
+import { BackHandler, StyleSheet, View } from 'react-native';
 import { Camera, CameraType } from 'react-native-camera-kit';
 import { Camera as VCamera } from 'react-native-vision-camera';
 
@@ -81,7 +83,7 @@ export default function QRCodeScanner({
 
   return (
     isCameraPermitted && (
-      <View className="w-full h-full">
+      <View className="bg-black" style={styles.container}>
         <Camera
           cameraType={CameraType.Back}
           scanBarcode={true}
@@ -96,7 +98,7 @@ export default function QRCodeScanner({
         />
         <Ionicons
           name="close"
-          size={24}
+          size={FONT_SIZE.xl * 2}
           color="white"
           style={styles.closeIcon}
           onPress={closeModal}
@@ -107,13 +109,20 @@ export default function QRCodeScanner({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: Device.getDeviceWidth(),
+    height: Device.getDeviceHeight()
+  },
   scanner: {
     width: '100%',
     height: '100%'
   },
   closeIcon: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 60 : 20,
-    right: 10
+    bottom: 100,
+    right: Device.getDeviceWidth() * 0.43,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 100,
+    padding: 10
   }
 });

@@ -4,12 +4,14 @@ import { useSecureStorage } from '@/hooks/eth-mobile';
 import { Account, addAccount, switchAccount } from '@/store/reducers/Accounts';
 import { addAccount as addWalletAccount } from '@/store/reducers/Wallet';
 import { COLORS } from '@/utils/constants';
+import Device from '@/utils/device';
 import { FONT_SIZE, WINDOW_WIDTH } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
-import { Keyboard, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
+import { TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
@@ -75,35 +77,45 @@ export default function ImportAccountModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="bg-white rounded-3xl p-5 gap-y-2"
+      style={{ width: Device.getDeviceWidth() * 0.9 }}
+    >
       <Ionicons
         name="cloud-download"
-        size={4 * FONT_SIZE.xl}
+        size={FONT_SIZE.xl * 3}
         color={COLORS.primary}
       />
-      <Text className="text-2xl font-[Poppins]">Import Account</Text>
+      <Text className="text-2xl font-semibold font-[Poppins-SemiBold]">
+        Import Account
+      </Text>
       <Text className="text-lg font-[Poppins]">
-        Imported accounts won't be associated with your Paux Secret Recovery
-        Phrase.
+        Imported accounts won't be associated with your Secret Recovery Phrase.
       </Text>
 
-      <View className="w-full gap-4">
-        <View className="flex-row items-center gap-2">
-          <TextInput
-            value={privateKey}
-            onChangeText={handleInputChange}
-            secureTextEntry
-            placeholder="Enter your private key here"
-            placeholderTextColor="#a3a3a3"
-            className="flex-1"
-          />
-          <Ionicons
-            name="scan"
-            size={24}
-            color={COLORS.primary}
-            onPress={scanPk}
-          />
-        </View>
+      <View className="gap-2 w-full">
+        <TextInput
+          value={privateKey}
+          onChangeText={handleInputChange}
+          mode="outlined"
+          secureTextEntry
+          placeholder="Enter your private key here"
+          placeholderTextColor="#a3a3a3"
+          textColor="black"
+          right={
+            <TextInput.Icon
+              icon="qrcode-scan"
+              onPress={scanPk}
+              forceTextInputFocus={false}
+            />
+          }
+          error={!!error}
+          outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
+          contentStyle={{ fontFamily: 'Poppins' }}
+        />
+        {error && (
+          <Text className="text-sm font-[Poppins] text-red-500">{error}</Text>
+        )}
 
         {error && (
           <Text className="text-sm font-[Poppins] text-red-500">{error}</Text>

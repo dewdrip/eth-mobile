@@ -85,9 +85,14 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="bg-white rounded-3xl p-5"
+      style={{ width: Device.getDeviceWidth() * 0.9 }}
+    >
       <View className="flex-row justify-between items-center mb-4">
-        <Text className="text-2xl font-[Poppins]">Accounts</Text>
+        <Text className="text-2xl font-semibold font-[Poppins-SemiBold ]">
+          Accounts
+        </Text>
         <Ionicons
           name="close-outline"
           size={FONT_SIZE['xl'] * 1.7}
@@ -125,10 +130,7 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
         ))}
       </ScrollView>
 
-      <View
-        className="flex-row gap-4"
-        style={{ width: Device.getDeviceWidth() * 0.8 }}
-      >
+      <View className="flex-row gap-4">
         <Button text="Create" onPress={createAccount} style={styles.button} />
         <Button
           type="outline"

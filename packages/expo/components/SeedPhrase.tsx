@@ -2,7 +2,6 @@ import { BlurView } from '@react-native-community/blur';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
-import globalStyles from '../styles/globalStyles';
 import { COLORS } from '../utils/constants';
 
 type Props = {
@@ -42,7 +41,7 @@ export default function SeedPhrase({ seedPhrase, onReveal }: Props) {
               style={{
                 textAlign: 'center',
                 fontWeight: 'bold',
-                ...globalStyles.text
+                fontFamily: 'Poppins'
               }}
             >
               Tap to reveal your seed phrase
@@ -52,7 +51,7 @@ export default function SeedPhrase({ seedPhrase, onReveal }: Props) {
               style={{
                 textAlign: 'center',
                 marginTop: 8,
-                ...globalStyles.text
+                fontFamily: 'Poppins'
               }}
             >
               Make sure no one is watching your screen
@@ -62,7 +61,7 @@ export default function SeedPhrase({ seedPhrase, onReveal }: Props) {
               icon="eye"
               onPress={reveal}
               style={styles.viewButton}
-              labelStyle={{ color: 'white', ...globalStyles.text }}
+              labelStyle={{ color: 'white', fontFamily: 'Poppins' }}
             >
               View
             </Button>
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     marginBottom: 10,
-    ...globalStyles.text
+    fontFamily: 'Poppins'
   },
   blurView: {
     position: 'absolute',

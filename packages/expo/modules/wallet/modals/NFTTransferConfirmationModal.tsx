@@ -1,14 +1,14 @@
 import Button from '@/components/buttons/CustomButton';
 import { Blockie } from '@/components/eth-mobile';
 import { useNetwork } from '@/hooks/eth-mobile';
+import Fail from '@/modules/wallet/modals/Fail';
+import Success from '@/modules/wallet/modals/Success';
 import { Account } from '@/store/reducers/Accounts';
 import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
 import { ethers, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
 import { Linking, Text, View } from 'react-native';
-import Fail from '../../../components/modals/modules/Fail';
-import Success from '../../../components/modals/modules/Success';
 
 interface TxData {
   from: Account;

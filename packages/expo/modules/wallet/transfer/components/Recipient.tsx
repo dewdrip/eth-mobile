@@ -1,17 +1,16 @@
+import { Blockie } from '@/components/eth-mobile';
+import ethmobileConfig from '@/ethmobile.config';
+import { useAccount } from '@/hooks/eth-mobile';
+import { Account } from '@/store/reducers/Accounts';
+import { COLORS } from '@/utils/constants';
+import { isENS } from '@/utils/eth-mobile';
+import { FONT_SIZE } from '@/utils/styles';
 import { isAddress, JsonRpcProvider } from 'ethers';
 import React, { useState } from 'react';
-import { Keyboard, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Keyboard, Pressable, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { Text, TextInput } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import ethmobileConfig from '../../../../ethmobile.config';
-import { Blockie } from '../../../components/eth-mobile';
-import { useAccount } from '../../../hooks/eth-mobile';
-import { Account } from '../../../store/reducers/Accounts';
-import globalStyles from '../../../styles/globalStyles';
-import { COLORS } from '../../../utils/constants';
-import { isENS } from '../../../utils/eth-mobile';
-import { FONT_SIZE } from '../../../utils/styles';
 
 type Props = {
   recipient: string;
@@ -82,23 +81,24 @@ export default function Recipient({ recipient, onChange, onSubmit }: Props) {
     }
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text variant="titleMedium" style={globalStyles.text}>
-          To:
-        </Text>
-        <TouchableOpacity onPress={selectAccount}>
-          <Text style={styles.myAccountText}>
+    <View className="mb-4">
+      <View className="flex-row items-center mb-2 gap-x-2">
+        <Text className="text-lg font-[Poppins]">To:</Text>
+        <Pressable onPress={selectAccount}>
+          <Text
+            className="text-lg font-[Poppins]"
+            style={{ color: COLORS.primary }}
+          >
             My account
-            <Text style={styles.accountName}>{getAddressName()}</Text>
+            <Text className="text-lg font-[Poppins]">{getAddressName()}</Text>
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       <TextInput
         value={recipient}
         mode="outlined"
-        style={styles.input}
+        style={{ backgroundColor: '#f5f5f5' }}
         placeholder="Recipient Address"
         placeholderTextColor="#a3a3a3"
         textColor="black"
@@ -116,44 +116,13 @@ export default function Recipient({ recipient, onChange, onSubmit }: Props) {
         right={<TextInput.Icon icon="qrcode-scan" onPress={scanQRCode} />}
         error={!!error}
         outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
-        contentStyle={globalStyles.text}
+        contentStyle={{ fontFamily: 'Poppins' }}
       />
       {error && (
-        <Text variant="bodySmall" style={styles.errorText}>
+        <Text className="text-sm font-[Poppins] text-red-500 mt-1">
           {error}
         </Text>
       )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 24
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8
-  },
-  myAccountText: {
-    color: COLORS.primary,
-    fontSize: FONT_SIZE.lg,
-    ...globalStyles.textMedium,
-    marginLeft: 8,
-    marginBottom: -2
-  },
-  accountName: {
-    color: 'black',
-    ...globalStyles.text,
-    fontSize: FONT_SIZE['md']
-  },
-  input: {
-    backgroundColor: '#f5f5f5'
-  },
-  errorText: {
-    color: 'red',
-    marginTop: 4,
-    ...globalStyles.text
-  }
-});

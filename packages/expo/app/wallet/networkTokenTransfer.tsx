@@ -5,6 +5,11 @@ import {
   useNetwork,
   useTransactions
 } from '@/hooks/eth-mobile';
+import Amount from '@/modules/wallet/transfer/components/Amount';
+import Header from '@/modules/wallet/transfer/components/Header';
+import PastRecipients from '@/modules/wallet/transfer/components/PastRecipients';
+import Recipient from '@/modules/wallet/transfer/components/Recipient';
+import Sender from '@/modules/wallet/transfer/components/Sender';
 import { Account } from '@/store/reducers/Accounts';
 import { addRecipient } from '@/store/reducers/Recipients';
 import { parseBalance, parseFloat } from '@/utils/eth-mobile';
@@ -18,18 +23,12 @@ import {
   Wallet
 } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, SafeAreaView, StyleSheet } from 'react-native';
+import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { Divider } from 'react-native-paper';
 // import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { Address } from 'viem';
-
-// import Amount from './modules/Amount';
-// import Header from './modules/Header';
-// import PastRecipients from './modules/PastRecipients';
-// import Recipient from './modules/Recipient';
-// import Sender from './modules/Sender';
 
 export default function NetworkTokenTransfer() {
   const navigation = useNavigation();
@@ -189,40 +188,42 @@ export default function NetworkTokenTransfer() {
   if (!isFocused) return;
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      {/* <Header token={network.currencySymbol} /> */}
+    <SafeAreaView className="flex-1">
+      <View className="flex-1 bg-white p-4">
+        <Header tokenSymbol={network.currencySymbol} />
 
-      {/* <Sender
-        account={sender}
-        balance={
-          balance !== null
-            ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
-            : null
-        }
-        onChange={setSender}
-      />
+        <Sender
+          account={sender}
+          balance={
+            balance !== null
+              ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
+              : null
+          }
+          onChange={setSender}
+        />
 
-      <Recipient
-        recipient={recipient}
-        onChange={setRecipient}
-        onSubmit={confirm}
-      />
+        <Recipient
+          recipient={recipient}
+          onChange={setRecipient}
+          onSubmit={confirm}
+        />
 
-      <Amount
-        amount={amount}
-        token={network.currencySymbol}
-        balance={balance}
-        gasCost={gasCost}
-        onChange={setAmount}
-        onConfirm={confirm}
-        isNativeToken
-      /> */}
+        <Amount
+          amount={amount}
+          token={network.currencySymbol}
+          balance={balance}
+          gasCost={gasCost}
+          onChange={setAmount}
+          onConfirm={confirm}
+          isNativeToken
+        />
 
-      <Divider style={styles.divider} />
+        <Divider style={styles.divider} />
 
-      {/* <PastRecipients onSelect={setRecipient} /> */}
+        <PastRecipients onSelect={setRecipient} />
 
-      <CustomButton text="Next" onPress={confirm} />
+        <CustomButton text="Next" onPress={confirm} />
+      </View>
     </SafeAreaView>
   );
 }

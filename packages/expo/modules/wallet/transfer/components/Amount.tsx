@@ -1,12 +1,10 @@
+// import { useToast } from 'react-native-toast-notifications';
+import { useCryptoPrice, useNetwork } from '@/hooks/eth-mobile';
+import { COLORS } from '@/utils/constants';
 import { formatEther } from 'ethers';
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
-import { useToast } from 'react-native-toast-notifications';
-import { useCryptoPrice, useNetwork } from '../../../hooks/eth-mobile';
-import globalStyles from '../../../styles/globalStyles';
-import { COLORS } from '../../../utils/constants';
-import { FONT_SIZE } from '../../../utils/styles';
+import { Pressable, Text, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 
 type Props = {
   amount: string;
@@ -31,7 +29,7 @@ export default function Amount({
   const [dollarValue, setDollarValue] = useState('');
   const [isDollar, setIsDollar] = useState(false);
 
-  const toast = useToast();
+  // const toast = useToast();
 
   const network = useNetwork();
   const {
@@ -45,7 +43,7 @@ export default function Amount({
 
   const switchCurrency = () => {
     if (!dollarRate) {
-      toast.show('Loading exchange rate', { placement: 'top' });
+      // toast.show('Loading exchange rate', { placement: 'top' });
 
       if (!isFetchingDollarRate) {
         fetchDollarRate();
@@ -109,14 +107,15 @@ export default function Amount({
   const displayConversion = isDollar ? amount : dollarValue;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text variant="titleMedium" style={globalStyles.text}>
-          Amount:
-        </Text>
+    <View className="mb-4">
+      <View className="flex-row items-center gap-2 mb-2">
+        <Text className="text-lg font-[Poppins]">Amount:</Text>
         {isNativeToken && (
           <Pressable onPress={switchCurrency}>
-            <Text style={styles.conversionText}>
+            <Text
+              className="text-lg font-[Poppins]"
+              style={{ color: COLORS.primary }}
+            >
               {isDollar ? 'USD' : token}
             </Text>
           </Pressable>
@@ -126,7 +125,7 @@ export default function Amount({
       <TextInput
         value={displayValue}
         mode="outlined"
-        style={styles.input}
+        style={{ backgroundColor: '#f5f5f5' }}
         placeholder={`0 ${isDollar ? 'USD' : token}`}
         placeholderTextColor="#a3a3a3"
         textColor="black"
@@ -135,17 +134,11 @@ export default function Amount({
         keyboardType="number-pad"
         error={!!error}
         outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
-        contentStyle={globalStyles.text}
+        contentStyle={{ fontFamily: 'Poppins' }}
       />
 
       {isNativeToken && (
-        <Text
-          variant="bodySmall"
-          style={[
-            globalStyles.text,
-            { marginTop: 4, opacity: displayConversion !== '' ? 1 : 0 }
-          ]}
-        >
+        <Text className="text-sm font-[Poppins] mt-1 opacity-100">
           ~{!isDollar && '$'}
           {Number(displayConversion).toLocaleString('en-US')}{' '}
           {isDollar && token}
@@ -153,37 +146,10 @@ export default function Amount({
       )}
 
       {error && (
-        <Text variant="bodySmall" style={styles.errorText}>
+        <Text className="text-sm font-[Poppins] text-red-500 mt-1">
           {error}
         </Text>
       )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 24
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-    marginBottom: 8
-  },
-  conversionText: {
-    color: COLORS.primary,
-    fontSize: FONT_SIZE.lg,
-    ...globalStyles.textMedium,
-    marginLeft: 2,
-    marginBottom: -2
-  },
-  input: {
-    backgroundColor: '#f5f5f5'
-  },
-  errorText: {
-    color: 'red',
-    marginTop: 4,
-    ...globalStyles.text
-  }
-});

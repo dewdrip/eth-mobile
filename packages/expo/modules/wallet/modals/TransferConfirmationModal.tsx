@@ -1,9 +1,10 @@
 import Button from '@/components/buttons/CustomButton';
 import { Blockie } from '@/components/eth-mobile';
-import Fail from '@/components/modals/modules/Fail';
-import Success from '@/components/modals/modules/Success';
 import { useNetwork } from '@/hooks/eth-mobile';
+import Fail from '@/modules/wallet/modals/Fail';
+import Success from '@/modules/wallet/modals/Success';
 import { Account } from '@/store/reducers/Accounts';
+import Device from '@/utils/device';
 import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
 import { ethers, formatEther, TransactionReceipt } from 'ethers';
@@ -95,8 +96,11 @@ export default function TransferConfirmationModal({
   };
 
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
-      <View className="gap-4">
+    <View
+      className="bg-white rounded-3xl p-5"
+      style={{ width: Device.getDeviceWidth() * 0.9 }}
+    >
+      <View className="gap-2">
         <View className="gap-2">
           <Text className="text-lg font-[Poppins]">From:</Text>
 
@@ -130,20 +134,24 @@ export default function TransferConfirmationModal({
           </View>
         </View>
 
-        <Text className="text-lg font-[Poppins]">AMOUNT</Text>
-        <Text className="text-2xl font-[Poppins]">
+        <Text className="text-lg text-center font-semibold font-[Poppins-SemiBold] mt-2">
+          AMOUNT
+        </Text>
+        <Text className="text-2xl text-center font-[Poppins] -mt-1">
           {txData.amount} {token}
         </Text>
 
         <View className="border border-gray-300 rounded-lg p-2">
           <View className="flex-row items-center justify-between">
             <View>
-              <Text className="text-lg font-[Poppins]">Estimated gas fee</Text>
-              <Text className="text-sm font-[Poppins]">
+              <Text className="text-base font-[Poppins]">
+                Estimated gas fee
+              </Text>
+              <Text className="text-sm text-green-500 font-[Poppins]">
                 Likely in &lt; 30 second
               </Text>
             </View>
-            <Text className="text-lg font-[Poppins]">
+            <Text className="text-base font-[Poppins]">
               {estimateGasCost
                 ? parseFloat(ethers.formatEther(estimateGasCost), 8).toString()
                 : null}{' '}
@@ -153,11 +161,13 @@ export default function TransferConfirmationModal({
 
           {isNativeToken && (
             <>
-              <View className="h-px bg-gray-300" />
+              <View className="h-px bg-gray-300 my-2" />
 
               <View className="flex-row items-center justify-between">
-                <Text className="text-lg font-[Poppins]">Total</Text>
-                <Text className="text-lg font-[Poppins]">
+                <Text className="text-lg font-semibold font-[Poppins-SemiBold]">
+                  Total
+                </Text>
+                <Text className="text-lg font-medium font-[Poppins-Medium]">
                   {calcTotal()} {network.currencySymbol}
                 </Text>
               </View>

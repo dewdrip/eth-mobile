@@ -6,7 +6,6 @@ import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
 
 type Props = {
   modal: {

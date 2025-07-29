@@ -1,10 +1,12 @@
 import Button from '@/components/buttons/CustomButton';
+import { useClipboard } from '@/hooks/eth-mobile';
 import { COLORS } from '@/utils/constants';
+import Device from '@/utils/device';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
-import Clipboard from '@react-native-clipboard/clipboard';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 type Props = {
@@ -21,6 +23,7 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
   const [error, setError] = useState('');
   const [seedPhrase, setSeedPhrase] = useState('');
 
+  const { copy, isCopied } = useClipboard();
   const showSeedPhrase = async () => {
     if (!password) {
       setError('Password cannot be empty');
@@ -44,14 +47,6 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
     }
   };
 
-  const copySeedPhrase = () => {
-    Clipboard.setString(seedPhrase);
-    //toast.show('Copied to clipboard', {
-    //  type: 'success',
-    //  placement: 'top'
-    //});
-  };
-
   const handleOnClose = () => {
     closeModal();
     setSeedPhrase('');
@@ -59,7 +54,10 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="bg-white rounded-3xl p-5"
+      style={{ width: Device.getDeviceWidth() * 0.9 }}
+    >
       <View className="flex-row items-center justify-between mb-4">
         <Text className="text-2xl font-[Poppins]">Show seed phrase</Text>
         <Ionicons
@@ -75,9 +73,9 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
             {seedPhrase}
           </Text>
           <Ionicons
-            name="copy-outline"
+            name={isCopied ? 'checkmark-circle-outline' : 'copy-outline'}
             size={FONT_SIZE['xl']}
-            onPress={copySeedPhrase}
+            onPress={() => copy(seedPhrase)}
             color={COLORS.primary}
           />
         </View>
@@ -86,12 +84,17 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
           <Text className="text-lg font-[Poppins]">Enter your password</Text>
           <TextInput
             value={password}
+            mode="outlined"
             secureTextEntry
             placeholder="Password"
             placeholderTextColor="#a3a3a3"
+            textColor="black"
             onChangeText={handleInputChange}
             onSubmitEditing={showSeedPhrase}
-            className="mt-2 mb-1"
+            style={{ marginTop: 10, marginBottom: 5 }}
+            activeOutlineColor={COLORS.primary}
+            outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
+            contentStyle={{ fontFamily: 'Poppins' }}
           />
           {error && (
             <Text className="text-lg font-[Poppins] text-red-500">{error}</Text>
@@ -100,11 +103,13 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
       )}
 
       <View className="flex-row items-center border-radius-10 p-4 mb-4 bg-red-100">
-        <Ionicons name="eye-off" size={24} color={COLORS.error} />
-        <Text className="flex-1 ml-2 text-lg font-[Poppins]">
-          Never disclose this seed phrase. Anyone with your seed phrase can
-          fully control all your accounts created with this seed phrase,
-          including transferring away any of your funds.
+        <Ionicons
+          name="eye-off"
+          size={FONT_SIZE.xl * 1.2}
+          color={COLORS.error}
+        />
+        <Text className="flex-1 ml-2 text-base font-[Poppins]">
+          Never disclose this seed phrase or risk losing ALL YOUR FUNDS.
         </Text>
       </View>
 
@@ -114,13 +119,14 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
         <View className="flex-row gap-4">
           <Button
             text="Cancel"
+            type="outline"
             onPress={handleOnClose}
-            style={styles.cancelButton}
+            style={styles.button}
           />
           <Button
             text="Reveal"
             onPress={showSeedPhrase}
-            style={styles.revealButton}
+            style={styles.button}
           />
         </View>
       )}
@@ -129,10 +135,7 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
 }
 
 const styles = StyleSheet.create({
-  cancelButton: {
-    flex: 1
-  },
-  revealButton: {
+  button: {
     flex: 1
   }
 });

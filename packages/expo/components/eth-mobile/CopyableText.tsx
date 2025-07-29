@@ -19,7 +19,7 @@ export function CopyableText({
   iconStyle,
   displayText
 }: Props) {
-  const { copy, copied } = useClipboard();
+  const { copy, isCopied } = useClipboard();
 
   return (
     <Pressable
@@ -31,7 +31,7 @@ export function CopyableText({
         {displayText || value}
       </Text>
       <Ionicons
-        name={copied ? 'checkmark-circle-outline' : 'copy-outline'}
+        name={isCopied ? 'checkmark-circle-outline' : 'copy-outline'}
         size={FONT_SIZE.xl}
         className="text-[#10b981]"
         style={iconStyle}

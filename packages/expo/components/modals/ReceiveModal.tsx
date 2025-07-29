@@ -21,7 +21,7 @@ export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
   const connectedAccount: Account = useAccount();
   const connectedNetwork: Network = useNetwork();
 
-  const { copy, copied } = useClipboard();
+  const { copy, isCopied } = useClipboard();
 
   const shareAddress = async () => {
     try {
@@ -62,7 +62,7 @@ export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
       <View className="flex-row justify-center gap-10">
         <View className="flex-col items-center">
           <Ionicons
-            name={copied ? 'checkmark-circle-outline' : 'copy-outline'}
+            name={isCopied ? 'checkmark-circle-outline' : 'copy-outline'}
             size={FONT_SIZE['xl'] * 1.7}
             color={COLORS.primary}
             onPress={() => copy(connectedAccount.address)}

@@ -20,7 +20,7 @@ export function Address({
   iconStyle,
   copyable = true
 }: Props) {
-  const { copy, copied } = useClipboard();
+  const { copy, isCopied } = useClipboard();
 
   return (
     <View className="flex-row items-center gap-x-2" style={containerStyle}>
@@ -31,7 +31,7 @@ export function Address({
       {copyable && (
         <Pressable onPress={() => copy(address)}>
           <Ionicons
-            name={copied ? 'checkmark-circle-outline' : 'copy-outline'}
+            name={isCopied ? 'checkmark-circle-outline' : 'copy-outline'}
             size={20}
             style={[{ color: '#10b981' }, iconStyle]}
           />

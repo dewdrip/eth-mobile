@@ -2,20 +2,20 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { useEffect, useState } from 'react';
 
 export function useClipboard() {
-  const [copied, setCopied] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
-    if (copied) {
+    if (isCopied) {
       setTimeout(() => {
-        setCopied(false);
+        setIsCopied(false);
       }, 2000);
     }
-  }, [copied]);
+  }, [isCopied]);
 
   const copy = (text: string) => {
     Clipboard.setString(text);
-    setCopied(true);
+    setIsCopied(true);
   };
 
-  return { copy, copied };
+  return { copy, isCopied };
 }

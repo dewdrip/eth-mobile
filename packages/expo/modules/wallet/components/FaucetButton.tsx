@@ -4,13 +4,7 @@ import { getParsedError } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import { JsonRpcProvider, parseEther, Wallet } from 'ethers';
 import React, { useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
 // Number of ETH faucet sends to an address
 const NUM_OF_ETH = '1';
@@ -21,17 +15,11 @@ const FAUCET_PRIVATE_KEY =
 
 export default function FaucetButton() {
   const [loading, setLoading] = useState(false);
-  // const toast = useToast();
 
   const connectedNetwork = useNetwork();
   const connectedAccount = useAccount();
 
   const sendETH = async () => {
-    if (!connectedAccount.address) {
-      // toast.show('No account connected', { type: 'danger', placement: 'top' });
-      return;
-    }
-
     try {
       setLoading(true);
 
@@ -44,13 +32,8 @@ export default function FaucetButton() {
       });
 
       await tx.wait(1);
-
-      // toast.show('Successfully received 1 ETH from faucet!', {
-      //   type: 'success',
-      //   placement: 'top'
-      // });
     } catch (error) {
-      console.error('Faucet error:', getParsedError(error));
+      console.error('Faucet error: ', getParsedError(error));
       // toast.show(getParsedError(error), {
       //   type: 'danger',
       //   placement: 'top'

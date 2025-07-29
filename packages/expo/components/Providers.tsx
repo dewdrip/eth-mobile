@@ -11,11 +11,13 @@ import AccountDetailsModal from '@/modules/wallet/home/modals/AccountDetailsModa
 import AccountsModal from '@/modules/wallet/home/modals/AccountsModal';
 import ReceiveModal from '@/modules/wallet/home/modals/ReceiveModal';
 import SeedPhraseModal from '@/modules/wallet/home/modals/SeedPhraseModal';
+import FailModal from '@/modules/wallet/modals/Fail';
 import ImportNFTModal from '@/modules/wallet/modals/ImportNFTModal';
 import ImportTokenModal from '@/modules/wallet/modals/ImportTokenModal';
 import NFTDetailsModal from '@/modules/wallet/modals/NFTDetailsModal';
 import NFTTransferConfirmationModal from '@/modules/wallet/modals/NFTTransferConfirmationModal';
 import PrivateKeyModal from '@/modules/wallet/modals/PrivateKeyModal';
+import SuccessModal from '@/modules/wallet/modals/Success';
 import TransactionDetailsModal from '@/modules/wallet/modals/TransactionDetailsModal';
 import TransferConfirmationModal from '@/modules/wallet/modals/TransferConfirmationModal';
 import { persistor, store } from '@/store';

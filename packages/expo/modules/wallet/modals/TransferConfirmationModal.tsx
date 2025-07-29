@@ -1,15 +1,13 @@
 import Button from '@/components/buttons/CustomButton';
 import { Blockie } from '@/components/eth-mobile';
 import { useNetwork } from '@/hooks/eth-mobile';
-import Fail from '@/modules/wallet/modals/Fail';
-import Success from '@/modules/wallet/modals/Success';
 import { Account } from '@/store/reducers/Accounts';
 import Device from '@/utils/device';
 import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
 import { ethers, formatEther, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
-import { Linking, Text, View } from 'react-native';
+import { Image, Linking, Text, View } from 'react-native';
 
 interface TxData {
   from: Account;
@@ -37,12 +35,10 @@ export default function TransferConfirmationModal({
   }
 }: Props) {
   // const toast = useToast();
-
+  const [isSuccess, setIsSuccess] = useState(false);
   const network = useNetwork();
 
   const [isTransferring, setIsTransferring] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showFailModal, setShowFailModal] = useState(false);
   const [txReceipt, setTxReceipt] = useState<ethers.TransactionReceipt | null>(
     null
   );
@@ -72,10 +68,13 @@ export default function TransferConfirmationModal({
       if (!txReceipt) return;
 
       setTxReceipt(txReceipt);
-      setShowSuccessModal(true);
+      setIsSuccess(true);
     } catch (error) {
       console.error(error);
-      setShowFailModal(true);
+      // toast.show('Failed to transfer', {
+      //   type: 'danger',
+      //   placement: 'top'
+      // });
       return;
     } finally {
       setIsTransferring(false);
@@ -141,73 +140,80 @@ export default function TransferConfirmationModal({
           {txData.amount} {token}
         </Text>
 
-        <View className="border border-gray-300 rounded-lg p-2">
-          <View className="flex-row items-center justify-between">
-            <View>
-              <Text className="text-base font-[Poppins]">
-                Estimated gas fee
-              </Text>
-              <Text className="text-sm text-green-500 font-[Poppins]">
-                Likely in &lt; 30 second
-              </Text>
-            </View>
-            <Text className="text-base font-[Poppins]">
-              {estimateGasCost
-                ? parseFloat(ethers.formatEther(estimateGasCost), 8).toString()
-                : null}{' '}
-              {network.currencySymbol}
-            </Text>
-          </View>
-
-          {isNativeToken && (
-            <>
-              <View className="h-px bg-gray-300 my-2" />
-
-              <View className="flex-row items-center justify-between">
-                <Text className="text-lg font-semibold font-[Poppins-SemiBold]">
-                  Total
+        {!isSuccess && (
+          <View className="border border-gray-300 rounded-lg p-2">
+            <View className="flex-row items-center justify-between">
+              <View>
+                <Text className="text-base font-[Poppins]">
+                  Estimated gas fee
                 </Text>
-                <Text className="text-lg font-medium font-[Poppins-Medium]">
-                  {calcTotal()} {network.currencySymbol}
+                <Text className="text-sm text-green-500 font-[Poppins]">
+                  Likely in &lt; 30 second
                 </Text>
               </View>
-            </>
-          )}
-        </View>
+              <Text className="text-base font-[Poppins]">
+                {estimateGasCost
+                  ? parseFloat(
+                      ethers.formatEther(estimateGasCost),
+                      8
+                    ).toString()
+                  : null}{' '}
+                {network.currencySymbol}
+              </Text>
+            </View>
+
+            {isNativeToken && (
+              <>
+                <View className="h-px bg-gray-300 my-2" />
+
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-lg font-semibold font-[Poppins-SemiBold]">
+                    Total
+                  </Text>
+                  <Text className="text-lg font-medium font-[Poppins-Medium]">
+                    {calcTotal()} {network.currencySymbol}
+                  </Text>
+                </View>
+              </>
+            )}
+          </View>
+        )}
+
+        {isSuccess && (
+          <View className="flex-col items-center justify-center">
+            <Image
+              source={require('../../../assets/images/success_transfer.png')}
+              className="self-center"
+              style={{
+                width: Device.getDeviceWidth() * 0.25,
+                height: Device.getDeviceWidth() * 0.25
+              }}
+              resizeMode="contain"
+            />
+            <Text className="text-xl font-[Poppins-SemiBold]">Success!</Text>
+          </View>
+        )}
 
         <View className="flex-row gap-4">
           <Button
             type="outline"
             onPress={() => (isTransferring ? null : closeModal())}
-            style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-            text="Cancel"
+            style={{ flex: 1 }}
+            text={isSuccess ? 'Close' : 'Cancel'}
           />
-          <Button
-            onPress={transfer}
-            loading={isTransferring}
-            style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-            text="Confirm"
-          />
+
+          {!isSuccess && (network.blockExplorer || !txReceipt) ? (
+            <Button
+              onPress={transfer}
+              loading={isTransferring}
+              style={{ flex: 1 }}
+              text="Confirm"
+            />
+          ) : (
+            <Button text="Review" style={{ flex: 1 }} onPress={viewTxDetails} />
+          )}
         </View>
       </View>
-
-      <Success
-        isVisible={showSuccessModal}
-        onClose={() => {
-          setShowSuccessModal(false);
-          closeModal();
-        }}
-        onViewDetails={viewTxDetails}
-      />
-
-      <Fail
-        isVisible={showFailModal}
-        onClose={() => setShowFailModal(false)}
-        onRetry={() => {
-          setShowFailModal(false);
-          transfer();
-        }}
-      />
     </View>
   );
 }

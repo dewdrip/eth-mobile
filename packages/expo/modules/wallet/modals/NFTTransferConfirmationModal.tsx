@@ -1,14 +1,13 @@
 import Button from '@/components/buttons/CustomButton';
 import { Blockie } from '@/components/eth-mobile';
 import { useNetwork } from '@/hooks/eth-mobile';
-import Fail from '@/modules/wallet/modals/Fail';
-import Success from '@/modules/wallet/modals/Success';
 import { Account } from '@/store/reducers/Accounts';
+import Device from '@/utils/device';
 import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
 import { ethers, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
-import { Linking, Text, View } from 'react-native';
+import { Image, Linking, Text, View } from 'react-native';
 
 interface TxData {
   from: Account;
@@ -33,12 +32,11 @@ export default function NFTTransferConfirmationModal({
   }
 }: Props) {
   // const toast = useToast();
-
   const network = useNetwork();
 
+  const [isSuccess, setIsSuccess] = useState(true);
+
   const [isTransferring, setIsTransferring] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showFailModal, setShowFailModal] = useState(false);
   const [txReceipt, setTxReceipt] = useState<ethers.TransactionReceipt | null>(
     null
   );
@@ -53,10 +51,9 @@ export default function NFTTransferConfirmationModal({
       if (!txReceipt) return;
 
       setTxReceipt(txReceipt);
-      setShowSuccessModal(true);
+      setIsSuccess(true);
     } catch (error) {
       console.error(error);
-      setShowFailModal(true);
       return;
     } finally {
       setIsTransferring(false);
@@ -110,59 +107,60 @@ export default function NFTTransferConfirmationModal({
         <Text className="text-lg font-medium">TOKEN ID</Text>
         <Text className="text-lg font-medium">1</Text>
 
-        <View className="border-2 border-gray-300 rounded-lg p-4">
-          <View className="flex-row justify-between items-center">
-            <View>
-              <Text className="text-lg font-medium">Estimated gas fee</Text>
+        {!isSuccess && (
+          <View className="border-2 border-gray-300 rounded-lg p-4">
+            <View className="flex-row justify-between items-center">
+              <View>
+                <Text className="text-lg font-medium">Estimated gas fee</Text>
+                <Text className="text-sm font-medium">
+                  Likely in &lt; 30 second
+                </Text>
+              </View>
               <Text className="text-sm font-medium">
-                Likely in &lt; 30 second
+                {String(
+                  estimateGasCost &&
+                    parseFloat(ethers.formatEther(estimateGasCost), 8)
+                )}{' '}
+                {network.currencySymbol}
               </Text>
             </View>
-            <Text className="text-sm font-medium">
-              {String(
-                estimateGasCost &&
-                  parseFloat(ethers.formatEther(estimateGasCost), 8)
-              )}{' '}
-              {network.currencySymbol}
-            </Text>
           </View>
-        </View>
+        )}
 
+        {isSuccess && (
+          <View className="flex-col items-center justify-center">
+            <Image
+              source={require('../../../assets/images/success_transfer.png')}
+              className="self-center"
+              style={{
+                width: Device.getDeviceWidth() * 0.25,
+                height: Device.getDeviceWidth() * 0.25
+              }}
+              resizeMode="contain"
+            />
+            <Text className="text-xl font-[Poppins-SemiBold]">Success!</Text>
+          </View>
+        )}
         <View className="flex-row gap-4">
           <Button
-            text="Cancel"
+            text={isSuccess ? 'Close' : 'Cancel'}
             type="outline"
             onPress={() => (isTransferring ? null : closeModal())}
-            style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
+            style={{ flex: 1 }}
             labelStyle={{ fontSize: FONT_SIZE['lg'] }}
           />
-          <Button
-            text="Confirm"
-            onPress={transfer}
-            loading={isTransferring}
-            style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-            labelStyle={{ fontSize: FONT_SIZE['lg'] }}
-          />
+          {!isSuccess && (network.blockExplorer || !txReceipt) ? (
+            <Button
+              onPress={transfer}
+              loading={isTransferring}
+              style={{ flex: 1 }}
+              text="Confirm"
+            />
+          ) : (
+            <Button text="Review" style={{ flex: 1 }} onPress={viewTxDetails} />
+          )}
         </View>
       </View>
-
-      <Success
-        isVisible={showSuccessModal}
-        onClose={() => {
-          setShowSuccessModal(false);
-          closeModal();
-        }}
-        onViewDetails={viewTxDetails}
-      />
-
-      <Fail
-        isVisible={showFailModal}
-        onClose={() => setShowFailModal(false)}
-        onRetry={() => {
-          setShowFailModal(false);
-          transfer();
-        }}
-      />
     </View>
   );
 }

@@ -1,14 +1,7 @@
-import { COLORS } from '@/utils/constants';
-import { FONT_SIZE } from '@/utils/styles';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import React from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextStyle,
-  ViewStyle
-} from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { Button as PaperButton } from 'react-native-paper';
 
 type Props = {
   text: string;
@@ -30,8 +23,10 @@ export default function CustomButton({
   onPress
 }: Props) {
   return (
-    <Pressable
+    <PaperButton
+      mode={type === 'outline' ? 'outlined' : 'contained'}
       onPress={onPress}
+      loading={loading}
       disabled={disabled}
       style={[
         styles.button,
@@ -39,21 +34,15 @@ export default function CustomButton({
         disabled && styles.disabledButton,
         style
       ]}
+      contentStyle={styles.content}
+      labelStyle={[
+        styles.label,
+        type === 'outline' && styles.outlineLabel,
+        labelStyle
+      ]}
     >
-      {loading ? (
-        <ActivityIndicator
-          size="small"
-          color={type === 'outline' ? COLORS.primary : 'white'}
-        />
-      ) : (
-        <Text
-          className="text-lg font-medium font-[Poppins-Medium]"
-          style={[type === 'outline' && styles.outlineLabel, labelStyle]}
-        >
-          {text}
-        </Text>
-      )}
-    </Pressable>
+      {text}
+    </PaperButton>
   );
 }
 
@@ -64,7 +53,7 @@ const styles = StyleSheet.create({
   },
   outlineButton: {
     backgroundColor: '#E8F7ED',
-    borderColor: COLORS.gray
+    borderColor: 'transparent'
   },
   disabledButton: {
     backgroundColor: '#2A974D'
@@ -74,7 +63,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: FONT_SIZE['lg'],
-    color: 'white'
+    color: 'white',
+    fontFamily: 'Poppins'
   },
   outlineLabel: {
     color: COLORS.primary

@@ -8,6 +8,7 @@ import {
   Wallet
 } from '@/store/reducers/Wallet';
 import { COLORS } from '@/utils/constants';
+import Device from '@/utils/device';
 import { truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
@@ -124,7 +125,10 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
         ))}
       </ScrollView>
 
-      <View className="flex-row gap-4">
+      <View
+        className="flex-row gap-4"
+        style={{ width: Device.getDeviceWidth() * 0.8 }}
+      >
         <Button text="Create" onPress={createAccount} style={styles.button} />
         <Button
           type="outline"

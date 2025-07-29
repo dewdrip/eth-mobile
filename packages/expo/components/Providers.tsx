@@ -6,6 +6,7 @@ import {
   ModalOptions,
   ModalProvider
 } from 'react-native-modalfy';
+import { PaperProvider } from 'react-native-paper';
 import { MenuProvider } from 'react-native-popup-menu';
 import { Provider as ReduxProvider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -29,6 +30,16 @@ import SwitchNetworkModal from './modals/SwitchNetworkModal';
 import TransactionDetailsModal from './modals/TransactionDetailsModal';
 import TransferConfirmationModal from './modals/TransferConfirmationModal';
 import TxReceiptModal from './modals/TxReceiptModal';
+
+const theme = {
+  colors: {
+    primary: '#27B858',
+    accent: '#f1c40f',
+    background: '#ffffff',
+    surface: '#ffffff',
+    error: '#B00020'
+  }
+};
 
 const modalConfig = {
   ImportTokenModal,
@@ -63,11 +74,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ReduxProvider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <MenuProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <ModalProvider stack={modalStack}>{children}</ModalProvider>
-          </GestureHandlerRootView>
-        </MenuProvider>
+        <PaperProvider theme={theme}>
+          <MenuProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <ModalProvider stack={modalStack}>{children}</ModalProvider>
+            </GestureHandlerRootView>
+          </MenuProvider>
+        </PaperProvider>
       </PersistGate>
     </ReduxProvider>
   );

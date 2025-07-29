@@ -7,7 +7,14 @@ import { Account } from '@/store/reducers/Accounts';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Linking, Share, StyleSheet, Text, View } from 'react-native';
+import {
+  Linking,
+  Pressable,
+  Share,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import {
   Menu,
@@ -60,11 +67,13 @@ export default function HomeHeader() {
       </View>
 
       <View className="flex-row items-center gap-x-6">
-        <Ionicons
-          name="people-outline"
-          size={1.7 * FONT_SIZE['xl']}
-          color="black"
-        />
+        <Pressable onPress={() => openModal('AccountsModal')}>
+          <Ionicons
+            name="people-outline"
+            size={1.7 * FONT_SIZE['xl']}
+            color="black"
+          />
+        </Pressable>
 
         <Menu>
           <MenuTrigger>

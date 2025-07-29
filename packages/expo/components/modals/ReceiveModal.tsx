@@ -1,13 +1,12 @@
 import { Network } from '@/ethmobile.config';
 import { useAccount, useClipboard, useNetwork } from '@/hooks/eth-mobile';
 import { Account } from '@/store/reducers/Accounts';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, Share, Text, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE } from '../../utils/styles';
 
 type Props = {
   modal: {
@@ -33,7 +32,10 @@ export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
   };
 
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="bg-white rounded-3xl p-5"
+      style={{ width: Device.getDeviceWidth() * 0.9 }}
+    >
       <View className="flex-row justify-between items-center mb-5">
         <Text className="text-2xl font-[Poppins]">
           Receive {params?.tokenSymbol || connectedNetwork.currencySymbol}

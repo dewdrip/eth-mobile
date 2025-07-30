@@ -8,9 +8,9 @@ type Props = {
 
 export default function Header({ tokenSymbol }: Props) {
   return (
-    <View className="flex-row items-center mb-4">
+    <View className="flex-row items-center mb-4 gap-x-2">
       <BackButton />
-      <Text className="ml-2 text-xl font-[Poppins-Medium] mb-[-2px]">
+      <Text className="text-xl font-semibold font-[Poppins-SemiBold] mb-[-2px]">
         Send {tokenSymbol}
       </Text>
     </View>

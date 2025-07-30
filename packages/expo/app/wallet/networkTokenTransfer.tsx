@@ -184,7 +184,7 @@ export default function NetworkTokenTransfer() {
   if (!isFocused) return;
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 bg-white p-4">
         <Header tokenSymbol={network.currencySymbol} />
 

@@ -182,7 +182,7 @@ export default function TransferConfirmationModal({
         {isSuccess && (
           <View className="flex-col items-center justify-center">
             <Image
-              source={require('../../../assets/images/success_transfer.png')}
+              source={require('../../../../assets/images/success_transfer.png')}
               className="self-center"
               style={{
                 width: Device.getDeviceWidth() * 0.25,

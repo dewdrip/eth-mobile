@@ -36,6 +36,7 @@ export default function ReadOnlyFunctionForm({
     args: getParsedContractFunctionArgs(form),
     enabled: false,
     onError: (error: any) => {
+      console.error('Error reading from contract: ', error);
       // toast.show(JSON.stringify(error), {
       //   type: 'danger',
       //   placement: 'top'

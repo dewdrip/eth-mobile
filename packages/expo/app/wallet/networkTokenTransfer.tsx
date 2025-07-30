@@ -1,10 +1,6 @@
 import CustomButton from '@/components/buttons/CustomButton';
-import {
-  useAccount,
-  useBalance,
-  useNetwork,
-  useTransactions
-} from '@/hooks/eth-mobile';
+import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
 import Amount from '@/modules/wallet/transfer/components/Amount';
 import Header from '@/modules/wallet/transfer/components/Header';
 import PastRecipients from '@/modules/wallet/transfer/components/PastRecipients';

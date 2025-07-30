@@ -1,3 +1,4 @@
+import { useAccount, useNetwork } from '@/hooks/eth-mobile';
 import {
   addTransaction,
   removeTransaction,
@@ -6,7 +7,6 @@ import {
 import { keccak256, toUtf8Bytes } from 'ethers';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAccount, useNetwork } from '.';
 
 /**
  * Generates a unique storage key based on network ID and account address.

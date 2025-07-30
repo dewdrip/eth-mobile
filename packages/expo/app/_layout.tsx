@@ -34,6 +34,10 @@ export default function RootLayout() {
           name="wallet/networkTokenTransfer"
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="wallet/transactions"
+          options={{ headerShown: false }}
+        />
       </Stack>
     </Providers>
   );

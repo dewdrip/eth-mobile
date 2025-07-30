@@ -1,3 +1,4 @@
+import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
 import { Account } from '@/store/reducers/Wallet';
 import { getParsedError, parseFloat } from '@/utils/eth-mobile';
 import {
@@ -12,12 +13,7 @@ import { useModal } from 'react-native-modalfy';
 // import { useToast } from 'react-native-toast-notifications';
 import { useSelector } from 'react-redux';
 import { Address, TransactionReceipt } from 'viem';
-import {
-  useAccount,
-  useDeployedContractInfo,
-  useNetwork,
-  useTransactions
-} from '.';
+import { useAccount, useDeployedContractInfo, useNetwork } from '.';
 
 interface UseScaffoldWriteContractConfig {
   contractName: string;

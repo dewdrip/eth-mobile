@@ -113,7 +113,10 @@ function MainBalance() {
 
           <View className="w-px h-8 bg-gray-300 mx-6" />
 
-          <Pressable className="flex-col items-center gap-y-2">
+          <Pressable
+            className="flex-col items-center gap-y-2"
+            onPress={() => router.push('/wallet/transactions')}
+          >
             <Ionicons
               name="swap-horizontal-outline"
               size={FONT_SIZE.xl * 1.5}

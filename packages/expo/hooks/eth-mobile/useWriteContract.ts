@@ -1,3 +1,4 @@
+import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
 import { Account } from '@/store/reducers/Wallet';
 import { getParsedError, parseFloat } from '@/utils/eth-mobile';
 import { Abi } from 'abitype';
@@ -12,7 +13,7 @@ import { useState } from 'react';
 import { useModal } from 'react-native-modalfy';
 import { useSelector } from 'react-redux';
 import { Address, TransactionReceipt } from 'viem';
-import { useAccount, useNetwork, useTransactions } from '.';
+import { useAccount, useNetwork } from '.';
 
 interface UseWriteContractConfig {
   abi: Abi;

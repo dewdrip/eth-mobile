@@ -37,11 +37,13 @@ export default function Home() {
               />
             </Link>
 
-            <Ionicons
-              name="settings-outline"
-              size={Device.getDeviceWidth() * 0.07}
-              color="#555"
-            />
+            <Link href="/settings" push asChild>
+              <Ionicons
+                name="settings-outline"
+                size={Device.getDeviceWidth() * 0.07}
+                color="#555"
+              />
+            </Link>
           </View>
         </View>
 

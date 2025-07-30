@@ -2,6 +2,7 @@ import ethmobileConfig, { Network } from '@/ethmobile.config';
 import { useNetwork } from '@/hooks/eth-mobile';
 import { switchNetwork } from '@/store/reducers/ConnectedNetwork';
 import { COLORS } from '@/utils/constants';
+import Device from '@/utils/device';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -25,13 +26,21 @@ export default function SwitchNetworkModal({ modal: { closeModal } }: Props) {
   };
 
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="bg-white rounded-3xl p-5"
+      style={{
+        width: Device.getDeviceWidth() * 0.9,
+        maxHeight: Device.getDeviceHeight() * 0.7
+      }}
+    >
       <View className="flex-row items-center justify-between mb-4">
-        <Text className="text-2xl font-[Poppins]">Switch Network</Text>
+        <Text className="text-2xl font-semibold font-[Poppins-SemiBold]">
+          Switch Network
+        </Text>
 
         <Ionicons
           name="close-outline"
-          size={FONT_SIZE['xl'] * 1.7}
+          size={FONT_SIZE.xl * 1.7}
           onPress={closeModal}
         />
       </View>
@@ -44,9 +53,9 @@ export default function SwitchNetworkModal({ modal: { closeModal } }: Props) {
               !(_network.id === connectedNetwork.id) &&
               handleNetworkSelecttion(_network.id)
             }
-            className="flex-row items-center justify-between"
+            className="flex-row items-center justify-between mb-4"
           >
-            <View className="gap-2">
+            <View>
               <Text className="text-lg font-[Poppins]">{_network.name}</Text>
               <Text className="text-sm font-[Poppins]">
                 Chain ID: {_network.id.toString()}

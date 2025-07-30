@@ -1,6 +1,8 @@
+import Header from '@/components/Header';
 import { useNetwork, useSecureStorage } from '@/hooks/eth-mobile';
 import { setBiometrics } from '@/store/reducers/Settings';
 import { COLORS } from '@/utils/constants';
+import Device from '@/utils/device';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
@@ -9,7 +11,6 @@ import { Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import * as Keychain from 'react-native-keychain';
 import { useModal } from 'react-native-modalfy';
 import { useDispatch, useSelector } from 'react-redux';
-import Header from '../Header';
 
 export default function Settings() {
   const { openModal } = useModal();
@@ -50,7 +51,13 @@ export default function Settings() {
 
   if (!isFocused) return;
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="bg-white rounded-3xl p-5"
+      style={{
+        width: Device.getDeviceWidth() * 0.9,
+        maxHeight: Device.getDeviceHeight() * 0.7
+      }}
+    >
       <Header title="Settings" />
 
       <ScrollView className="flex-1 bg-white p-5">

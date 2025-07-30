@@ -1,5 +1,4 @@
 import AccountsSelectionModal from '@/components/modals/AccountsSelectionModal';
-import ChangePasswordModal from '@/components/modals/ChangePasswordModal';
 import ConsentModal from '@/components/modals/ConsentModal';
 import PromptWalletCreationModal from '@/components/modals/PromptWalletCreationModal';
 import QRCodeScanner from '@/components/modals/QRCodeScanner';
@@ -7,6 +6,7 @@ import SignMessageModal from '@/components/modals/SignMessageModal';
 import SignTransactionModal from '@/components/modals/SignTransactionModal';
 import SwitchNetworkModal from '@/components/modals/SwitchNetworkModal';
 import TxReceiptModal from '@/components/modals/TxReceiptModal';
+import ChangePasswordModal from '@/modules/settings/modals/ChangePasswordModal';
 import AccountDetailsModal from '@/modules/wallet/home/modals/AccountDetailsModal';
 import AccountsModal from '@/modules/wallet/home/modals/AccountsModal';
 import ImportAccountModal from '@/modules/wallet/home/modals/ImportAccountModal';
@@ -45,7 +45,6 @@ const theme = {
 const modalConfig = {
   ImportTokenModal,
   ImportNFTModal,
-  ChangePasswordModal,
   SignTransactionModal,
   SignMessageModal,
   TxReceiptModal,
@@ -63,7 +62,8 @@ const modalConfig = {
   PrivateKeyModal,
   SeedPhraseModal,
   TransactionDetailsModal,
-  PromptWalletCreationModal
+  PromptWalletCreationModal,
+  ChangePasswordModal
 };
 const defaultOptions: ModalOptions = {
   backdropOpacity: 0.6,

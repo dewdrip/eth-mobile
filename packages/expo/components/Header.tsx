@@ -15,7 +15,10 @@ export default function Header({ title, style, titleStyle }: HeaderProps) {
       style={style}
     >
       <BackButton />
-      <Text className="text-xl font-semibold font-[Poppins]" style={titleStyle}>
+      <Text
+        className="text-xl font-semibold font-[Poppins-SemiBold]"
+        style={titleStyle}
+      >
         {title}
       </Text>
     </View>

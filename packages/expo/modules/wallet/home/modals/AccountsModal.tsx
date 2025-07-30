@@ -90,12 +90,12 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
       style={{ width: Device.getDeviceWidth() * 0.9 }}
     >
       <View className="flex-row justify-between items-center mb-4">
-        <Text className="text-2xl font-semibold font-[Poppins-SemiBold ]">
+        <Text className="text-2xl font-semibold font-[Poppins-SemiBold]">
           Accounts
         </Text>
         <Ionicons
           name="close-outline"
-          size={FONT_SIZE['xl'] * 1.7}
+          size={FONT_SIZE.xl * 1.7}
           onPress={closeModal}
         />
       </View>
@@ -123,7 +123,7 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
               <Ionicons
                 name="checkmark-done"
                 color={COLORS.primary}
-                size={1.2 * FONT_SIZE['xl']}
+                size={1.2 * FONT_SIZE.xl}
               />
             )}
           </Pressable>

@@ -36,13 +36,13 @@ export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
       className="bg-white rounded-3xl p-5"
       style={{ width: Device.getDeviceWidth() * 0.9 }}
     >
-      <View className="flex-row justify-between items-center mb-5">
-        <Text className="text-2xl font-[Poppins]">
+      <View className="flex-row justify-between items-center mb-4">
+        <Text className="text-2xl font-semibold font-[Poppins-SemiBold]">
           Receive {params?.tokenSymbol || connectedNetwork.currencySymbol}
         </Text>
         <Ionicons
           name="close-outline"
-          size={FONT_SIZE['xl'] * 1.7}
+          size={FONT_SIZE.xl * 1.7}
           onPress={closeModal}
         />
       </View>
@@ -65,7 +65,7 @@ export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
         </Text>
       </View>
 
-      <View className="flex-row justify-center gap-10">
+      <View className="flex-row justify-center gap-12">
         <Pressable
           className="flex-col items-center"
           onPress={() => copy(connectedAccount.address)}

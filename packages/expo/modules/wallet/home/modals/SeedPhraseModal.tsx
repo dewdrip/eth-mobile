@@ -59,10 +59,12 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
       style={{ width: Device.getDeviceWidth() * 0.9 }}
     >
       <View className="flex-row items-center justify-between mb-4">
-        <Text className="text-2xl font-[Poppins]">Show seed phrase</Text>
+        <Text className="text-2xl font-semibold font-[Poppins-SemiBold]">
+          Show seed phrase
+        </Text>
         <Ionicons
           name="close-outline"
-          size={FONT_SIZE['xl'] * 1.7}
+          size={FONT_SIZE.xl * 1.7}
           onPress={handleOnClose}
         />
       </View>
@@ -74,7 +76,7 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
           </Text>
           <Ionicons
             name={isCopied ? 'checkmark-circle-outline' : 'copy-outline'}
-            size={FONT_SIZE['xl']}
+            size={FONT_SIZE.xl}
             onPress={() => copy(seedPhrase)}
             color={COLORS.primary}
           />

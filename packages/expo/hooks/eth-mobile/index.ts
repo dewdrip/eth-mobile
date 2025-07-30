@@ -17,5 +17,4 @@ export * from './useSecureStorage';
 export * from './useSignMessage';
 export * from './useERC20Balance';
 export * from './useERC20Metadata';
-export * from './useTokens';
 export * from './useWallet';

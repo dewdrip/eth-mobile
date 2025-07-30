@@ -1,18 +1,19 @@
 import { FONT_SIZE } from '@/utils/constants';
 import globalStyles from '@/utils/globalStyles';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 type Feature = {
   title: string;
   icon: string;
-  screen: string;
+  screen: any;
 };
 
 const features: Feature[] = [
-  { title: 'Tokens', icon: 'cash-outline', screen: 'Tokens' },
-  { title: 'NFTs', icon: 'images-outline', screen: 'NFTs' }
+  { title: 'Tokens', icon: 'cash-outline', screen: '/wallet/tokens' },
+  { title: 'NFTs', icon: 'images-outline', screen: '/wallet/nfts' }
 ];
 
 const FeatureCard = ({ title, icon, screen }: Feature) => {
@@ -20,7 +21,7 @@ const FeatureCard = ({ title, icon, screen }: Feature) => {
     <Pressable
       className="justify-center items-center gap-y-2 w-[48%] p-6 rounded-2xl bg-white"
       style={globalStyles.shadow}
-      onPress={() => null}
+      onPress={() => router.push(screen)}
     >
       <View className="flex-col items-center gap-y-2">
         <Ionicons name={icon as any} color="grey" size={FONT_SIZE.xl * 1.8} />

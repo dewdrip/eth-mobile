@@ -4,15 +4,18 @@ import {
   useAccount,
   useERC20Balance,
   useERC20Metadata,
-  useNetwork,
-  useTokens
+  useNetwork
 } from '@/hooks/eth-mobile';
+import { useTokens } from '@/modules/wallet/tokens/hooks/useTokens';
 import { addToken, Token } from '@/store/reducers/Tokens';
+import { COLORS } from '@/utils/constants';
+import Device from '@/utils/device';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { Address } from 'viem';
 
@@ -96,12 +99,17 @@ export default function ImportTokenModal({ modal: { closeModal } }: Props) {
     closeModal();
   };
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="bg-white rounded-3xl p-5"
+      style={{ width: Device.getDeviceWidth() * 0.9 }}
+    >
       <View className="flex-row justify-between items-center mb-5">
-        <Text className="text-2xl font-medium">Import Token</Text>
+        <Text className="text-2xl font-semibold font-[Poppins-SemiBold]">
+          Import Token
+        </Text>
         <Ionicons
           name="close-outline"
-          size={FONT_SIZE['xl'] * 1.7}
+          size={FONT_SIZE.xl * 1.7}
           onPress={closeModal}
         />
       </View>
@@ -112,9 +120,14 @@ export default function ImportTokenModal({ modal: { closeModal } }: Props) {
             <Text className="text-lg font-medium">Address</Text>
             <TextInput
               value={address}
-              className="text-black border-2 border-gray-300 rounded-lg p-2"
-              placeholder={'0x...'}
+              mode="outlined"
+              outlineColor={COLORS.primary}
+              activeOutlineColor={COLORS.primary}
+              outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
+              contentStyle={{ fontFamily: 'Poppins' }}
+              placeholder="0x..."
               placeholderTextColor="#a3a3a3"
+              textColor="black"
               onChangeText={value => setAddress(value.trim())}
               onSubmitEditing={getTokenData}
             />
@@ -125,17 +138,17 @@ export default function ImportTokenModal({ modal: { closeModal } }: Props) {
         ) : (
           <>
             <View className="flex-row justify-between items-center">
-              <Text className="text-lg font-medium">Token</Text>
-              <Text className="text-lg font-medium">Balance</Text>
+              <Text className="text-lg font-[Poppins]">Token</Text>
+              <Text className="text-lg font-[Poppins]">Balance</Text>
             </View>
 
             <View className="flex-row justify-between items-center">
               <View className="flex-row items-center gap-2">
-                <Blockie address={token.address} size={2.5 * FONT_SIZE['xl']} />
-                <Text className="text-lg font-medium">{token.name}</Text>
+                <Blockie address={token.address} size={FONT_SIZE.xl * 2.5} />
+                <Text className="text-lg font-[Poppins]">{token.name}</Text>
               </View>
 
-              <Text className="text-lg font-medium">
+              <Text className="text-lg font-[Poppins]">
                 {balance} {token.symbol}
               </Text>
             </View>

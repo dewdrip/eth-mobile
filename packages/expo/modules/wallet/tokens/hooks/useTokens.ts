@@ -1,8 +1,8 @@
+import { useAccount, useNetwork } from '@/hooks/eth-mobile';
 import { Token } from '@/store/reducers/Tokens';
 import { keccak256, toUtf8Bytes } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useAccount, useNetwork } from '.';
 
 export function useTokens() {
   // @ts-ignore

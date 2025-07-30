@@ -38,6 +38,7 @@ export default function RootLayout() {
           name="wallet/transactions"
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="wallet/tokens" options={{ headerShown: false }} />
       </Stack>
     </Providers>
   );

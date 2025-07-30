@@ -53,7 +53,9 @@ export default function ContractUI() {
         {network && (
           <View className="flex-row items-center">
             <Text className="text-lg font-[Poppins]">Network: </Text>
-            <Text className="text-lg font-[Poppins]">{network.name}</Text>
+            <Text className="text-lg font-semibold font-[Poppins-SemiBold]">
+              {network.name}
+            </Text>
           </View>
         )}
       </View>

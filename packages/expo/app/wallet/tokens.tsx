@@ -4,6 +4,7 @@ import { useTokens } from '@/modules/wallet/tokens/hooks/useTokens';
 import { COLORS } from '@/utils/constants';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import React from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
@@ -41,7 +42,14 @@ export default function Tokens() {
               name={item.name}
               symbol={item.symbol}
               onPress={() => {
-                //   navigation.navigate('TokenDetails', { token: item });
+                router.push({
+                  pathname: '/wallet/tokenDetails',
+                  params: {
+                    name: item.name,
+                    symbol: item.symbol,
+                    address: item.address
+                  }
+                });
               }}
             />
           )}

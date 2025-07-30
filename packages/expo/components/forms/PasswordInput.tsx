@@ -1,11 +1,8 @@
+import { COLORS, FONT_SIZE } from '@/utils/constants';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { StyleSheet, TextStyle, View } from 'react-native';
+import { TextStyle, View } from 'react-native';
 import { Text, TextInput } from 'react-native-paper';
-// @ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE } from '../../utils/styles';
 
 type Props = {
   label: string;
@@ -31,12 +28,15 @@ export default function PasswordInput({
   const [show, setShow] = useState(false);
 
   return (
-    <View style={{ gap: 8 }}>
-      <Text variant="headlineSmall" style={[styles.label, labelStyle]}>
+    <View className="gap-y-2">
+      <Text
+        className="text-lg font-semibold font-[Poppins-SemiBold]"
+        style={labelStyle}
+      >
         {label}
       </Text>
 
-      <View style={styles.inputContainer}>
+      <View className="flex-row items-center">
         <TextInput
           defaultValue={defaultValue}
           value={value}
@@ -44,7 +44,7 @@ export default function PasswordInput({
           outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
           activeOutlineColor={COLORS.primary}
           style={{ flex: 1, paddingRight: 55 }}
-          contentStyle={styles.inputContent}
+          contentStyle={{ fontSize: FONT_SIZE.lg, fontFamily: 'Poppins' }}
           left={<TextInput.Icon icon="lock" color="#a3a3a3" />}
           secureTextEntry={!show}
           placeholder="Password"
@@ -52,7 +52,7 @@ export default function PasswordInput({
           onSubmitEditing={onSubmit}
         />
 
-        <View style={styles.actionIconsContainer}>
+        <View className="flex-row gap-x-2 absolute right-4">
           {value && (
             <Ionicons
               name="close"
@@ -71,41 +71,11 @@ export default function PasswordInput({
       </View>
 
       {infoText ? (
-        <Text variant="bodySmall" style={styles.infoText}>
-          {infoText}
-        </Text>
+        <Text className="text-sm text-gray-500 font-[Poppins]">{infoText}</Text>
       ) : null}
       {errorText ? (
-        <Text variant="bodySmall" style={styles.errorText}>
-          {errorText}
-        </Text>
+        <Text className="text-sm text-red-500 font-[Poppins]">{errorText}</Text>
       ) : null}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  label: {
-    fontSize: FONT_SIZE['xl'],
-    ...globalStyles.textMedium
-  },
-  inputContainer: { flexDirection: 'row', alignItems: 'center' },
-  inputContent: {
-    fontSize: FONT_SIZE['lg'],
-    ...globalStyles.text
-  },
-  infoText: {
-    color: '#a3a3a3',
-    ...globalStyles.text
-  },
-  errorText: {
-    color: '#ef4444',
-    ...globalStyles.text
-  },
-  actionIconsContainer: {
-    flexDirection: 'row',
-    gap: 5,
-    position: 'absolute',
-    right: 10
-  }
-});

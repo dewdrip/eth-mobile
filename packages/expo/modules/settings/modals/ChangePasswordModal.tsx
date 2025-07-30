@@ -1,55 +1,104 @@
-import Header from '@/components/Header';
-import { useNetwork, useSecureStorage } from '@/hooks/eth-mobile';
-import { setBiometrics } from '@/store/reducers/Settings';
-import { COLORS } from '@/utils/constants';
+import Button from '@/components/buttons/CustomButton';
+import PasswordInput from '@/components/forms/PasswordInput';
+import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '@/core/Encryptor';
+import { useSecureStorage } from '@/hooks/eth-mobile';
+import { setPassword as setWalletPassword } from '@/store/reducers/Wallet';
+import { FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
-import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
-import { useIsFocused } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { Pressable, ScrollView, Switch, Text, View } from 'react-native';
-import * as Keychain from 'react-native-keychain';
-import { useModal } from 'react-native-modalfy';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
+// import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 
-export default function Settings() {
-  const { openModal } = useModal();
-  const isFocused = useIsFocused();
-  const [biometricType, setBiometricType] =
-    useState<Keychain.BIOMETRY_TYPE | null>(null);
-  const network = useNetwork();
+type Props = {
+  modal: {
+    closeModal: () => void;
+  };
+};
+
+export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
+  // const toast = useToast();
+  const { saveItem, saveItemWithBiometrics } = useSecureStorage();
+  const wallet = useSelector((state: any) => state.wallet);
   const dispatch = useDispatch();
-
-  const { saveItemWithBiometrics } = useSecureStorage();
-
   const isBiometricsEnabled = useSelector(
     (state: any) => state.settings.isBiometricsEnabled as boolean
   );
-  const wallet = useSelector((state: any) => state.wallet);
 
-  const switchNetwork = () => {
-    openModal('SwitchNetworkModal');
-  };
+  const [password, setPassword] = useState({
+    current: '',
+    new: '',
+    confirm: ''
+  });
 
-  const toggleBiometrics = async () => {
+  const change = async () => {
     try {
-      if (!isBiometricsEnabled) {
-        await saveItemWithBiometrics('password', wallet.password);
+      const existingPassword = wallet.password;
+      const currentPassword = password.current.trim();
+      const newPassword = password.new.trim();
+      const confirmPassword = password.confirm.trim();
+
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        // toast.show('Password cannot be empty!', { type: 'warning' });
+        return;
       }
 
-      dispatch(setBiometrics(!isBiometricsEnabled));
+      if (newPassword.length < 8) {
+        // toast.show('Password must be at least 8 characters', {
+        //   type: 'warning'
+        // });
+        return;
+      }
+
+      if (currentPassword !== existingPassword) {
+        // toast.show('Incorrect password!', { type: 'warning' });
+        return;
+      }
+
+      if (currentPassword === newPassword) {
+        // toast.show('Cannot use current password', { type: 'warning' });
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        // toast.show('Passwords do not match!', { type: 'warning' });
+        return;
+      }
+
+      if (isBiometricsEnabled) {
+        await saveItemWithBiometrics('password', newPassword);
+      }
+
+      // @ts-ignore
+      dispatch(setWalletPassword(newPassword));
+
+      const encryptor = new Encryptor({
+        keyDerivationOptions: LEGACY_DERIVATION_OPTIONS
+      });
+
+      const encryptedMnemonic = await encryptor.encrypt(
+        newPassword,
+        wallet.mnemonic
+      );
+
+      await saveItem('seedPhrase', encryptedMnemonic);
+
+      const encryptedAccounts = await encryptor.encrypt(
+        newPassword,
+        wallet.accounts
+      );
+
+      await saveItem('accounts', encryptedAccounts);
+
+      closeModal();
+      // toast.show('Password Changed Successfully', { type: 'success' });
     } catch (error) {
-      return;
+      // toast.show('Failed to change password', { type: 'danger' });
     }
   };
 
-  useEffect(() => {
-    Keychain.getSupportedBiometryType().then(type => {
-      setBiometricType(type);
-    });
-  }, []);
-
-  if (!isFocused) return;
   return (
     <View
       className="bg-white rounded-3xl p-5"
@@ -58,47 +107,57 @@ export default function Settings() {
         maxHeight: Device.getDeviceHeight() * 0.7
       }}
     >
-      <Header title="Settings" />
+      <View className="flex-row items-center justify-between mb-4">
+        <Text className="text-2xl font-semibold font-[Poppins-SemiBold]">
+          Change Password
+        </Text>
 
-      <ScrollView className="flex-1 bg-white p-5">
-        {biometricType && (
-          <View className="flex-row items-center gap-4 mb-4">
-            <Ionicons
-              name="finger-print-outline"
-              size={FONT_SIZE['xl'] * 1.2}
-            />
-            <View className="flex-row items-center justify-between flex-1">
-              <Text className="text-lg font-[Poppins]">
-                Sign in with {biometricType}
-              </Text>
-              <Switch
-                value={isBiometricsEnabled}
-                onValueChange={toggleBiometrics}
-                trackColor={{ true: COLORS.primary }}
-              />
-            </View>
-          </View>
-        )}
+        <Ionicons
+          name="close-outline"
+          size={FONT_SIZE['xl'] * 1.7}
+          onPress={closeModal}
+        />
+      </View>
 
-        <Pressable
-          onPress={() => openModal('ChangePasswordModal')}
-          className="flex-row items-center gap-4 mb-4"
-        >
-          <Ionicons name="lock-closed-outline" size={FONT_SIZE['xl'] * 1.2} />
-          <Text className="text-lg font-[Poppins]">Change Password</Text>
-        </Pressable>
+      <View className="gap-y-4">
+        <PasswordInput
+          label="Current Password"
+          value={password.current}
+          infoText={
+            password.current.length < 8 && 'Must be at least 8 characters'
+          }
+          onChange={value => setPassword(prev => ({ ...prev, current: value }))}
+          onSubmit={change}
+          labelStyle={styles.label}
+        />
+        <PasswordInput
+          label="New Password"
+          value={password.new}
+          infoText={password.new.length < 8 && 'Must be at least 8 characters'}
+          onChange={value => setPassword(prev => ({ ...prev, new: value }))}
+          onSubmit={change}
+          labelStyle={styles.label}
+        />
+        <PasswordInput
+          label="Confirm Password"
+          value={password.confirm}
+          infoText={
+            password.confirm.length < 8 && 'Must be at least 8 characters'
+          }
+          onChange={value => setPassword(prev => ({ ...prev, confirm: value }))}
+          onSubmit={change}
+          labelStyle={styles.label}
+        />
 
-        <Pressable
-          onPress={switchNetwork}
-          className="flex-row items-center gap-4 mb-4"
-        >
-          <Ionicons name="git-network-outline" size={FONT_SIZE['xl'] * 1.2} />
-          <Text className="text-lg font-[Poppins]">
-            Change Network
-            <Text className="text-sm font-[Poppins]">({network.name})</Text>
-          </Text>
-        </Pressable>
-      </ScrollView>
+        <Button text="Change Password" onPress={change} style={styles.button} />
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  label: { fontSize: FONT_SIZE.lg },
+  button: {
+    marginTop: 10
+  }
+});

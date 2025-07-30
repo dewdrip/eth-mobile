@@ -9,7 +9,7 @@ import { COLORS } from '@/utils/constants';
 import { parseBalance, truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { Link } from 'expo-router';
 import React, { useEffect } from 'react';
 import {
   Pressable,
@@ -85,18 +85,16 @@ function MainBalance() {
         </View>
 
         <View className="flex-row justify-center items-center my-6">
-          <Pressable
-            className="flex-col items-center gap-y-2"
-            onPress={() => router.push('/wallet/networkTokenTransfer')}
-          >
-            <Ionicons
-              name="paper-plane-outline"
-              size={FONT_SIZE.xl * 1.5}
-              color={COLORS.primary}
-            />
-            <Text className="text-lg font-[Poppins]">Send</Text>
-          </Pressable>
-
+          <Link href="/wallet/networkTokenTransfer" push>
+            <View className="flex-col items-center gap-y-2">
+              <Ionicons
+                name="paper-plane-outline"
+                size={FONT_SIZE.xl * 1.5}
+                color={COLORS.primary}
+              />
+              <Text className="text-lg font-[Poppins]">Send</Text>
+            </View>
+          </Link>
           <View className="w-px h-8 bg-gray-300 mx-6" />
 
           <Pressable
@@ -113,17 +111,16 @@ function MainBalance() {
 
           <View className="w-px h-8 bg-gray-300 mx-6" />
 
-          <Pressable
-            className="flex-col items-center gap-y-2"
-            onPress={() => router.push('/wallet/transactions')}
-          >
-            <Ionicons
-              name="swap-horizontal-outline"
-              size={FONT_SIZE.xl * 1.5}
-              color={COLORS.primary}
-            />
-            <Text className="text-lg font-[Poppins]">History</Text>
-          </Pressable>
+          <Link href="/wallet/transactions" push>
+            <View className="flex-col items-center gap-y-2">
+              <Ionicons
+                name="swap-horizontal-outline"
+                size={FONT_SIZE.xl * 1.5}
+                color={COLORS.primary}
+              />
+              <Text className="text-lg font-[Poppins]">History</Text>
+            </View>
+          </Link>
         </View>
 
         <FaucetButton />

@@ -1,7 +1,7 @@
 import { FONT_SIZE } from '@/utils/constants';
 import globalStyles from '@/utils/globalStyles';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { Link } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -18,16 +18,17 @@ const features: Feature[] = [
 
 const FeatureCard = ({ title, icon, screen }: Feature) => {
   return (
-    <Pressable
-      className="justify-center items-center gap-y-2 w-[48%] p-6 rounded-2xl bg-white"
-      style={globalStyles.shadow}
-      onPress={() => router.push(screen)}
-    >
-      <View className="flex-col items-center gap-y-2">
-        <Ionicons name={icon as any} color="grey" size={FONT_SIZE.xl * 1.8} />
-        <Text className="text-xl font-[Poppins]">{title}</Text>
-      </View>
-    </Pressable>
+    <Link href={screen} push asChild>
+      <Pressable
+        className="justify-center items-center gap-y-2 w-[48%] p-6 rounded-2xl bg-white"
+        style={globalStyles.shadow}
+      >
+        <View className="flex-col items-center gap-y-2">
+          <Ionicons name={icon as any} color="grey" size={FONT_SIZE.xl * 1.8} />
+          <Text className="text-xl font-[Poppins]">{title}</Text>
+        </View>
+      </Pressable>
+    </Link>
   );
 };
 

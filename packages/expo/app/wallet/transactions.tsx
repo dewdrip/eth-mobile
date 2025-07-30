@@ -4,9 +4,7 @@ import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransact
 import React from 'react';
 import { FlatList, SafeAreaView } from 'react-native';
 
-type Props = {};
-
-export default function Transactions({}: Props) {
+export default function Transactions() {
   const { transactions } = useTransactions();
 
   return (

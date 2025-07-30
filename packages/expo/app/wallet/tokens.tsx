@@ -9,9 +9,7 @@ import { FlatList, SafeAreaView, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { Text } from 'react-native-paper';
 
-type Props = {};
-
-export default function Tokens({}: Props) {
+export default function Tokens() {
   const { openModal } = useModal();
   const { tokens } = useTokens();
 

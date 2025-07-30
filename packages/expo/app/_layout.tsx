@@ -26,20 +26,7 @@ export default function RootLayout() {
 
   return (
     <Providers>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="debugContracts" options={{ headerShown: false }} />
-        <Stack.Screen name="wallet/index" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="wallet/networkTokenTransfer"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="wallet/transactions"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="wallet/tokens" options={{ headerShown: false }} />
-      </Stack>
+      <Stack screenOptions={{ headerShown: false }} />
     </Providers>
   );
 }

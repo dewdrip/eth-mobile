@@ -1,6 +1,6 @@
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 function HighlightedText({ children }: { children: string }) {
@@ -12,7 +12,6 @@ function HighlightedText({ children }: { children: string }) {
 }
 
 export default function Home() {
-  const router = useRouter();
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -22,18 +21,22 @@ export default function Home() {
           </Text>
 
           <View className="flex flex-row items-center gap-x-5">
-            <Ionicons
-              name="bug-outline"
-              size={Device.getDeviceWidth() * 0.07}
-              color="#555"
-              onPress={() => router.push('/debugContracts')}
-            />
-            <Ionicons
-              name="wallet-outline"
-              size={Device.getDeviceWidth() * 0.07}
-              color="#555"
-              onPress={() => router.push('/wallet')}
-            />
+            <Link href="/debugContracts" push asChild>
+              <Ionicons
+                name="bug-outline"
+                size={Device.getDeviceWidth() * 0.07}
+                color="#555"
+              />
+            </Link>
+
+            <Link href="/wallet" push asChild>
+              <Ionicons
+                name="wallet-outline"
+                size={Device.getDeviceWidth() * 0.07}
+                color="#555"
+              />
+            </Link>
+
             <Ionicons
               name="settings-outline"
               size={Device.getDeviceWidth() * 0.07}
@@ -61,37 +64,33 @@ export default function Home() {
         </View>
 
         <View className="flex-1 pb-4 justify-center items-center gap-4">
-          <View className="items-center py-8 w-[90%] border border-gray-300 rounded-3xl bg-white gap-4">
-            <Ionicons
-              name="bug-outline"
-              color="grey"
-              size={Device.getDeviceWidth() * 0.09}
-            />
+          <Link href="/debugContracts" className="w-[90%]" push>
+            <View className="items-center py-8 border w-full border-gray-300 rounded-3xl bg-white gap-4">
+              <Ionicons
+                name="bug-outline"
+                color="grey"
+                size={Device.getDeviceWidth() * 0.09}
+              />
 
-            <Text className="text-center text-xl w-[60%] font-[Poppins]">
-              Tinker with your smart contracts in
-              <Text
-                className="underline text-lg"
-                onPress={() => router.push('/debugContracts')}
-              >
-                {' '}
-                DebugContracts
+              <Text className="text-center text-xl w-[60%] font-[Poppins]">
+                Tinker with your smart contracts
               </Text>
-            </Text>
-          </View>
+            </View>
+          </Link>
 
-          <View className="items-center py-8 w-[90%] border border-gray-300 rounded-3xl bg-white gap-4">
-            <Ionicons
-              name="wallet-outline"
-              color="grey"
-              size={Device.getDeviceWidth() * 0.09}
-            />
+          <Link href="/wallet" className="w-[90%]" push>
+            <View className="items-center py-8 border w-full border-gray-300 rounded-3xl bg-white gap-4">
+              <Ionicons
+                name="wallet-outline"
+                color="grey"
+                size={Device.getDeviceWidth() * 0.09}
+              />
 
-            <Text className="text-center text-xl w-[60%] font-[Poppins]">
-              Manage your accounts, funds, and tokens in your
-              <Text className="underline text-lg font-bold"> Wallet</Text>
-            </Text>
-          </View>
+              <Text className="text-center text-xl w-[60%] font-[Poppins]">
+                Manage your accounts, funds, and tokens
+              </Text>
+            </View>
+          </Link>
         </View>
       </ScrollView>
     </SafeAreaView>

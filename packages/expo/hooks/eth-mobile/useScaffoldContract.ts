@@ -81,8 +81,8 @@ export function useScaffoldContract({
       );
 
       if (!activeAccount) {
-        console.warn('No active account found');
-        return null;
+        openModal('PromptWalletCreationModal');
+        return;
       }
 
       const activeWallet = new Wallet(activeAccount.privateKey, provider);

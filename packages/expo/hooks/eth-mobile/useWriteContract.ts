@@ -68,6 +68,11 @@ export function useWriteContract({
             connectedAccount.address.toLowerCase()
         );
 
+        if (!activeAccount) {
+          openModal('PromptWalletCreationModal');
+          return;
+        }
+
         const activeWallet = new Wallet(activeAccount.privateKey, provider);
         const contract = new Contract(
           address,

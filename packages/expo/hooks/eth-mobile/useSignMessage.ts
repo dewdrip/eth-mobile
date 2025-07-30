@@ -69,7 +69,8 @@ export function useSignMessage({
           );
 
           if (!activeAccount) {
-            throw new Error('Active account not found.');
+            openModal('PromptWalletCreationModal');
+            return;
           }
 
           const activeWallet = new Wallet(activeAccount.privateKey, provider);

@@ -1,6 +1,7 @@
 import AccountsSelectionModal from '@/components/modals/AccountsSelectionModal';
 import ChangePasswordModal from '@/components/modals/ChangePasswordModal';
 import ConsentModal from '@/components/modals/ConsentModal';
+import PromptWalletCreationModal from '@/components/modals/PromptWalletCreationModal';
 import QRCodeScanner from '@/components/modals/QRCodeScanner';
 import SignMessageModal from '@/components/modals/SignMessageModal';
 import SignTransactionModal from '@/components/modals/SignTransactionModal';
@@ -61,7 +62,8 @@ const modalConfig = {
   AccountDetailsModal,
   PrivateKeyModal,
   SeedPhraseModal,
-  TransactionDetailsModal
+  TransactionDetailsModal,
+  PromptWalletCreationModal
 };
 const defaultOptions: ModalOptions = {
   backdropOpacity: 0.6,

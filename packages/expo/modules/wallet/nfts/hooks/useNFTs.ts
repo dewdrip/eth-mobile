@@ -1,8 +1,8 @@
+import { useAccount, useNetwork } from '@/hooks/eth-mobile';
 import { NFT } from '@/store/reducers/NFTs';
 import { keccak256, toUtf8Bytes } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useAccount, useNetwork } from '.';
 
 /**
  * Checks if an NFT already exists in the store for the given address and token ID.

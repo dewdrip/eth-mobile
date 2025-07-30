@@ -1,17 +1,15 @@
 import Button from '@/components/buttons/CustomButton';
-import {
-  useAccount,
-  useERC721Metadata,
-  useNetwork,
-  useNFTs
-} from '@/hooks/eth-mobile';
+import { useAccount, useERC721Metadata, useNetwork } from '@/hooks/eth-mobile';
+import { useNFTs } from '@/modules/wallet/nfts/hooks/useNFTs';
 import { addNFT } from '@/store/reducers/NFTs';
+import { COLORS } from '@/utils/constants';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { Address } from 'abitype';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 
 type Props = {
@@ -107,9 +105,14 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
           <Text className="text-lg font-[Poppins]">Address</Text>
           <TextInput
             value={address}
+            mode="outlined"
+            outlineColor={COLORS.primary}
+            activeOutlineColor={COLORS.primary}
+            outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
+            contentStyle={{ fontFamily: 'Poppins' }}
             placeholder={'0x...'}
             placeholderTextColor="#a3a3a3"
-            className="border border-gray-300 rounded-lg p-2"
+            textColor="black"
             onChangeText={setAddress}
             onSubmitEditing={importNFT}
           />
@@ -124,9 +127,14 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
           <Text className="text-lg font-[Poppins]">Token ID</Text>
           <TextInput
             value={tokenId}
+            mode="outlined"
+            outlineColor={COLORS.primary}
+            activeOutlineColor={COLORS.primary}
+            outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
+            contentStyle={{ fontFamily: 'Poppins' }}
             placeholder={'Enter the token id'}
             placeholderTextColor="#a3a3a3"
-            className="border border-gray-300 rounded-lg p-2"
+            textColor="black"
             onChangeText={setTokenId}
             onSubmitEditing={importNFT}
           />

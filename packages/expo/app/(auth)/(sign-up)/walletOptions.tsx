@@ -37,7 +37,7 @@ export default function WalletOptions() {
         <BackButton
           style={{
             position: 'absolute',
-            top: 10,
+            top: 15,
             left: 15
           }}
         />
@@ -54,13 +54,13 @@ export default function WalletOptions() {
             have an account
           </Text>
 
-          <View className="w-full gap-y-2">
+          <View className="w-full gap-y-3">
             <Button text="Create a New Wallet" onPress={() => {}} />
 
             <Button
               type="outline"
               text="Import Using Seed Phrase"
-              onPress={() => {}}
+              onPress={() => router.push('/importWallet')}
             />
           </View>
         </View>

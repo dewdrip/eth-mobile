@@ -1,11 +1,8 @@
+import { COLORS, FONT_SIZE } from '@/utils/constants';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
-// @ts-ignore
-import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-import globalStyles from '../../styles/globalStyles';
-import { COLORS } from '../../utils/constants';
-import { FONT_SIZE } from '../../utils/styles';
+import { Text, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 
 type Props = {
   value?: string;
@@ -26,14 +23,14 @@ export default function SeedPhraseInput({
 }: Props) {
   const [show, setShow] = useState(false);
   return (
-    <View style={{ gap: 8 }}>
-      <Text style={styles.label}>Seed Phrase</Text>
+    <View className="gap-y-2">
+      <Text className="text-lg font-[Poppins]">Seed Phrase</Text>
 
-      <View style={styles.inputContainer}>
+      <View className="flex-row items-center">
         <TextInput
           mode="outlined"
           style={{ flex: 1, paddingRight: 55, paddingVertical: 5 }}
-          contentStyle={styles.inputContent}
+          contentStyle={{ fontSize: FONT_SIZE['lg'], fontFamily: 'Poppins' }}
           outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
           activeOutlineColor={COLORS.primary}
           value={value}
@@ -46,7 +43,7 @@ export default function SeedPhraseInput({
           selectionColor={COLORS.primary}
           cursorColor="#303030"
         />
-        <View style={styles.actionIconsContainer}>
+        <View className="flex-row gap-x-2 absolute right-2">
           {value && (
             <Ionicons
               name="close"
@@ -64,34 +61,12 @@ export default function SeedPhraseInput({
         </View>
       </View>
 
-      {infoText ? <Text style={styles.infoText}>{infoText}</Text> : null}
-      {errorText ? <Text style={styles.errorText}>{errorText}</Text> : null}
+      {infoText ? (
+        <Text className="text-sm text-gray-500 font-[Poppins]">{infoText}</Text>
+      ) : null}
+      {errorText ? (
+        <Text className="text-sm text-red-500 font-[Poppins]">{errorText}</Text>
+      ) : null}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  label: {
-    fontSize: FONT_SIZE['xl'],
-    ...globalStyles.textMedium
-  },
-  inputContainer: { flexDirection: 'row', alignItems: 'center' },
-  inputContent: {
-    fontSize: FONT_SIZE['lg'],
-    ...globalStyles.text
-  },
-  actionIconsContainer: {
-    flexDirection: 'row',
-    gap: 5,
-    position: 'absolute',
-    right: 10
-  },
-  infoText: {
-    color: '#a3a3a3',
-    ...globalStyles.text
-  },
-  errorText: {
-    color: '#ef4444',
-    ...globalStyles.text
-  }
-});

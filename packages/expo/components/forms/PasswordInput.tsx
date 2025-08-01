@@ -1,8 +1,8 @@
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { TextStyle, View } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
+import { Text, TextStyle, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 
 type Props = {
   label: string;
@@ -29,10 +29,7 @@ export default function PasswordInput({
 
   return (
     <View className="gap-y-2">
-      <Text
-        className="text-lg font-semibold font-[Poppins-SemiBold]"
-        style={labelStyle}
-      >
+      <Text className="text-lg font-[Poppins]" style={labelStyle}>
         {label}
       </Text>
 

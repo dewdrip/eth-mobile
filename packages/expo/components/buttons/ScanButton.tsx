@@ -1,8 +1,8 @@
+import { FONT_SIZE } from '@/utils/constants';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
+import { Pressable } from 'react-native';
 import { useModal } from 'react-native-modalfy';
-// @ts-ignore
-import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import { FONT_SIZE } from '../../utils/styles';
 
 type Props = {
   onScan: (value: string) => void;
@@ -18,15 +18,12 @@ export default function ScanButton({ onScan }: Props) {
   };
 
   return (
-    <IconButton
-      icon={() => (
-        <MaterialCommunityIcons
-          name="qrcode-scan"
-          size={1.3 * FONT_SIZE['xl']}
-          color="black"
-        />
-      )}
-      onPress={scan}
-    />
+    <Pressable onPress={scan}>
+      <MaterialCommunityIcons
+        name="qrcode-scan"
+        size={1.3 * FONT_SIZE['xl']}
+        color="black"
+      />
+    </Pressable>
   );
 }

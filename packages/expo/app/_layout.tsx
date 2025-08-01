@@ -5,11 +5,12 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+function RootLayout() {
   const [loaded] = useFonts({
     Poppins: require('../assets/fonts/Poppins-Regular.ttf')
   });
@@ -20,13 +21,28 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+  const auth = useSelector((state: any) => state.auth);
+
   if (!loaded) {
     return null;
   }
 
   return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Protected guard={auth.isLoggedIn}>
+        <Stack.Screen name="(dashboard)" />
+      </Stack.Protected>
+      <Stack.Protected guard={!auth.isLoggedIn}>
+        <Stack.Screen name="(auth)" />
+      </Stack.Protected>
+    </Stack>
+  );
+}
+
+export default function RootLayoutProviders() {
+  return (
     <Providers>
-      <Stack screenOptions={{ headerShown: false }} />
+      <RootLayout />
     </Providers>
   );
 }

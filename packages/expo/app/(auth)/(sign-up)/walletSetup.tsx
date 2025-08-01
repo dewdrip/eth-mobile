@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native';
 
-export default function WalletOptions() {
+export default function WalletSetup() {
   const router = useRouter();
   return (
     <SafeAreaView className="flex-1 bg-white">

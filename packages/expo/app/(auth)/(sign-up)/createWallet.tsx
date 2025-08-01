@@ -147,14 +147,13 @@ export default function CreateWallet() {
 
         <ScrollView className="flex-1 px-4 mt-4">
           <Text
-            className="text-2xl font-[Poppins]"
+            className="text-3xl font-[Poppins] max-w-[80%]"
             style={{ color: COLORS.primary }}
           >
             Write Down Your Seed Phrase
           </Text>
-          <Text className="text-base text-gray-500 font-[Poppins]">
-            This is your seed phrase. Write it down on a piece of paper and keep
-            it in a safe place.
+          <Text className="text-lg text-gray-500 font-[Poppins]">
+            Write it down on a piece of paper and keep it safe.
           </Text>
 
           <Divider style={{ marginVertical: 16 }} />

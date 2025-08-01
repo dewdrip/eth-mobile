@@ -47,7 +47,7 @@ export default function Onboarding() {
 
           <Button
             text="Let's Get Started"
-            onPress={() => router.push('/walletOptions')}
+            onPress={() => router.push('/walletSetup')}
           />
         </View>
       </ScrollView>

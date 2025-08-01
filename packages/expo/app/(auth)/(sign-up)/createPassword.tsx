@@ -89,12 +89,12 @@ function CreatePassword() {
 
       <ScrollView className="flex-1 px-4 mt-4">
         <Text
-          className="text-2xl font-[Poppins]"
+          className="text-3xl font-[Poppins]"
           style={{ color: COLORS.primary }}
         >
           Create Password
         </Text>
-        <Text className="text-base text-gray-500 font-[Poppins]">
+        <Text className="text-lg text-gray-500 font-[Poppins]">
           This password will unlock ETH Mobile only on this device
         </Text>
 

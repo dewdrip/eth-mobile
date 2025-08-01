@@ -54,8 +54,11 @@ export default function WalletOptions() {
             have an account
           </Text>
 
-          <View className="w-full gap-y-3">
-            <Button text="Create a New Wallet" onPress={() => {}} />
+          <View className="w-full gap-y-2">
+            <Button
+              text="Create a New Wallet"
+              onPress={() => router.push('/(auth)/(sign-up)/createPassword')}
+            />
 
             <Button
               type="outline"

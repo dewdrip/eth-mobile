@@ -206,8 +206,7 @@ function ImportWallet() {
             loading={isImporting}
             style={{
               marginTop: 20,
-              marginBottom: 50,
-              paddingVertical: 5
+              marginBottom: 50
             }}
           />
         </View>

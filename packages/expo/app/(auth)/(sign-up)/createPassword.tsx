@@ -3,7 +3,7 @@ import Button from '@/components/buttons/CustomButton';
 import PasswordInput from '@/components/forms/PasswordInput';
 import { setBiometrics } from '@/store/reducers/Settings';
 import { COLORS } from '@/utils/constants';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import * as Keychain from 'react-native-keychain';
@@ -12,7 +12,7 @@ import { Divider, Switch } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 
 function CreatePassword() {
-  const navigation = useNavigation();
+  const router = useRouter();
   // const toast = useToast();
 
   const [password, setPassword] = useState('');
@@ -67,7 +67,7 @@ function CreatePassword() {
       setConfirmPassword('');
 
       // @ts-ignore
-      navigation.navigate('CreateWallet', { password });
+      router.push({ pathname: '/createWallet', params: { password } });
     } catch (error) {
       //   toast.show('Failed to create password. Please try again', {
       //     type: 'danger',
@@ -89,7 +89,7 @@ function CreatePassword() {
 
       <ScrollView className="flex-1 px-4 mt-4">
         <Text
-          className="text-3xl font-[Poppins]"
+          className="text-2xl font-[Poppins]"
           style={{ color: COLORS.primary }}
         >
           Create Password

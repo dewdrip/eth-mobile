@@ -1,8 +1,8 @@
+import { COLORS } from '@/utils/constants';
 import { BlurView } from '@react-native-community/blur';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
-import { COLORS } from '../utils/constants';
+import { StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native-paper';
 
 type Props = {
   seedPhrase: string | undefined;
@@ -18,10 +18,16 @@ export default function SeedPhrase({ seedPhrase, onReveal }: Props) {
     onReveal();
   };
   return (
-    <View style={styles.seedPhraseContainer}>
-      <View style={styles.seedPhraseWrapper}>
+    <View
+      className="w-full border-2 rounded-2xl p-4"
+      style={{ borderColor: COLORS.primary }}
+    >
+      <View className="flex-row flex-wrap justify-between items-center w-full">
         {seedPhrase?.split(' ').map((word, index) => (
-          <Text key={word} style={styles.word}>
+          <Text
+            key={word}
+            className="w-[45%] p-2 bg-gray-100 rounded-2xl text-center font-bold mb-2 font-[Poppins]"
+          >
             {index + 1}. {word}
           </Text>
         ))}
@@ -35,25 +41,11 @@ export default function SeedPhrase({ seedPhrase, onReveal }: Props) {
             blurAmount={6}
             reducedTransparencyFallbackColor="white"
           />
-          <View style={styles.seedPhraseMask}>
-            <Text
-              variant="titleLarge"
-              style={{
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontFamily: 'Poppins'
-              }}
-            >
+          <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center gap-y-2">
+            <Text className="text-lg font-[Poppins]">
               Tap to reveal your seed phrase
             </Text>
-            <Text
-              variant="bodyMedium"
-              style={{
-                textAlign: 'center',
-                marginTop: 8,
-                fontFamily: 'Poppins'
-              }}
-            >
+            <Text className="text-sm text-gray-500 font-[Poppins]">
               Make sure no one is watching your screen
             </Text>
             <Button
@@ -61,7 +53,11 @@ export default function SeedPhrase({ seedPhrase, onReveal }: Props) {
               icon="eye"
               onPress={reveal}
               style={styles.viewButton}
-              labelStyle={{ color: 'white', fontFamily: 'Poppins' }}
+              labelStyle={{
+                color: 'white',
+                fontSize: 16,
+                fontFamily: 'Poppins'
+              }}
             >
               View
             </Button>
@@ -73,42 +69,12 @@ export default function SeedPhrase({ seedPhrase, onReveal }: Props) {
 }
 
 const styles = StyleSheet.create({
-  seedPhraseContainer: {
-    width: '100%',
-    borderWidth: 2,
-    borderColor: COLORS.primary,
-    borderRadius: 40,
-    padding: 15
-  },
-  seedPhraseWrapper: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%'
-  },
-  word: {
-    width: '45%',
-    padding: 10,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 25,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginBottom: 10,
-    fontFamily: 'Poppins'
-  },
   blurView: {
     position: 'absolute',
     top: -20,
     left: -20,
     bottom: -20,
     right: -20
-  },
-  seedPhraseMask: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 8
   },
   viewButton: {
     marginTop: 8,

@@ -24,7 +24,7 @@
     "expo:install": "yarn workspace @ethmobile/expo expo install",
     "expo:lint": "yarn workspace @ethmobile/expo lint",
     "expo:uninstall": "yarn workspace @ethmobile/expo expo uninstall",
-    "expo:list-routers": "yarn workspace @ethmobile/expo list-routers",
+    "expo:list-routes": "yarn workspace @ethmobile/expo list-routes",
     "expo:remove": "yarn workspace @ethmobile/expo remove",
     "expo:start": "yarn workspace @ethmobile/expo start",
     "fork": "yarn hardhat:fork",

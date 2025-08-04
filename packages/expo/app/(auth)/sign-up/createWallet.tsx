@@ -147,7 +147,7 @@ export default function CreateWallet() {
 
         <ScrollView className="flex-1 px-4 mt-4">
           <Text
-            className="text-3xl font-[Poppins] max-w-[80%]"
+            className="text-3xl font-[Poppins]"
             style={{ color: COLORS.primary }}
           >
             Write Down Your Seed Phrase

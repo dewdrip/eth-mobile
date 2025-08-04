@@ -5,7 +5,7 @@
   "scripts": {
     "android": "expo run:android",
     "configure-network": "ts-node utils/eth-mobile/configureLocalNetwork.ts",
-    "list-routers": "npx expo-router-sitemap",
+    "list-routes": "npx expo-router-sitemap",
     "format": "prettier . --write",
     "ios": "expo run:ios",
     "lint": "expo lint",
@@ -44,6 +44,7 @@
     "expo-status-bar": "~2.2.3",
     "expo-system-ui": "~5.0.6",
     "expo-web-browser": "~14.1.6",
+    "fast-text-encoding": "^1.0.6",
     "moment": "^2.30.1",
     "nativewind": "^4.1.23",
     "prettier-plugin-tailwindcss": "^0.6.14",
@@ -82,6 +83,7 @@
   "devDependencies": {
     "@babel/core": "^7.27.1",
     "@ianvs/prettier-plugin-sort-imports": "4.3.1",
+    "@types/fast-text-encoding": "^1",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.1.2",
     "@types/react-test-renderer": "^19.1.0",

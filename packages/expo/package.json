@@ -5,8 +5,7 @@
   "scripts": {
     "android": "expo run:android",
     "configure-network": "ts-node utils/eth-mobile/configureLocalNetwork.ts",
-    "expo:install": "expo install",
-    "expo:uninstall": "expo uninstall",
+    "list-routers": "npx expo-router-sitemap",
     "format": "prettier . --write",
     "ios": "expo run:ios",
     "lint": "expo lint",

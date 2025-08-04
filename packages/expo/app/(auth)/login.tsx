@@ -147,14 +147,17 @@ export default function Login() {
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView
         contentContainerClassName="flex-1 justify-center items-center"
-        className="p-4 bg-white"
+        className="p-4"
       >
         <Logo />
-        <Text className="text-2xl font-bold text-primary mt-10">
+        <Text
+          className="text-3xl font-[Poppins] mt-10"
+          style={{ color: COLORS.primary }}
+        >
           Welcome Back!
         </Text>
 
-        <View className="mt-4">
+        <View className="my-4 w-full">
           <PasswordInput
             label="Password"
             value={password}
@@ -176,13 +179,15 @@ export default function Login() {
           }
         />
 
-        <Text className="text-sm text-primary">
+        <Text className="text-base mt-2 font-[Poppins] text-gray-700">
           Wallet won't unlock? You can ERASE your current wallet and setup a new
           one
         </Text>
 
-        <Pressable onPress={handleResetWallet} className="opacity-80">
-          <Text className="text-primary">Reset Wallet</Text>
+        <Pressable onPress={handleResetWallet} className="mt-10">
+          <Text className="text-2xl text-red-400 font-[Poppins]">
+            Reset Wallet
+          </Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>

@@ -108,7 +108,7 @@ export default function CreateWallet() {
       );
       dispatch(loginUser());
       //@ts-ignore
-      router.push('/dashboard');
+      router.push('/(dashboard)');
     } catch (error) {
       //   toast.show('Failed to save wallet', {
       //     type: 'danger',

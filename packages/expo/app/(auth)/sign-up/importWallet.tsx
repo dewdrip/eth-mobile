@@ -3,7 +3,6 @@ import Button from '@/components/buttons/CustomButton';
 import ScanButton from '@/components/buttons/ScanButton';
 import PasswordInput from '@/components/forms/PasswordInput';
 import SeedPhraseInput from '@/components/forms/SeedPhraseInput';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '@/core/Encryptor';
 import { useSecureStorage, useWallet } from '@/hooks/eth-mobile';
 import { ethers } from '@/patches/ethers';
 import { initAccounts } from '@/store/reducers/Accounts';
@@ -11,6 +10,10 @@ import { loginUser } from '@/store/reducers/Auth';
 import { setBiometrics } from '@/store/reducers/Settings';
 import { initWallet } from '@/store/reducers/Wallet';
 import { COLORS } from '@/utils/constants';
+import {
+  Encryptor,
+  LEGACY_DERIVATION_OPTIONS
+} from '@/utils/eth-mobile/encryptor';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';

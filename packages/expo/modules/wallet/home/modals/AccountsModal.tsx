@@ -1,6 +1,5 @@
 import Button from '@/components/buttons/CustomButton';
 import { Blockie } from '@/components/eth-mobile';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '@/core/Encryptor';
 import { useAccount, useSecureStorage, useWallet } from '@/hooks/eth-mobile';
 import { Account, addAccount, switchAccount } from '@/store/reducers/Accounts';
 import {
@@ -10,6 +9,10 @@ import {
 import { COLORS } from '@/utils/constants';
 import Device from '@/utils/device';
 import { truncateAddress } from '@/utils/eth-mobile';
+import {
+  Encryptor,
+  LEGACY_DERIVATION_OPTIONS
+} from '@/utils/eth-mobile/encryptor';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';

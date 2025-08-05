@@ -1,10 +1,13 @@
 import Button from '@/components/buttons/CustomButton';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '@/core/Encryptor';
 import { useSecureStorage } from '@/hooks/eth-mobile';
 import { Account, addAccount, switchAccount } from '@/store/reducers/Accounts';
 import { addAccount as addWalletAccount } from '@/store/reducers/Wallet';
 import { COLORS } from '@/utils/constants';
 import Device from '@/utils/device';
+import {
+  Encryptor,
+  LEGACY_DERIVATION_OPTIONS
+} from '@/utils/eth-mobile/encryptor';
 import { FONT_SIZE, WINDOW_WIDTH } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { ethers } from 'ethers';

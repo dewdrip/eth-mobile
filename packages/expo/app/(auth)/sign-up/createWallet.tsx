@@ -1,12 +1,15 @@
 import BackButton from '@/components/buttons/BackButton';
 import Button from '@/components/buttons/CustomButton';
 import SeedPhrase from '@/components/SeedPhrase';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '@/core/Encryptor';
 import { useSecureStorage, useWallet } from '@/hooks/eth-mobile';
 import { initAccounts } from '@/store/reducers/Accounts';
 import { loginUser } from '@/store/reducers/Auth';
 import { initWallet } from '@/store/reducers/Wallet';
 import { COLORS } from '@/utils/constants';
+import {
+  Encryptor,
+  LEGACY_DERIVATION_OPTIONS
+} from '@/utils/eth-mobile/encryptor';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';

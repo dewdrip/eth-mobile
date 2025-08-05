@@ -1752,6 +1752,7 @@ __metadata:
     react: 19.0.0
     react-dom: 19.0.0
     react-native: 0.79.2
+    react-native-aes-crypto: ^3.2.1
     react-native-camera-kit: ^15.1.0
     react-native-device-info: ^14.0.4
     react-native-gesture-handler: 2.25.0
@@ -13077,6 +13078,13 @@ __metadata:
   version: 19.1.0
   resolution: "react-is@npm:19.1.0"
   checksum: 3eb4eac7f09bf178bdc6fa98d384f5f243b85de7c99679a88b0154ead4d818ad94386ccb00ea31ec52409ffd13299057f5ec6ca2eaec06f9f7eddc1ad4832332
+  languageName: node
+  linkType: hard
+
+"react-native-aes-crypto@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "react-native-aes-crypto@npm:3.2.1"
+  checksum: 00d6cbbfa49c536a833f44c4fb32e32245d86cf431a20c1148c1ab350c0c7789e745b383d44cd1132fa596f2ecdd412aec361391c391ca4e53bb0e712f4684fa
   languageName: node
   linkType: hard
 

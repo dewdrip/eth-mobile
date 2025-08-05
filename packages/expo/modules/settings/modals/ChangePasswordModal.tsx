@@ -1,10 +1,13 @@
 import Button from '@/components/buttons/CustomButton';
 import PasswordInput from '@/components/forms/PasswordInput';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '@/core/Encryptor';
 import { useSecureStorage } from '@/hooks/eth-mobile';
 import { setPassword as setWalletPassword } from '@/store/reducers/Wallet';
 import { FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
+import {
+  Encryptor,
+  LEGACY_DERIVATION_OPTIONS
+} from '@/utils/eth-mobile/encryptor';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';

@@ -2,13 +2,16 @@ import Button from '@/components/buttons/CustomButton';
 import PasswordInput from '@/components/forms/PasswordInput';
 import Logo from '@/components/Logo';
 import { ConsentModalParams } from '@/components/modals/ConsentModal';
-import { Encryptor, LEGACY_DERIVATION_OPTIONS } from '@/core/Encryptor';
 import { useSecureStorage } from '@/hooks/eth-mobile';
 import { loginUser, logoutUser } from '@/store/reducers/Auth';
 import { clearRecipients } from '@/store/reducers/Recipients';
 import { clearSettings } from '@/store/reducers/Settings';
 import { clearWallet, initWallet } from '@/store/reducers/Wallet';
 import { COLORS } from '@/utils/constants';
+import {
+  Encryptor,
+  LEGACY_DERIVATION_OPTIONS
+} from '@/utils/eth-mobile/encryptor';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
 import {

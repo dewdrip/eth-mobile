@@ -208,13 +208,13 @@ export default function Login() {
           }
         />
 
-        <Text className="text-base mt-2 font-[Poppins] text-gray-700">
+        <Text className="text-base text-center mt-2 font-[Poppins] text-gray-700">
           Wallet won't unlock? You can ERASE your current wallet and setup a new
           one
         </Text>
 
         <Pressable onPress={handleResetWallet} className="mt-10">
-          <Text className="text-2xl text-red-400 font-[Poppins]">
+          <Text className="text-xl text-red-400 font-[Poppins]">
             Reset Wallet
           </Text>
         </Pressable>

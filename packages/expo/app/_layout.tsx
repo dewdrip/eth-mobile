@@ -29,12 +29,19 @@ function RootLayout() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={auth.isLoggedIn}>
-        <Stack.Screen name="(dashboard)" />
+      <Stack.Protected guard={!auth.hasOnboarded}>
+        <Stack.Screen name="index" />
       </Stack.Protected>
-      <Stack.Protected guard={!auth.isLoggedIn}>
-        <Stack.Screen name="(auth)" />
+
+      <Stack.Protected guard={!auth.isSignedUp}>
+        <Stack.Screen name="(sign-up)" />
       </Stack.Protected>
+
+      <Stack.Protected guard={auth.isSignedUp}>
+        <Stack.Screen name="login" />
+      </Stack.Protected>
+
+      <Stack.Screen name="(dashboard)" />
     </Stack>
   );
 }

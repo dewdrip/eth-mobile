@@ -67,7 +67,7 @@ function CreatePassword() {
       setConfirmPassword('');
 
       // @ts-ignore
-      router.push({ pathname: '/sign-up/createWallet', params: { password } });
+      router.push({ pathname: '/createWallet', params: { password } });
     } catch (error) {
       //   toast.show('Failed to create password. Please try again', {
       //     type: 'danger',

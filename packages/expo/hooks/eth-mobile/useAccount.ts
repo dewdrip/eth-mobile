@@ -10,9 +10,5 @@ export function useAccount() {
     state.accounts.find((account: Account) => account.isConnected)
   );
 
-  return {
-    name: 'Account 0',
-    address: '0x0000000000000000000000000000000000000000',
-    isConnected: true
-  };
+  return connectedAccount;
 }

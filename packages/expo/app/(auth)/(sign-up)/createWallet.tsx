@@ -3,13 +3,10 @@ import Button from '@/components/buttons/CustomButton';
 import SeedPhrase from '@/components/SeedPhrase';
 import { useSecureStorage, useWallet } from '@/hooks/eth-mobile';
 import { initAccounts } from '@/store/reducers/Accounts';
-import { loginUser } from '@/store/reducers/Auth';
+import { initAuth, setHasOnboarded } from '@/store/reducers/Auth';
 import { initWallet } from '@/store/reducers/Wallet';
 import { COLORS } from '@/utils/constants';
-import {
-  Encryptor,
-  LEGACY_DERIVATION_OPTIONS
-} from '@/utils/eth-mobile/encryptor';
+import { Encryptor } from '@/utils/eth-mobile/encryptor';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -81,13 +78,11 @@ export default function CreateWallet() {
         await saveItemWithBiometrics('password', password);
       }
 
-      const encryptor = new Encryptor({
-        keyDerivationOptions: LEGACY_DERIVATION_OPTIONS
-      });
+      const encryptor = new Encryptor();
 
       const encryptedMnemonic = await encryptor.encrypt(
-        password,
-        wallet.mnemonic
+        wallet.mnemonic,
+        password
       );
 
       await saveItem('seedPhrase', encryptedMnemonic);
@@ -97,7 +92,7 @@ export default function CreateWallet() {
         privateKey: wallet.privateKey
       };
 
-      const encryptedAccount = await encryptor.encrypt(password, [account]);
+      const encryptedAccount = await encryptor.encrypt([account], password);
 
       await saveItem('accounts', encryptedAccount);
 
@@ -109,9 +104,11 @@ export default function CreateWallet() {
           accounts: [account]
         })
       );
-      dispatch(loginUser());
-      //@ts-ignore
-      router.push('/(dashboard)');
+      dispatch(initAuth());
+
+      setTimeout(() => {
+        router.replace('/(dashboard)');
+      }, 200);
     } catch (error) {
       //   toast.show('Failed to save wallet', {
       //     type: 'danger',

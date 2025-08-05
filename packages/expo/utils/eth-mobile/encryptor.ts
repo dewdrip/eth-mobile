@@ -1,5 +1,10 @@
 import Aes from 'react-native-aes-crypto';
 
+export interface EncryptedData {
+  cipher: string;
+  iv: string;
+}
+
 export class Encryptor {
   generateKey = (
     password: string,
@@ -8,17 +13,22 @@ export class Encryptor {
     length: number
   ) => Aes.pbkdf2(password, salt, cost, length, 'sha256');
 
-  encrypt = async (data: string, password: string) => {
+  encrypt = async (data: any, password: string): Promise<EncryptedData> => {
     const key = await this.generateKey(password, 'salt', 5000, 256);
     const iv = await Aes.randomKey(16);
-    const cipher = await Aes.encrypt(data, key, iv, 'aes-256-cbc');
+    const cipher = await Aes.encrypt(
+      JSON.stringify(data),
+      key,
+      iv,
+      'aes-256-cbc'
+    );
     return { cipher, iv };
   };
 
   decrypt = async (
-    encryptedData: { cipher: string; iv: string },
+    encryptedData: EncryptedData,
     password: string
-  ) => {
+  ): Promise<string> => {
     const key = await this.generateKey(password, 'salt', 5000, 256);
     const decrypted = await Aes.decrypt(
       encryptedData.cipher,

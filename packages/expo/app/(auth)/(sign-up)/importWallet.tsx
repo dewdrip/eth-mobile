@@ -6,14 +6,11 @@ import SeedPhraseInput from '@/components/forms/SeedPhraseInput';
 import { useSecureStorage, useWallet } from '@/hooks/eth-mobile';
 import { ethers } from '@/patches/ethers';
 import { initAccounts } from '@/store/reducers/Accounts';
-import { loginUser } from '@/store/reducers/Auth';
+import { initAuth, setHasOnboarded } from '@/store/reducers/Auth';
 import { setBiometrics } from '@/store/reducers/Settings';
 import { initWallet } from '@/store/reducers/Wallet';
 import { COLORS } from '@/utils/constants';
-import {
-  Encryptor,
-  LEGACY_DERIVATION_OPTIONS
-} from '@/utils/eth-mobile/encryptor';
+import { Encryptor } from '@/utils/eth-mobile/encryptor';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
@@ -106,13 +103,12 @@ function ImportWallet() {
 
         dispatch(setBiometrics(true));
       }
-      const encryptor = new Encryptor({
-        keyDerivationOptions: LEGACY_DERIVATION_OPTIONS
-      });
+
+      const encryptor = new Encryptor();
 
       const encryptedMnemonic = await encryptor.encrypt(
-        password,
-        wallet.mnemonic
+        wallet.mnemonic,
+        password
       );
 
       await saveItem('seedPhrase', encryptedMnemonic);
@@ -121,7 +117,7 @@ function ImportWallet() {
         privateKey: wallet.privateKey
       };
 
-      const encryptedAccount = await encryptor.encrypt(password, [account]);
+      const encryptedAccount = await encryptor.encrypt([account], password);
       await saveItem('accounts', encryptedAccount);
 
       dispatch(initAccounts([account.address]));
@@ -132,8 +128,12 @@ function ImportWallet() {
           accounts: [account]
         })
       );
-      dispatch(loginUser());
-      router.push('/(dashboard)');
+      dispatch(initAuth());
+      dispatch(setHasOnboarded());
+
+      setTimeout(() => {
+        router.replace('/(dashboard)');
+      }, 100);
     } catch (error) {
       //   toast.show(
       //     'Failed to import wallet. Please ensure you have a stable network connection and try again',

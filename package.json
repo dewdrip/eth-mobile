@@ -48,6 +48,7 @@
     "hardhat:verify": "yarn workspace @ethmobile/hardhat verify",
     "ios": "yarn workspace @ethmobile/expo ios",
     "lint": "yarn expo:lint && yarn hardhat:lint",
+    "list-routes": "yarn workspace @ethmobile/expo list-routes",
     "patch-ethers": "yarn workspace @ethmobile/expo patch-ethers",
     "postinstall": "husky install",
     "prebuild": "yarn workspace @ethmobile/expo prebuild",

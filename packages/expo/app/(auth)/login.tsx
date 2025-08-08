@@ -3,6 +3,7 @@ import PasswordInput from '@/components/forms/PasswordInput';
 import Logo from '@/components/Logo';
 import { ConsentModalParams } from '@/components/modals/ConsentModal';
 import { useSecureStorage } from '@/hooks/eth-mobile';
+import { clearAccounts } from '@/store/reducers/Accounts';
 import { initAuth, resetAuth } from '@/store/reducers/Auth';
 import { clearRecipients } from '@/store/reducers/Recipients';
 import { clearSettings } from '@/store/reducers/Settings';
@@ -130,6 +131,7 @@ export default function Login() {
   const resetWallet = async () => {
     await removeItem('seedPhrase');
     await removeItem('accounts');
+    dispatch(clearAccounts());
     dispatch(clearRecipients());
     dispatch(clearWallet());
     dispatch(clearSettings());

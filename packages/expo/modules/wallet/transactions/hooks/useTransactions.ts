@@ -39,9 +39,9 @@ export function useTransactions() {
    * Ensures that the key is only recalculated when dependencies change.
    */
   const storageKey = useMemo(() => {
-    if (!network.id || !account.address) return null;
+    if (!network.id || !account?.address) return null;
     return getStorageKey(network.id, account.address);
-  }, [network.id, account.address]);
+  }, [network.id, account?.address]);
 
   /**
    * Retrieves transactions for the current account and network.

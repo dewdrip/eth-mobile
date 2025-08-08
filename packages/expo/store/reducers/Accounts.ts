@@ -65,6 +65,9 @@ export const accountsSlice = createSlice({
           return account;
         }
       });
+    },
+    clearAccounts: () => {
+      return [];
     }
   }
 });
@@ -74,7 +77,8 @@ export const {
   addAccount,
   switchAccount,
   removeAccount,
-  changeName
+  changeName,
+  clearAccounts
 } = accountsSlice.actions;
 
 export default accountsSlice.reducer;

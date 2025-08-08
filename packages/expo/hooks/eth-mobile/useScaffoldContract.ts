@@ -9,6 +9,7 @@ import {
   JsonRpcProvider,
   Wallet
 } from 'ethers';
+import { usePathname } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 import { useModal } from 'react-native-modalfy';
 import { useSelector } from 'react-redux';
@@ -58,7 +59,7 @@ export function useScaffoldContract({
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
   const route = useRoute();
-
+  const pathname = usePathname();
   const { openModal } = useModal();
   const { addTx } = useTransactions();
 
@@ -81,14 +82,12 @@ export function useScaffoldContract({
       const activeAccount = wallet.accounts.find(
         (account: Account) =>
           account.address.toLowerCase() ===
-          connectedAccount.address.toLowerCase()
+          connectedAccount?.address.toLowerCase()
       );
 
       if (!activeAccount) {
-        // Get current route for navigation context
-        const currentScreen = route.name;
         openModal('PromptWalletCreationModal', {
-          sourceScreen: currentScreen,
+          sourceScreen: pathname,
           sourceParams: route.params
         });
         return;

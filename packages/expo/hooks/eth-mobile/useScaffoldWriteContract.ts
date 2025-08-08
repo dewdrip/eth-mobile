@@ -9,6 +9,7 @@ import {
   JsonRpcProvider,
   Wallet
 } from 'ethers';
+import { usePathname } from 'expo-router';
 import { useState } from 'react';
 import { useModal } from 'react-native-modalfy';
 // import { useToast } from 'react-native-toast-notifications';
@@ -51,6 +52,7 @@ export function useScaffoldWriteContract({
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
   const route = useRoute();
+  const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
   const [isMining, setIsMining] = useState(false);
 
@@ -73,14 +75,12 @@ export function useScaffoldWriteContract({
         const activeAccount = wallet.accounts.find(
           (account: Account) =>
             account.address.toLowerCase() ===
-            connectedAccount.address.toLowerCase()
+            connectedAccount?.address.toLowerCase()
         );
 
         if (!activeAccount) {
-          // Get current route for navigation context
-          const currentScreen = route.name;
           openModal('PromptWalletCreationModal', {
-            sourceScreen: currentScreen,
+            sourceScreen: pathname,
             sourceParams: route.params
           });
           return;

@@ -53,6 +53,7 @@ export default function Login() {
     const seedPhrase = await encryptor.decrypt(encryptedSeedPhrase, password);
 
     if (!seedPhrase) {
+      console.log('Incorrect password!');
       // toast.show('Incorrect password!', {
       //   type: 'danger',
       //   placement: 'top'
@@ -65,7 +66,7 @@ export default function Login() {
       password
     );
 
-    const accounts = JSON.parse(decryptedAccounts) as string[];
+    const accounts = JSON.parse(decryptedAccounts!) as string[];
 
     dispatch(
       initWallet({

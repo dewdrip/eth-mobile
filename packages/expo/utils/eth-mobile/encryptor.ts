@@ -28,14 +28,18 @@ export class Encryptor {
   decrypt = async (
     encryptedData: EncryptedData,
     password: string
-  ): Promise<string> => {
-    const key = await this.generateKey(password, 'salt', 5000, 256);
-    const decrypted = await Aes.decrypt(
-      encryptedData.cipher,
-      key,
-      encryptedData.iv,
-      'aes-256-cbc'
-    );
-    return decrypted;
+  ): Promise<string | undefined> => {
+    try {
+      const key = await this.generateKey(password, 'salt', 5000, 256);
+      const decrypted = await Aes.decrypt(
+        encryptedData.cipher,
+        key,
+        encryptedData.iv,
+        'aes-256-cbc'
+      );
+      return decrypted;
+    } catch (error) {
+      return undefined;
+    }
   };
 }

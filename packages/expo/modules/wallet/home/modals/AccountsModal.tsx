@@ -9,10 +9,7 @@ import {
 import { COLORS } from '@/utils/constants';
 import Device from '@/utils/device';
 import { truncateAddress } from '@/utils/eth-mobile';
-import {
-  Encryptor,
-  LEGACY_DERIVATION_OPTIONS
-} from '@/utils/eth-mobile/encryptor';
+import { Encryptor } from '@/utils/eth-mobile/encryptor';
 import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -69,14 +66,12 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
       return;
     }
 
-    const encryptor = new Encryptor({
-      keyDerivationOptions: LEGACY_DERIVATION_OPTIONS
-    });
+    const encryptor = new Encryptor();
 
-    const encryptedAccounts = await encryptor.encrypt(wallet.password, [
-      ...wallet.accounts,
-      newAccount
-    ] as any);
+    const encryptedAccounts = await encryptor.encrypt(
+      [...wallet.accounts, newAccount],
+      wallet.password
+    );
 
     await saveItem('accounts', encryptedAccounts);
 
@@ -103,7 +98,7 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
         />
       </View>
 
-      <ScrollView className="max-h-[20%]">
+      <ScrollView style={{ maxHeight: Device.getDeviceHeight() * 0.2 }}>
         {accounts.map((account, index) => (
           <Pressable
             key={account.address}

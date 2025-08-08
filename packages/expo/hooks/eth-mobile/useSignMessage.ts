@@ -1,5 +1,6 @@
 import { Account } from '@/store/reducers/Wallet';
 import { getParsedError } from '@/utils/eth-mobile';
+import { useRoute } from '@react-navigation/native';
 import { JsonRpcProvider, Wallet } from 'ethers';
 import { useModal } from 'react-native-modalfy';
 import { useSelector } from 'react-redux';
@@ -27,6 +28,7 @@ export function useSignMessage({
   const network = useNetwork();
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
+  const route = useRoute();
 
   /**
    * Signs a message using the connected wallet.
@@ -69,7 +71,12 @@ export function useSignMessage({
           );
 
           if (!activeAccount) {
-            openModal('PromptWalletCreationModal');
+            // Get current route for navigation context
+            const currentScreen = route.name;
+            openModal('PromptWalletCreationModal', {
+              sourceScreen: currentScreen,
+              sourceParams: route.params
+            });
             return;
           }
 

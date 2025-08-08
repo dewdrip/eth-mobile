@@ -1,5 +1,7 @@
+import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
 import { Account } from '@/store/reducers/Wallet';
 import { parseFloat } from '@/utils/eth-mobile';
+import { useRoute } from '@react-navigation/native';
 import {
   Contract,
   formatEther,
@@ -55,8 +57,10 @@ export function useScaffoldContract({
   const network = useNetwork();
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
+  const route = useRoute();
 
   const { openModal } = useModal();
+  const { addTx } = useTransactions();
 
   const { data: deployedContractData } = useDeployedContractInfo({
     contractName
@@ -81,7 +85,12 @@ export function useScaffoldContract({
       );
 
       if (!activeAccount) {
-        openModal('PromptWalletCreationModal');
+        // Get current route for navigation context
+        const currentScreen = route.name;
+        openModal('PromptWalletCreationModal', {
+          sourceScreen: currentScreen,
+          sourceParams: route.params
+        });
         return;
       }
 
@@ -99,7 +108,8 @@ export function useScaffoldContract({
     deployedContractData,
     network?.provider,
     connectedAccount?.address,
-    wallet.accounts
+    wallet.accounts,
+    route
   ]);
 
   const contractInstance = useMemo(() => {

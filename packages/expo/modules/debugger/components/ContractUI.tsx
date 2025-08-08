@@ -45,10 +45,10 @@ export default function ContractUI() {
         style={globalStyles.shadow}
       >
         <Text className="text-lg font-[Poppins]">{contractName}</Text>
-        <Address address={deployedContractData.address} />
+        <Address address={deployedContractData?.address} />
         <View className="flex-row items-center">
           <Text className="text-lg font-[Poppins]">Balance: </Text>
-          <Balance address={deployedContractData.address} />
+          <Balance address={deployedContractData?.address} />
         </View>
         {network && (
           <View className="flex-row items-center">

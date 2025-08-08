@@ -1,6 +1,7 @@
 import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
 import { Account } from '@/store/reducers/Wallet';
 import { getParsedError, parseFloat } from '@/utils/eth-mobile';
+import { useRoute } from '@react-navigation/native';
 import { Abi } from 'abitype';
 import {
   Contract,
@@ -9,6 +10,7 @@ import {
   JsonRpcProvider,
   Wallet
 } from 'ethers';
+import { usePathname } from 'expo-router';
 import { useState } from 'react';
 import { useModal } from 'react-native-modalfy';
 import { useSelector } from 'react-redux';
@@ -49,6 +51,8 @@ export function useWriteContract({
   // const toast = useToast();
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
+  const route = useRoute();
+  const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
   const [isMining, setIsMining] = useState(false);
 
@@ -66,11 +70,14 @@ export function useWriteContract({
         const activeAccount = wallet.accounts.find(
           (account: Account) =>
             account.address.toLowerCase() ===
-            connectedAccount.address.toLowerCase()
+            connectedAccount?.address.toLowerCase()
         );
 
         if (!activeAccount) {
-          openModal('PromptWalletCreationModal');
+          openModal('PromptWalletCreationModal', {
+            sourceScreen: pathname,
+            sourceParams: route.params
+          });
           return;
         }
 
@@ -108,7 +115,7 @@ export function useWriteContract({
           const activeAccount = wallet.accounts.find(
             (account: Account) =>
               account.address.toLowerCase() ===
-              connectedAccount.address.toLowerCase()
+              connectedAccount?.address.toLowerCase()
           );
 
           const activeWallet = new Wallet(activeAccount.privateKey, provider);

@@ -13,6 +13,7 @@ import {
 import Accounts from './reducers/Accounts';
 import Auth from './reducers/Auth';
 import ConnectedNetwork from './reducers/ConnectedNetwork';
+import Navigation from './reducers/Navigation';
 import NFTs from './reducers/NFTs';
 import Recipients from './reducers/Recipients';
 import Settings from './reducers/Settings';
@@ -24,7 +25,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage: AsyncStorage,
-  blacklist: ['wallet']
+  blacklist: ['wallet', 'navigation']
 };
 
 const reducers = combineReducers({
@@ -36,7 +37,8 @@ const reducers = combineReducers({
   tokens: Tokens,
   nfts: NFTs,
   wallet: Wallet,
-  settings: Settings
+  settings: Settings,
+  navigation: Navigation
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

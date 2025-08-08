@@ -7,6 +7,7 @@ import { useSecureStorage, useWallet } from '@/hooks/eth-mobile';
 import { ethers } from '@/patches/ethers';
 import { initAccounts } from '@/store/reducers/Accounts';
 import { initAuth, setHasOnboarded } from '@/store/reducers/Auth';
+import { clearPendingWalletCreation } from '@/store/reducers/Navigation';
 import { setBiometrics } from '@/store/reducers/Settings';
 import { initWallet } from '@/store/reducers/Wallet';
 import { COLORS } from '@/utils/constants';
@@ -16,7 +17,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import * as Keychain from 'react-native-keychain';
 import { Divider, Switch } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 function ImportWallet() {
   const router = useRouter();
@@ -24,7 +25,6 @@ function ImportWallet() {
   //   const toast = useToast();
   const { saveItem, saveItemWithBiometrics } = useSecureStorage();
   const { importWallet } = useWallet();
-
   const [seedPhrase, setSeedPhrase] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -32,6 +32,10 @@ function ImportWallet() {
   const [biometricType, setBiometricType] =
     useState<Keychain.BIOMETRY_TYPE | null>(null);
   const [isBiometricsEnabled, setIsBiometricsEnabled] = useState(false);
+
+  const pendingWalletCreation = useSelector(
+    (state: any) => state.navigation.pendingWalletCreation
+  );
 
   useEffect(() => {
     Keychain.getSupportedBiometryType().then(type => {
@@ -131,9 +135,27 @@ function ImportWallet() {
       dispatch(initAuth());
       dispatch(setHasOnboarded());
 
-      setTimeout(() => {
-        router.replace('/(dashboard)');
-      }, 100);
+      // Check if we need to navigate back to a pending screen
+      if (pendingWalletCreation.screen) {
+        dispatch(clearPendingWalletCreation());
+
+        // Navigate back to the original screen
+        setTimeout(() => {
+          if (pendingWalletCreation.params) {
+            router.dismissTo({
+              pathname: pendingWalletCreation.screen,
+              params: pendingWalletCreation.params
+            });
+          } else {
+            router.dismissTo(pendingWalletCreation.screen);
+          }
+        }, 200);
+      } else {
+        // Default navigation to dashboard
+        setTimeout(() => {
+          router.replace('/(dashboard)');
+        }, 200);
+      }
     } catch (error) {
       //   toast.show(
       //     'Failed to import wallet. Please ensure you have a stable network connection and try again',

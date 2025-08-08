@@ -1,6 +1,7 @@
 import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
 import { Account } from '@/store/reducers/Wallet';
 import { getParsedError, parseFloat } from '@/utils/eth-mobile';
+import { useRoute } from '@react-navigation/native';
 import {
   Contract,
   formatEther,
@@ -49,6 +50,7 @@ export function useScaffoldWriteContract({
   // const toast = useToast();
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
+  const route = useRoute();
   const [isLoading, setIsLoading] = useState(false);
   const [isMining, setIsMining] = useState(false);
 
@@ -75,7 +77,12 @@ export function useScaffoldWriteContract({
         );
 
         if (!activeAccount) {
-          openModal('PromptWalletCreationModal');
+          // Get current route for navigation context
+          const currentScreen = route.name;
+          openModal('PromptWalletCreationModal', {
+            sourceScreen: currentScreen,
+            sourceParams: route.params
+          });
           return;
         }
 

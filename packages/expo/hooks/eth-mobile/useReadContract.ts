@@ -62,7 +62,7 @@ export function useReadContract({
       const activeAccount = wallet.accounts.find(
         (account: Account) =>
           account.address.toLowerCase() ===
-          connectedAccount.address.toLowerCase()
+          connectedAccount?.address.toLowerCase()
       );
 
       let runner: ContractRunner;
@@ -108,7 +108,7 @@ export function useReadContract({
       const activeAccount = wallet.accounts.find(
         (account: Account) =>
           account.address.toLowerCase() ===
-          connectedAccount.address.toLowerCase()
+          connectedAccount?.address.toLowerCase()
       );
 
       let runner: ContractRunner;

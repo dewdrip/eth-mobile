@@ -1,6 +1,8 @@
 import Button from '@/components/buttons/CustomButton';
 import { Blockie } from '@/components/eth-mobile';
 import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { COLORS } from '@/utils/constants';
+import Device from '@/utils/device';
 import { parseBalance, parseFloat, truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
 import { ethers } from 'ethers';
@@ -117,109 +119,94 @@ export default function SignTransactionModal({
   }
 
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
-      <View className="mb-4">
-        <Text className="text-lg font-[Poppins]">{network.name} network</Text>
+    <View
+      className="bg-white rounded-3xl p-5 gap-y-2"
+      style={{ width: Device.getDeviceWidth() * 0.9 }}
+    >
+      <View className="gap-2">
         <Text className="text-lg font-[Poppins]">From:</Text>
 
-        <View className="flex-row items-center justify-between">
-          <Blockie address={account.address} size={1.8 * FONT_SIZE.xl} />
-          <View className="ml-4">
-            <Text className="text-lg font-[Poppins]">{account.name}</Text>
-            <Text className="text-lg font-[Poppins]">
-              Balance:{' '}
-              {balance !== null
-                ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
-                : null}
-            </Text>
+        <View className="bg-gray-100 rounded-lg p-2">
+          <View className="flex-row items-center gap-2">
+            <Blockie address={account.address} size={1.8 * FONT_SIZE['xl']} />
+
+            <View className="w-3/4">
+              <Text className="text-lg font-[Poppins]">{account.name}</Text>
+              <Text className="text-sm font-[Poppins]">
+                Balance:{' '}
+                {balance !== null
+                  ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
+                  : null}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
 
-      <View className="mb-4">
+      <View className="gap-2">
         <Text className="text-lg font-[Poppins]">To:</Text>
-        <View className="flex-row items-center justify-between">
-          <Blockie address={params.contractAddress} size={1.8 * FONT_SIZE.xl} />
+
+        <View className="flex-row items-center gap-2 bg-gray-100 rounded-lg p-2">
+          <Blockie
+            address={params.contractAddress}
+            size={1.8 * FONT_SIZE['xl']}
+          />
           <Text className="text-lg font-[Poppins]">
             {truncateAddress(params.contractAddress)}
           </Text>
         </View>
       </View>
 
-      <View className="flex-row items-center justify-between">
-        <Text className="text-lg font-[Poppins]">
+      <View className="flex-row items-center">
+        <Text className="text-base font-[Poppins]">
           {truncateAddress(params.contractAddress)}
         </Text>
-        <Text className="text-lg font-[Poppins]">
+        <Text className="text-base text-blue-500 font-[Poppins]">
           {' '}
           : {params.functionName.toUpperCase()}
         </Text>
       </View>
 
-      <Text className="text-2xl font-[Poppins]">
+      <Text className="text-2xl font-[Poppins] text-center">
         {ethers.formatEther(params.value)} {network.currencySymbol}
       </Text>
 
+      {/* Gas Fee Section */}
       <View className="border border-gray-300 rounded-lg p-2">
-        {/* Gas Fee Section */}
-        <View className="p-4">
-          <View className="flex-row justify-between">
-            <View>
-              <Text className="text-lg font-[Poppins]">Estimated Gas Fee</Text>
-              <Text className="text-lg font-[Poppins]">
-                Likely in {'<'} 30 seconds
-              </Text>
-            </View>
-            <View>
-              <Text className="text-lg font-[Poppins]">
-                {estimatedGasCost.min
-                  ? parseGasCost(estimatedGasCost.min)
-                  : null}{' '}
-                {network.currencySymbol}
-              </Text>
-              <Text className="text-lg font-[Poppins]">
-                Max:{' '}
-                {estimatedGasCost.max
-                  ? parseGasCost(estimatedGasCost.max)
-                  : null}{' '}
-                {network.currencySymbol}
-              </Text>
-            </View>
+        <View className="flex-row items-center justify-between">
+          <View>
+            <Text className="text-base font-[Poppins]">Estimated gas fee</Text>
+            <Text className="text-sm text-green-500 font-[Poppins]">
+              Likely in &lt; 30 second
+            </Text>
           </View>
+          <Text className="text-base font-[Poppins]">
+            {estimatedGasCost.max ? parseGasCost(estimatedGasCost.max) : null}{' '}
+            {network.currencySymbol}
+          </Text>
         </View>
 
-        <View className="h-px bg-gray-300" />
+        <View className="h-px bg-gray-200 my-2" />
 
-        {/* Total Section */}
-        <View className="p-4">
-          <View className="flex-row justify-between">
-            <View>
-              <Text className="text-lg font-[Poppins]">Total</Text>
-              <Text className="text-lg font-[Poppins]">Amount + Gas Fee</Text>
-            </View>
-            <View>
-              <Text className="text-lg font-[Poppins]">
-                {calcTotal().min || ''} {network.currencySymbol}
-              </Text>
-              <Text className="text-lg font-[Poppins]">
-                Max: {calcTotal().max || ''} {network.currencySymbol}
-              </Text>
-            </View>
-          </View>
+        <View className="flex-row items-center justify-between">
+          <Text className="text-lg font-semibold font-[Poppins-SemiBold]">
+            Total
+          </Text>
+          <Text className="text-lg font-medium font-[Poppins-Medium]">
+            {calcTotal().max || ''} {network.currencySymbol}
+          </Text>
         </View>
       </View>
 
       <View className="flex-row gap-4">
         <Button
           onPress={reject}
-          style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
+          style={{ flex: 1, backgroundColor: COLORS.lightRed }}
+          labelStyle={{ color: COLORS.error }}
           text="Reject"
+          type="outline"
         />
-        <Button
-          onPress={confirm}
-          style={{ flex: 1, paddingVertical: 4, borderRadius: 30 }}
-          text="Confirm"
-        />
+        <Button onPress={confirm} style={{ flex: 1 }} text="Confirm" />
       </View>
     </View>
   );

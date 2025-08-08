@@ -3,7 +3,8 @@ import Button from '@/components/buttons/CustomButton';
 import SeedPhrase from '@/components/SeedPhrase';
 import { useSecureStorage, useWallet } from '@/hooks/eth-mobile';
 import { initAccounts } from '@/store/reducers/Accounts';
-import { initAuth, setHasOnboarded } from '@/store/reducers/Auth';
+import { initAuth } from '@/store/reducers/Auth';
+import { clearPendingWalletCreation } from '@/store/reducers/Navigation';
 import { initWallet } from '@/store/reducers/Wallet';
 import { COLORS } from '@/utils/constants';
 import { Encryptor } from '@/utils/eth-mobile/encryptor';
@@ -29,6 +30,7 @@ interface Wallet {
 
 export default function CreateWallet() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { password } = useLocalSearchParams<{ password: string }>();
   //   const toast = useToast();
   const { createWallet } = useWallet();
@@ -36,12 +38,15 @@ export default function CreateWallet() {
   const [hasSeenSeedPhrase, setHasSeenSeedPhrase] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { saveItem, saveItemWithBiometrics } = useSecureStorage();
-  const dispatch = useDispatch();
 
   const [isSaving, setIsSaving] = useState(false);
 
   const isBiometricsEnabled = useSelector(
     (state: any) => state.settings.isBiometricsEnabled as boolean
+  );
+
+  const pendingWalletCreation = useSelector(
+    (state: any) => state.navigation.pendingWalletCreation
   );
 
   const copySeedPhrase = () => {
@@ -106,9 +111,27 @@ export default function CreateWallet() {
       );
       dispatch(initAuth());
 
-      setTimeout(() => {
-        router.replace('/(dashboard)');
-      }, 200);
+      // Check if we need to navigate back to a pending screen
+      if (pendingWalletCreation.screen) {
+        dispatch(clearPendingWalletCreation());
+
+        // Navigate back to the original screen
+        setTimeout(() => {
+          if (pendingWalletCreation.params) {
+            router.dismissTo({
+              pathname: pendingWalletCreation.screen,
+              params: pendingWalletCreation.params
+            });
+          } else {
+            router.dismissTo(pendingWalletCreation.screen);
+          }
+        }, 200);
+      } else {
+        // Default navigation to dashboard
+        setTimeout(() => {
+          router.replace('/(dashboard)');
+        }, 200);
+      }
     } catch (error) {
       //   toast.show('Failed to save wallet', {
       //     type: 'danger',

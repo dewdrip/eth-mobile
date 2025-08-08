@@ -1,21 +1,26 @@
 import { COLORS } from '@/utils/constants';
+import Device from '@/utils/device';
 import { WINDOW_WIDTH } from '@/utils/styles';
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, TextStyle, View } from 'react-native';
+import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { IconButton } from 'react-native-paper';
 import Button from '../buttons/CustomButton';
 
 export interface ConsentModalParams {
   icon?: React.ReactNode;
   title: string;
-  subTitle: string;
+  description: string;
   okText?: string;
   cancelText?: string;
   isOkLoading?: boolean;
   isCancelLoading?: boolean;
   iconColor?: string;
   titleStyle?: TextStyle;
-  subTitleStyle?: TextStyle;
+  descriptionStyle?: TextStyle;
+  cancelTextStyle?: TextStyle;
+  okTextStyle?: TextStyle;
+  cancelButtonStyle?: ViewStyle;
+  okButtonStyle?: ViewStyle;
   onAccept: () => void;
 }
 type Props = {
@@ -31,14 +36,18 @@ export default function ConsentModal({
     params: {
       icon,
       title,
-      subTitle,
+      description,
       okText,
       cancelText,
       isOkLoading,
       isCancelLoading,
       iconColor,
       titleStyle,
-      subTitleStyle,
+      descriptionStyle,
+      cancelTextStyle,
+      okTextStyle,
+      cancelButtonStyle,
+      okButtonStyle,
       onAccept
     }
   }
@@ -48,34 +57,39 @@ export default function ConsentModal({
     onAccept();
   };
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="bg-white rounded-3xl p-4 gap-y-2"
+      style={{ width: Device.getDeviceWidth() * 0.9 }}
+    >
       {icon || (
-        <Ionicons
-          name="alert"
+        <IconButton
+          icon="alert"
           size={WINDOW_WIDTH * 0.17}
-          color={iconColor || COLORS.primary}
+          iconColor={iconColor || COLORS.primary}
         />
       )}
       <Text className="text-2xl font-[Poppins]" style={titleStyle}>
         {title}
       </Text>
-      <Text className="text-lg font-[Poppins]" style={subTitleStyle}>
-        {subTitle}
+      <Text className="text-base font-[Poppins]" style={descriptionStyle}>
+        {description}
       </Text>
 
-      <View className="flex-row gap-4">
+      <View className="flex-row gap-x-4 mt-4">
         <Button
           type="outline"
           text={cancelText || 'Cancel'}
           onPress={closeModal}
           loading={isCancelLoading}
-          style={styles.button}
+          labelStyle={{ ...cancelTextStyle }}
+          style={{ ...styles.button, ...cancelButtonStyle }}
         />
         <Button
           text={okText || 'Ok'}
           onPress={handleAcceptance}
           loading={isOkLoading}
-          style={styles.button}
+          labelStyle={{ ...okTextStyle }}
+          style={{ ...styles.button, ...okButtonStyle }}
         />
       </View>
     </View>

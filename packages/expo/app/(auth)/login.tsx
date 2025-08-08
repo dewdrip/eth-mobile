@@ -164,11 +164,11 @@ export default function Login() {
   const handleResetWallet = () => {
     const params: ConsentModalParams = {
       title: 'Reset Wallet',
-      subTitle:
+      description:
         'This will erase all your current wallet data. Are you sure you want to go through with this?',
       iconColor: COLORS.error,
       titleStyle: { color: COLORS.error },
-      subTitleStyle: { color: COLORS.error },
+      okButtonStyle: { backgroundColor: COLORS.error },
       onAccept: resetWallet
     };
     openModal('ConsentModal', params);

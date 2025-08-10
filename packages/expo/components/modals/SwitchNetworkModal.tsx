@@ -29,7 +29,7 @@ export default function SwitchNetworkModal({ modal: { closeModal } }: Props) {
       className="bg-white rounded-3xl p-5"
       style={{
         width: Device.getDeviceWidth() * 0.9,
-        maxHeight: Device.getDeviceHeight() * 0.7
+        maxHeight: Device.getDeviceHeight() * 0.4
       }}
     >
       <View className="flex-row items-center justify-between mb-4">

@@ -4,10 +4,7 @@ import { useSecureStorage } from '@/hooks/eth-mobile';
 import { setPassword as setWalletPassword } from '@/store/reducers/Wallet';
 import { FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
-import {
-  Encryptor,
-  LEGACY_DERIVATION_OPTIONS
-} from '@/utils/eth-mobile/encryptor';
+import { Encryptor } from '@/utils/eth-mobile/encryptor';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -39,12 +36,16 @@ export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
   const change = async () => {
     try {
       const existingPassword = wallet.password;
+      console.log('mnemonic: ', wallet.mnemonic);
+      console.log('accounts: ', wallet.accounts);
+
       const currentPassword = password.current.trim();
       const newPassword = password.new.trim();
       const confirmPassword = password.confirm.trim();
 
       if (!currentPassword || !newPassword || !confirmPassword) {
         // toast.show('Password cannot be empty!', { type: 'warning' });
+        console.error('Password cannot be empty!');
         return;
       }
 
@@ -52,21 +53,25 @@ export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
         // toast.show('Password must be at least 8 characters', {
         //   type: 'warning'
         // });
+        console.error('Password must be at least 8 characters');
         return;
       }
 
       if (currentPassword !== existingPassword) {
         // toast.show('Incorrect password!', { type: 'warning' });
+        console.error('Incorrect password!');
         return;
       }
 
       if (currentPassword === newPassword) {
         // toast.show('Cannot use current password', { type: 'warning' });
+        console.error('Cannot use current password');
         return;
       }
 
       if (newPassword !== confirmPassword) {
         // toast.show('Passwords do not match!', { type: 'warning' });
+        console.error('Passwords do not match!');
         return;
       }
 
@@ -77,20 +82,18 @@ export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
       // @ts-ignore
       dispatch(setWalletPassword(newPassword));
 
-      const encryptor = new Encryptor({
-        keyDerivationOptions: LEGACY_DERIVATION_OPTIONS
-      });
+      const encryptor = new Encryptor();
 
       const encryptedMnemonic = await encryptor.encrypt(
-        newPassword,
-        wallet.mnemonic
+        wallet.mnemonic,
+        newPassword
       );
 
       await saveItem('seedPhrase', encryptedMnemonic);
 
       const encryptedAccounts = await encryptor.encrypt(
-        newPassword,
-        wallet.accounts
+        wallet.accounts,
+        newPassword
       );
 
       await saveItem('accounts', encryptedAccounts);

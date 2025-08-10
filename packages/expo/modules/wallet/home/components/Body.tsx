@@ -72,7 +72,7 @@ function MainBalance() {
         <View className="flex-col items-center mt-6">
           <Text className="text-4xl font-semibold font-[Poppins-semibold]">
             {balance !== null
-              ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
+              ? `${Number(parseBalance(balance))} ${network.currencySymbol}`
               : null}
           </Text>
 

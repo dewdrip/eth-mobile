@@ -17,7 +17,7 @@ export default function NFTs() {
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 bg-white">
         <View className="flex-row items-center justify-between border-b border-gray-300 p-4">
-          <View className="flex-row items-center gap-x-2">
+          <View className="flex-row items-center gap-x-4">
             <BackButton />
             <Text className="text-xl font-semibold font-[Poppins-SemiBold]">
               NFTs

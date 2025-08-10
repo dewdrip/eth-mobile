@@ -2,13 +2,9 @@ import Button from '@/components/buttons/CustomButton';
 import { useSecureStorage } from '@/hooks/eth-mobile';
 import { Account, addAccount, switchAccount } from '@/store/reducers/Accounts';
 import { addAccount as addWalletAccount } from '@/store/reducers/Wallet';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
-import {
-  Encryptor,
-  LEGACY_DERIVATION_OPTIONS
-} from '@/utils/eth-mobile/encryptor';
-import { FONT_SIZE, WINDOW_WIDTH } from '@/utils/styles';
+import { Encryptor } from '@/utils/eth-mobile/encryptor';
 import { Ionicons } from '@expo/vector-icons';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
@@ -44,14 +40,12 @@ export default function ImportAccountModal({ modal: { closeModal } }: Props) {
 
       const newAccount = { address: newWallet.address, privateKey };
 
-      const encryptor = new Encryptor({
-        keyDerivationOptions: LEGACY_DERIVATION_OPTIONS
-      });
+      const encryptor = new Encryptor();
 
-      const encryptedAccounts = await encryptor.encrypt(wallet.password, [
-        ...wallet.accounts,
-        newAccount
-      ] as any);
+      const encryptedAccounts = await encryptor.encrypt(
+        [...wallet.accounts, newAccount],
+        wallet.password
+      );
 
       await saveItem('accounts', encryptedAccounts);
 
@@ -146,7 +140,7 @@ const styles = StyleSheet.create({
     margin: 20,
     alignItems: 'center',
     gap: 16,
-    width: WINDOW_WIDTH * 0.9
+    width: Device.getDeviceWidth() * 0.9
   },
   title: {
     color: COLORS.primary

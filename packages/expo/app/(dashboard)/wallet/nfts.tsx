@@ -1,8 +1,7 @@
 import BackButton from '@/components/buttons/BackButton';
 import NFT from '@/modules/wallet/nfts/components/NFT';
 import { useNFTs } from '@/modules/wallet/nfts/hooks/useNFTs';
-import { COLORS } from '@/utils/constants';
-import { FONT_SIZE } from '@/utils/styles';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { FlatList, SafeAreaView, View } from 'react-native';

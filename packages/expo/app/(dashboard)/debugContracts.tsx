@@ -1,7 +1,7 @@
 import Header from '@/components/Header';
 import ContractUI from '@/modules/debugger/components/ContractUI';
+import { FONT_SIZE } from '@/utils/constants';
 import { useAllContracts } from '@/utils/eth-mobile/contractsData';
-import { FONT_SIZE } from '@/utils/styles';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React from 'react';
 import { SafeAreaView, Text, View } from 'react-native';

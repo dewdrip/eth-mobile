@@ -4,7 +4,7 @@ import { Blockie } from '@/components/eth-mobile';
 import { Network } from '@/ethmobile.config';
 import { useNetwork } from '@/hooks/eth-mobile';
 // import { Account } from '@/store/reducers/Accounts';
-import { FONT_SIZE } from '@/utils/styles';
+import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import {

@@ -1,6 +1,6 @@
+import Device from '@/utils/device';
 import React from 'react';
 import { Image } from 'react-native';
-import { WINDOW_WIDTH } from '../utils/styles';
 
 type Props = {
   size?: number;
@@ -11,8 +11,8 @@ export default function Logo({ size }: Props) {
     <Image
       source={require('../assets/images/logo.png')}
       style={{
-        width: size || WINDOW_WIDTH * 0.3,
-        height: size || WINDOW_WIDTH * 0.3
+        width: size || Device.getDeviceWidth() * 0.3,
+        height: size || Device.getDeviceWidth() * 0.3
       }}
     />
   );

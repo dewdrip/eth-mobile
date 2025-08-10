@@ -1,9 +1,8 @@
 import Button from '@/components/buttons/CustomButton';
 import { useAccount, useClipboard } from '@/hooks/eth-mobile';
 import { Account } from '@/store/reducers/Accounts';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
-import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';

@@ -6,11 +6,10 @@ import {
   addAccount as addWalletAccount,
   Wallet
 } from '@/store/reducers/Wallet';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { truncateAddress } from '@/utils/eth-mobile';
 import { Encryptor } from '@/utils/eth-mobile/encryptor';
-import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

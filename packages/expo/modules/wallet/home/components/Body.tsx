@@ -5,9 +5,8 @@ import {
   useCryptoPrice,
   useNetwork
 } from '@/hooks/eth-mobile';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { parseBalance, truncateAddress } from '@/utils/eth-mobile';
-import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import React, { useEffect } from 'react';

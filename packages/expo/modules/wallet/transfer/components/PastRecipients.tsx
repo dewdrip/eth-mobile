@@ -1,9 +1,8 @@
 import { Blockie } from '@/components/eth-mobile';
 import { ConsentModalParams } from '@/components/modals/ConsentModal';
 import { clearRecipients } from '@/store/reducers/Recipients';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { truncateAddress } from '@/utils/eth-mobile';
-import { FONT_SIZE } from '@/utils/styles';
 import React from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';

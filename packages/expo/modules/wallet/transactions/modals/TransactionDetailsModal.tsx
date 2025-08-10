@@ -1,9 +1,8 @@
 import { CopyableText } from '@/components/eth-mobile';
 import { useNetwork } from '@/hooks/eth-mobile';
 import { Transaction } from '@/store/reducers/Transactions';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { parseTimestamp, truncateAddress } from '@/utils/eth-mobile';
-import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';

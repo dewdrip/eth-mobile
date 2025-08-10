@@ -1,10 +1,9 @@
 import Button from '@/components/buttons/CustomButton';
 import { Blockie } from '@/components/eth-mobile';
 import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { parseBalance, parseFloat, truncateAddress } from '@/utils/eth-mobile';
-import { FONT_SIZE } from '@/utils/styles';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';

@@ -1,9 +1,8 @@
 import Button from '@/components/buttons/CustomButton';
 import { useAccount, useNetwork } from '@/hooks/eth-mobile';
 import { removeNFT } from '@/store/reducers/NFTs';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { parseIPFS } from '@/utils/eth-mobile';
-import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { Address } from 'abitype';
 import React, { useEffect, useState } from 'react';

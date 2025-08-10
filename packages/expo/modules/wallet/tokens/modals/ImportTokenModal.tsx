@@ -8,9 +8,8 @@ import {
 } from '@/hooks/eth-mobile';
 import { useTokens } from '@/modules/wallet/tokens/hooks/useTokens';
 import { addToken, Token } from '@/store/reducers/Tokens';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
-import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';

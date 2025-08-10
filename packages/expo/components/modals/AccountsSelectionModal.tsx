@@ -1,8 +1,7 @@
 import { Blockie } from '@/components/eth-mobile';
 import { Account } from '@/store/reducers/Accounts';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { truncateAddress } from '@/utils/eth-mobile';
-import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';

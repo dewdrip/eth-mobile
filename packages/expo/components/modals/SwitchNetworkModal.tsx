@@ -1,9 +1,8 @@
 import ethmobileConfig, { Network } from '@/ethmobile.config';
 import { useNetwork } from '@/hooks/eth-mobile';
 import { switchNetwork } from '@/store/reducers/ConnectedNetwork';
-import { COLORS } from '@/utils/constants';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
-import { FONT_SIZE } from '@/utils/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';

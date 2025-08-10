@@ -1,8 +1,7 @@
 import BackButton from '@/components/buttons/BackButton';
 import Token from '@/modules/wallet/tokens/components/Token';
 import { useTokens } from '@/modules/wallet/tokens/hooks/useTokens';
-import { COLORS } from '@/utils/constants';
-import { FONT_SIZE } from '@/utils/styles';
+import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';

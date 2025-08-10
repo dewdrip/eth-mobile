@@ -1,6 +1,5 @@
 import { COLORS } from '@/utils/constants';
 import Device from '@/utils/device';
-import { WINDOW_WIDTH } from '@/utils/styles';
 import React from 'react';
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 import { IconButton } from 'react-native-paper';
@@ -64,7 +63,7 @@ export default function ConsentModal({
       {icon || (
         <IconButton
           icon="alert"
-          size={WINDOW_WIDTH * 0.17}
+          size={Device.getDeviceWidth() * 0.17}
           iconColor={iconColor || COLORS.primary}
         />
       )}

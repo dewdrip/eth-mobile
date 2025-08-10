@@ -1,8 +1,8 @@
 import Button from '@/components/buttons/CustomButton';
 import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
 import { Account } from '@/store/reducers/Accounts';
+import { FONT_SIZE } from '@/utils/constants';
 import { parseBalance } from '@/utils/eth-mobile';
-import { FONT_SIZE } from '@/utils/styles';
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { Blockie } from '../eth-mobile';

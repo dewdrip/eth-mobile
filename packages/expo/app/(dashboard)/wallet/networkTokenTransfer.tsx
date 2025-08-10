@@ -1,4 +1,4 @@
-import CustomButton from '@/components/buttons/CustomButton';
+import Button from '@/components/buttons/CustomButton';
 import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
 import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
 import Amount from '@/modules/wallet/transfer/components/Amount';
@@ -10,21 +10,14 @@ import { Account } from '@/store/reducers/Accounts';
 import { addRecipient } from '@/store/reducers/Recipients';
 import { parseBalance, parseFloat } from '@/utils/eth-mobile';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import {
-  formatEther,
-  isAddress,
-  JsonRpcProvider,
-  parseEther,
-  TransactionReceipt,
-  Wallet
-} from 'ethers';
+import { isAddress, JsonRpcProvider, TransactionReceipt, Wallet } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { Divider } from 'react-native-paper';
 // import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { Address } from 'viem';
+import { Address, formatEther, parseEther } from 'viem';
 
 export default function NetworkTokenTransfer() {
   const navigation = useNavigation();
@@ -80,7 +73,7 @@ export default function NetworkTokenTransfer() {
     const tx = await activeWallet.sendTransaction({
       from: sender.address,
       to: recipient,
-      value: parseEther(amount.toString())
+      value: parseEther(amount)
     });
 
     const txReceipt = await tx.wait(1);
@@ -218,7 +211,7 @@ export default function NetworkTokenTransfer() {
 
         <PastRecipients onSelect={setRecipient} />
 
-        <CustomButton text="Next" onPress={confirm} />
+        <Button text="Next" onPress={confirm} />
       </View>
     </SafeAreaView>
   );

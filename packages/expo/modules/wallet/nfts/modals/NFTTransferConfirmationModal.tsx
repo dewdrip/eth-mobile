@@ -8,6 +8,7 @@ import { FONT_SIZE } from '@/utils/styles';
 import { ethers, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
 import { Image, Linking, Text, View } from 'react-native';
+import { formatEther } from 'viem';
 
 interface TxData {
   from: Account;
@@ -118,8 +119,7 @@ export default function NFTTransferConfirmationModal({
               </View>
               <Text className="text-sm font-medium">
                 {String(
-                  estimateGasCost &&
-                    parseFloat(ethers.formatEther(estimateGasCost), 8)
+                  estimateGasCost && parseFloat(formatEther(estimateGasCost), 8)
                 )}{' '}
                 {network.currencySymbol}
               </Text>

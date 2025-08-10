@@ -2,9 +2,10 @@ import { useAccount, useNetwork } from '@/hooks/eth-mobile';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { getParsedError } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
-import { JsonRpcProvider, parseEther, Wallet } from 'ethers';
+import { JsonRpcProvider, Wallet } from 'ethers';
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { parseEther } from 'viem';
 
 // Number of ETH faucet sends to an address
 const NUM_OF_ETH = '1';

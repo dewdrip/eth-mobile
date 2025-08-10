@@ -5,9 +5,10 @@ import { Account } from '@/store/reducers/Accounts';
 import Device from '@/utils/device';
 import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
-import { ethers, formatEther, TransactionReceipt } from 'ethers';
+import { ethers, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
 import { Image, Linking, Text, View } from 'react-native';
+import { formatEther } from 'viem';
 
 interface TxData {
   from: Account;

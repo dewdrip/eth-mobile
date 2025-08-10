@@ -2,18 +2,12 @@ import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransact
 import { Account } from '@/store/reducers/Wallet';
 import { parseFloat } from '@/utils/eth-mobile';
 import { useRoute } from '@react-navigation/native';
-import {
-  Contract,
-  formatEther,
-  InterfaceAbi,
-  JsonRpcProvider,
-  Wallet
-} from 'ethers';
+import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
 import { usePathname } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 import { useModal } from 'react-native-modalfy';
 import { useSelector } from 'react-redux';
-import { Address } from 'viem';
+import { Address, formatEther } from 'viem';
 import { useAccount, useDeployedContractInfo, useNetwork } from '.';
 
 interface UseScaffoldContractOptions {
@@ -201,7 +195,10 @@ export function useScaffoldContract({
                     from: tx.from as Address,
                     to: tx.to as Address,
                     nonce: tx.nonce,
-                    gasFee: parseFloat(formatEther(gasFee), 8).toString(),
+                    gasFee: parseFloat(
+                      formatEther(BigInt(gasFee)),
+                      8
+                    ).toString(),
                     total: parseFloat(
                       formatEther(tx.value + gasFee),
                       8

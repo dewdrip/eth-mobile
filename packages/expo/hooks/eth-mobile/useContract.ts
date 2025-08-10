@@ -1,17 +1,11 @@
 import { Account } from '@/store/reducers/Wallet';
 import { parseFloat } from '@/utils/eth-mobile';
 import { Abi } from 'abitype';
-import {
-  Contract,
-  formatEther,
-  InterfaceAbi,
-  JsonRpcProvider,
-  Wallet
-} from 'ethers';
+import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useModal } from 'react-native-modalfy';
 import { useSelector } from 'react-redux';
-import { Address } from 'viem';
+import { Address, formatEther } from 'viem';
 import { useAccount, useNetwork } from '.';
 
 interface UseContractOptions {
@@ -184,7 +178,10 @@ export function useContract({
                     from: tx.from as Address,
                     to: tx.to as Address,
                     nonce: tx.nonce,
-                    gasFee: parseFloat(formatEther(gasFee), 8).toString(),
+                    gasFee: parseFloat(
+                      formatEther(BigInt(gasFee)),
+                      8
+                    ).toString(),
                     total: parseFloat(
                       formatEther(tx.value + gasFee),
                       8

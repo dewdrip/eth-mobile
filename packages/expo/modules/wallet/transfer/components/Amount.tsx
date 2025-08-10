@@ -1,10 +1,10 @@
 // import { useToast } from 'react-native-toast-notifications';
 import { useCryptoPrice, useNetwork } from '@/hooks/eth-mobile';
 import { COLORS } from '@/utils/constants';
-import { formatEther } from 'ethers';
 import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { formatEther } from 'viem';
 
 type Props = {
   amount: string;

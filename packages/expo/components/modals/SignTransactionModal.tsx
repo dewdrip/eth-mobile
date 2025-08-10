@@ -8,6 +8,7 @@ import { FONT_SIZE } from '@/utils/styles';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
+import { formatEther } from 'viem';
 
 type Props = {
   modal: {
@@ -75,13 +76,13 @@ export default function SignTransactionModal({
     const minAmount =
       estimatedGasCost.min &&
       parseFloat(
-        ethers.formatEther(params.value + estimatedGasCost.min),
+        formatEther(params.value + estimatedGasCost.min),
         8
       ).toString();
     const maxAmount =
       estimatedGasCost.max &&
       parseFloat(
-        ethers.formatEther(params.value + estimatedGasCost.max),
+        formatEther(params.value + estimatedGasCost.max),
         8
       ).toString();
     return {
@@ -115,7 +116,7 @@ export default function SignTransactionModal({
   }
 
   function parseGasCost(value: bigint) {
-    return parseFloat(ethers.formatEther(value), 8);
+    return parseFloat(formatEther(value), 8);
   }
 
   return (
@@ -168,7 +169,7 @@ export default function SignTransactionModal({
       </View>
 
       <Text className="text-2xl font-[Poppins] text-center">
-        {ethers.formatEther(params.value)} {network.currencySymbol}
+        {formatEther(params.value)} {network.currencySymbol}
       </Text>
 
       {/* Gas Fee Section */}

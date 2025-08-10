@@ -1,9 +1,12 @@
 import { Blockie } from '@/components/eth-mobile';
+import { ConsentModalParams } from '@/components/modals/ConsentModal';
 import { clearRecipients } from '@/store/reducers/Recipients';
+import { COLORS } from '@/utils/constants';
 import { truncateAddress } from '@/utils/eth-mobile';
 import { FONT_SIZE } from '@/utils/styles';
 import React from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
+import { useModal } from 'react-native-modalfy';
 import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
@@ -14,8 +17,20 @@ export default function PastRecipients({ onSelect }: Props) {
   const recipients: string[] = useSelector((state: any) => state.recipients);
   const dispatch = useDispatch();
 
+  const { openModal } = useModal();
+
   const clear = () => {
-    dispatch(clearRecipients());
+    const params: ConsentModalParams = {
+      title: 'Clear Past Recipients',
+      description:
+        'This will erase all your past recipients. Are you sure you want to go through with this?',
+      iconColor: COLORS.error,
+      titleStyle: { color: COLORS.error },
+      okButtonStyle: { backgroundColor: COLORS.error },
+      onAccept: () => dispatch(clearRecipients())
+    };
+
+    openModal('ConsentModal', params);
   };
 
   return (
@@ -23,9 +38,11 @@ export default function PastRecipients({ onSelect }: Props) {
       {recipients.length > 0 && (
         <>
           <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-lg font-[Poppins]">Recents</Text>
+            <Text className="text-lg font-semibold font-[Poppins-SemiBold]">
+              Recents
+            </Text>
             <Pressable onPress={clear}>
-              <Text className="text-lg font-[Poppins] text-primary">Clear</Text>
+              <Text className="text-lg font-[Poppins] text-red-500">Clear</Text>
             </Pressable>
           </View>
 

@@ -36,9 +36,6 @@ export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
   const change = async () => {
     try {
       const existingPassword = wallet.password;
-      console.log('mnemonic: ', wallet.mnemonic);
-      console.log('accounts: ', wallet.accounts);
-
       const currentPassword = password.current.trim();
       const newPassword = password.new.trim();
       const confirmPassword = password.confirm.trim();

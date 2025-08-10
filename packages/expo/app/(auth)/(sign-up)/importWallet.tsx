@@ -64,6 +64,7 @@ function ImportWallet() {
       //     type: 'danger',
       //     placement: 'top'
       //   });
+      console.error('Invalid Seed Phrase');
       return false;
     }
     if (!password) {
@@ -71,6 +72,7 @@ function ImportWallet() {
       //     type: 'danger',
       //     placement: 'top'
       //   });
+      console.error('Password cannot be empty!');
       return false;
     }
 
@@ -79,6 +81,7 @@ function ImportWallet() {
       //     type: 'danger',
       //     placement: 'top'
       //   });
+      console.error('Password must be at least 8 characters');
       return false;
     }
 
@@ -87,6 +90,7 @@ function ImportWallet() {
       //     type: 'danger',
       //     placement: 'top'
       //   });
+      console.error('Passwords do not match!');
       return false;
     }
 

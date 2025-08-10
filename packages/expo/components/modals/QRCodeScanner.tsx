@@ -94,6 +94,10 @@ export default function QRCodeScanner({
           showFrame={true}
           laserColor="blue"
           frameColor="white"
+          barcodeFrameSize={{
+            width: Device.getDeviceWidth() * 0.65,
+            height: Device.getDeviceWidth() * 0.65
+          }}
           style={styles.scanner}
         />
         <Ionicons

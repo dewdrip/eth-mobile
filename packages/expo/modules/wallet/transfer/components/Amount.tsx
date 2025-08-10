@@ -137,11 +137,10 @@ export default function Amount({
         contentStyle={{ fontFamily: 'Poppins' }}
       />
 
-      {isNativeToken && (
+      {!!amount && isNativeToken && (
         <Text className="text-sm font-[Poppins] mt-1 opacity-100">
           ~{!isDollar && '$'}
-          {Number(displayConversion).toLocaleString('en-US')}{' '}
-          {isDollar && token}
+          {displayConversion} {isDollar && token}
         </Text>
       )}
 

@@ -85,7 +85,10 @@ export default function Settings() {
           <Ionicons name="git-network-outline" size={FONT_SIZE['xl'] * 1.2} />
           <Text className="text-xl font-[Poppins]">
             Change Network
-            <Text className="text-sm text-green-500 font-[Poppins]">
+            <Text
+              className="text-sm font-[Poppins]"
+              style={{ color: COLORS.primary }}
+            >
               ({network.name})
             </Text>
           </Text>

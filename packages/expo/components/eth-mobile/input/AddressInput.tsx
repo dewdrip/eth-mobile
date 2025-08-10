@@ -1,26 +1,20 @@
 import ethmobileConfig from '@/ethmobile.config';
+import Device from '@/utils/device';
 import { isENS } from '@/utils/eth-mobile';
+import { Ionicons } from '@expo/vector-icons';
 import { isAddress, JsonRpcProvider } from 'ethers';
 import React, { useState } from 'react';
-import {
-  Keyboard,
-  Text,
-  TextInput,
-  TextStyle,
-  View,
-  ViewStyle
-} from 'react-native';
+import { Keyboard, Text, TextInput, TextStyle, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
+import { Blockie } from '../Blockie';
 
 type Props = {
   value: string;
   placeholder?: string;
   onChange: (value: string) => void;
   onSubmit?: () => void;
-  containerStyle?: ViewStyle;
-  inputStyle?: TextStyle;
-  outlineStyle?: TextStyle;
-  contentStyle?: TextStyle;
+  containerClassname?: string;
+  inputContainerClassname?: string;
   errorStyle?: TextStyle;
   scan?: boolean;
 };
@@ -30,10 +24,8 @@ export function AddressInput({
   placeholder,
   onChange,
   onSubmit,
-  containerStyle,
-  inputStyle,
-  outlineStyle,
-  contentStyle,
+  containerClassname,
+  inputContainerClassname,
   errorStyle,
   scan
 }: Props) {
@@ -58,7 +50,7 @@ export function AddressInput({
     if (isENS(value)) {
       try {
         const provider = new JsonRpcProvider(
-          `https://eth-mainnet.alchemyapi.io/v2/${ethmobileConfig.networks.ethereum}`
+          `${ethmobileConfig.networks.ethereum.provider}`
         );
 
         const address = await provider.resolveName(value);
@@ -69,38 +61,44 @@ export function AddressInput({
           setError('Invalid ENS');
         }
       } catch (error) {
-        setError('Could not resolve ENS');
+        setError(`Could not resolve ENS: ${error}`);
         return;
       }
     }
   };
 
   return (
-    <View className="mb-6" style={containerStyle}>
-      <TextInput
-        value={value}
-        className="bg-gray-100"
-        style={{ ...inputStyle }}
-        placeholder={placeholder}
-        placeholderTextColor="#a3a3a3"
-        onChangeText={handleInputChange}
-        onSubmitEditing={onSubmit}
-        // left={
-        //   isAddress(value) ? (
-        //     <Blockie address={value} size={1.8 * 24} />
-        //   ) : null
-        // }
-        // right={
-        //   scan ? (
-        //     <TextInput.Icon icon="qrcode-scan" onPress={scanQRCode} />
-        //   ) : null
-        // }
-        // error={!!error}
-        // outlineStyle={{ ...styles.outline, ...outlineStyle }}
-        // contentStyle={{ ...styles.content, ...contentStyle }}
-      />
+    <View className={`gap-y-2 ${containerClassname}`}>
+      <View
+        className={`bg-gray-100 flex-row items-center gap-x-1 p-2 rounded-lg ${inputContainerClassname}`}
+      >
+        {isAddress(value) && (
+          <Blockie address={value} size={Device.getDeviceWidth() * 0.09} />
+        )}
+        <TextInput
+          placeholder={placeholder || 'Enter address or ENS name'}
+          value={value}
+          className="flex-1 text-lg font-[Poppins]"
+          placeholderTextColor="#a3a3a3"
+          onChangeText={handleInputChange}
+          onSubmitEditing={onSubmit}
+        />
+        {scan && (
+          <Ionicons
+            name="scan-outline"
+            size={Device.getDeviceWidth() * 0.075}
+            color="black"
+            onPress={scanQRCode}
+            className="bg-white p-1 rounded-full"
+          />
+        )}
+      </View>
+
       {error && (
-        <Text className="text-sm font-[Poppins]" style={errorStyle}>
+        <Text
+          className="text-sm text-red-500 font-[Poppins]"
+          style={errorStyle}
+        >
           {error}
         </Text>
       )}

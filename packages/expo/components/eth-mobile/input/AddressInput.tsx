@@ -1,16 +1,24 @@
-import ethmobileConfig from '@/ethmobile.config';
+import { COLORS } from '@/utils/constants';
 import Device from '@/utils/device';
 import { isENS } from '@/utils/eth-mobile';
 import { MaterialIcons } from '@expo/vector-icons';
 import { isAddress, JsonRpcProvider } from 'ethers';
 import React, { useState } from 'react';
-import { Keyboard, Pressable, Text, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Keyboard,
+  Pressable,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { Blockie } from '../Blockie';
 
 type Props = {
   value: string;
   placeholder?: string;
+  error?: string;
   onChange: (value: string) => void;
   onSubmit?: () => void;
   containerClassName?: string;
@@ -23,6 +31,7 @@ type Props = {
 export function AddressInput({
   value,
   placeholder,
+  error: errorProp,
   onChange,
   onSubmit,
   containerClassName,
@@ -33,7 +42,8 @@ export function AddressInput({
 }: Props) {
   const { openModal } = useModal();
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState(errorProp || '');
+  const [isLoading, setIsLoading] = useState(false);
 
   const scanQRCode = () => {
     Keyboard.dismiss();
@@ -51,8 +61,10 @@ export function AddressInput({
 
     if (isENS(value)) {
       try {
+        setIsLoading(true);
+
         const provider = new JsonRpcProvider(
-          `${ethmobileConfig.networks.ethereum.provider}`
+          'https://eth-mainnet.alchemyapi.io/v2/K18rs5rCTi1A-RDyPUw92tvL7I2cGVUB'
         );
 
         const address = await provider.resolveName(value);
@@ -65,6 +77,8 @@ export function AddressInput({
       } catch (error) {
         setError(`Could not resolve ENS: ${error}`);
         return;
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -72,10 +86,17 @@ export function AddressInput({
   return (
     <View className={`gap-y-2 ${containerClassName}`}>
       <View
-        className={`bg-gray-100 flex-row items-center gap-x-1 p-2 rounded-lg ${inputContainerClassName}`}
+        className={`bg-gray-100 border border-gray-200 flex-row items-center gap-x-1 px-3 py-2 rounded-lg ${inputContainerClassName}`}
       >
-        {isAddress(value) && (
-          <Blockie address={value} size={Device.getDeviceWidth() * 0.09} />
+        {isLoading ? (
+          <ActivityIndicator
+            size={Device.getDeviceWidth() * 0.09}
+            color={COLORS.primary}
+          />
+        ) : (
+          isAddress(value) && (
+            <Blockie address={value} size={Device.getDeviceWidth() * 0.09} />
+          )
         )}
         <TextInput
           placeholder={placeholder || 'Enter address or ENS name'}

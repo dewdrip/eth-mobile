@@ -1,15 +1,10 @@
-import { Blockie } from '@/components/eth-mobile';
-import ethmobileConfig from '@/ethmobile.config';
+import { AddressInput } from '@/components/eth-mobile';
 import { useAccount } from '@/hooks/eth-mobile';
 import { Account } from '@/store/reducers/Accounts';
 import { COLORS } from '@/utils/constants';
-import { isENS } from '@/utils/eth-mobile';
-import { FONT_SIZE } from '@/utils/styles';
-import { isAddress, JsonRpcProvider } from 'ethers';
-import React, { useState } from 'react';
-import { Keyboard, Pressable, View } from 'react-native';
+import React from 'react';
+import { Pressable, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
-import { Text, TextInput } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 type Props = {
@@ -23,16 +18,7 @@ export default function Recipient({ recipient, onChange, onSubmit }: Props) {
 
   const accounts: Account[] = useSelector((state: any) => state.accounts);
 
-  const [error, setError] = useState('');
-
   const account = useAccount();
-
-  const scanQRCode = () => {
-    Keyboard.dismiss();
-    openModal('QRCodeScanner', {
-      onScan: onChange
-    });
-  };
 
   const getAddressName = () => {
     const _recipient = accounts.find(
@@ -41,33 +27,6 @@ export default function Recipient({ recipient, onChange, onSubmit }: Props) {
 
     if (!_recipient) return;
     return `(${_recipient.name})`;
-  };
-
-  const handleInputChange = async (value: string) => {
-    onChange(value);
-
-    if (error) {
-      setError('');
-    }
-
-    if (isENS(value)) {
-      try {
-        const provider = new JsonRpcProvider(
-          `https://eth-mainnet.alchemyapi.io/v2/${ethmobileConfig.networks.ethereum}`
-        );
-
-        const address = await provider.resolveName(value);
-
-        if (address && isAddress(address)) {
-          onChange(address);
-        } else {
-          setError('Invalid ENS');
-        }
-      } catch (error) {
-        setError('Could not resolve ENS');
-        return;
-      }
-    }
   };
 
   const selectAccount = () => {
@@ -95,34 +54,13 @@ export default function Recipient({ recipient, onChange, onSubmit }: Props) {
         </Pressable>
       </View>
 
-      <TextInput
-        value={recipient}
-        mode="outlined"
-        style={{ backgroundColor: '#f5f5f5' }}
+      <AddressInput
         placeholder="Recipient Address"
-        placeholderTextColor="#a3a3a3"
-        textColor="black"
-        onChangeText={handleInputChange}
-        onSubmitEditing={onSubmit}
-        left={
-          isAddress(recipient) ? (
-            <TextInput.Icon
-              icon={() => (
-                <Blockie address={recipient} size={1.8 * FONT_SIZE['xl']} />
-              )}
-            />
-          ) : null
-        }
-        right={<TextInput.Icon icon="qrcode-scan" onPress={scanQRCode} />}
-        error={!!error}
-        outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
-        contentStyle={{ fontFamily: 'Poppins' }}
+        value={recipient}
+        onChange={onChange}
+        onSubmit={onSubmit}
+        scan
       />
-      {error && (
-        <Text className="text-sm font-[Poppins] text-red-500 mt-1">
-          {error}
-        </Text>
-      )}
     </View>
   );
 }

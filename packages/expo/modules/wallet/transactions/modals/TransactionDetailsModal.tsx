@@ -50,9 +50,9 @@ export default function TransactionDetailsModal({
               iconStyle={{ color: COLORS.primary }}
             />
           </View>
-          <View className="w-1/2">
+          <View className="w-1/2 items-end">
             <Text className="text-lg font-[Poppins]">Date</Text>
-            <Text className="text-lg font-[Poppins]">
+            <Text className="text-base font-[Poppins]">
               {parseTimestamp(tx.timestamp)}
             </Text>
           </View>
@@ -71,7 +71,7 @@ export default function TransactionDetailsModal({
               iconStyle={{ color: COLORS.primary }}
             />
           </View>
-          <View className="w-1/2">
+          <View className="w-1/2 items-end">
             <Text className="text-lg font-[Poppins]">To</Text>
             <CopyableText
               displayText={truncateAddress(tx.to)}
@@ -93,24 +93,24 @@ export default function TransactionDetailsModal({
         <View className="border border-gray-300 rounded-lg p-2">
           <View className="flex-row items-center justify-between">
             <View className="w-1/2">
-              <Text className="text-lg font-[Poppins]">Amount</Text>
-              <Text className="text-lg font-[Poppins]">Estimated gas fee</Text>
+              <Text className="text-base font-[Poppins]">Amount</Text>
+              <Text className="text-base font-[Poppins]">Gas fee</Text>
             </View>
-            <View className="w-1/2">
-              <Text className="text-lg font-[Poppins]">
+            <View className="w-1/2 items-end">
+              <Text className="text-base font-[Poppins]">
                 {tx.value} {network.currencySymbol}
               </Text>
-              <Text className="text-lg font-[Poppins]">
+              <Text className="text-base font-[Poppins]">
                 {tx.gasFee} {network.currencySymbol}
               </Text>
             </View>
           </View>
 
-          <View className="h-px bg-gray-300" />
+          <View className="h-px bg-gray-300 my-2" />
 
           <View className="flex-row items-center justify-between">
-            <Text className="text-lg font-[Poppins]">Total</Text>
-            <Text className="text-lg font-[Poppins]">
+            <Text className="text-lg font-[Poppins]">Total Cost</Text>
+            <Text className="text-lg font-semibold font-[Poppins-SemiBold]">
               {tx.total} {network.currencySymbol}
             </Text>
           </View>

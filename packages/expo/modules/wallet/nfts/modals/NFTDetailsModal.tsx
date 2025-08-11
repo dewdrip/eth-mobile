@@ -69,7 +69,7 @@ export default function NFTDetailsModal({
           setImage(imageURI);
         }
       } catch (error) {
-        console.log(error);
+        error;
       }
     };
     fetchImage();

@@ -19,7 +19,7 @@ import {
   View
 } from 'react-native';
 import { Divider } from 'react-native-paper';
-// import { useToast } from 'react-native-toast-notifications';
+import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface Wallet {
@@ -32,7 +32,7 @@ export default function CreateWallet() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { password } = useLocalSearchParams<{ password: string }>();
-  //   const toast = useToast();
+  const toast = useToast();
   const { createWallet } = useWallet();
   const [wallet, setWallet] = useState<Wallet>();
   const [hasSeenSeedPhrase, setHasSeenSeedPhrase] = useState(false);
@@ -52,27 +52,25 @@ export default function CreateWallet() {
   const copySeedPhrase = () => {
     if (isLoading) return;
     if (!wallet) {
-      //   toast.show('Still generating wallet', { placement: 'top' });
+      toast.show('Still generating wallet', { type: 'warning' });
       return;
     }
 
     Clipboard.setString(wallet.mnemonic);
-    // toast.show('Copied to clipboard', {
-    //   type: 'success',
-    //   placement: 'top'
-    // });
+    toast.show('Copied to clipboard', {
+      type: 'success'
+    });
   };
 
   const saveWallet = async () => {
     if (isSaving) return;
     if (!wallet || !hasSeenSeedPhrase) {
-      //   `toast.show(
-      //     "You haven't even seen your seed phrase. Do you want to lose your funds?🤨",
-      //     {
-      //       type: 'warning',
-      //       placement: 'top'
-      //     }
-      //   );
+      toast.show(
+        "You haven't even seen your seed phrase. Do you want to lose your funds?🤨",
+        {
+          type: 'warning'
+        }
+      );
       return;
     }
 
@@ -133,10 +131,9 @@ export default function CreateWallet() {
         }, 200);
       }
     } catch (error) {
-      //   toast.show('Failed to save wallet', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
+      toast.show('Failed to save wallet', {
+        type: 'danger'
+      });
     } finally {
       setIsSaving(false);
     }

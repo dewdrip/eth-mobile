@@ -8,12 +8,12 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import * as Keychain from 'react-native-keychain';
 import { Divider, Switch } from 'react-native-paper';
-// import { useToast } from 'react-native-toast-notifications';
+import { useToast } from 'react-native-toast-notifications';
 import { useDispatch } from 'react-redux';
 
 function CreatePassword() {
   const router = useRouter();
-  // const toast = useToast();
+  const toast = useToast();
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -31,27 +31,24 @@ function CreatePassword() {
   }, []);
 
   const createPassword = async () => {
-    if (!password) {
-      //   toast.show('Password cannot be empty!', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
+    if (!password || !confirmPassword) {
+      toast.show('Password cannot be empty!', {
+        type: 'danger'
+      });
       return;
     }
 
     if (password.length < 8) {
-      //   toast.show('Password must be at least 8 characters', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
+      toast.show('Password must be at least 8 characters', {
+        type: 'danger'
+      });
       return;
     }
 
     if (password !== confirmPassword) {
-      //   toast.show('Passwords do not match!', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
+      toast.show('Passwords do not match!', {
+        type: 'danger'
+      });
       return;
     }
 
@@ -69,10 +66,9 @@ function CreatePassword() {
       // @ts-ignore
       router.push({ pathname: '/createWallet', params: { password } });
     } catch (error) {
-      //   toast.show('Failed to create password. Please try again', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
+      toast.show('Failed to create password. Please try again', {
+        type: 'danger'
+      });
     } finally {
       setIsCreating(false);
     }

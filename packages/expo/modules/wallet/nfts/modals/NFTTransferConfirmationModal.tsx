@@ -8,6 +8,7 @@ import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
 import { ethers, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
 import { Image, Linking, Text, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { formatEther } from 'viem';
 
 interface TxData {
@@ -32,7 +33,7 @@ export default function NFTTransferConfirmationModal({
     params: { txData, estimateGasCost, onTransfer }
   }
 }: Props) {
-  // const toast = useToast();
+  const toast = useToast();
   const network = useNetwork();
 
   const [isSuccess, setIsSuccess] = useState(true);
@@ -67,10 +68,9 @@ export default function NFTTransferConfirmationModal({
     try {
       await Linking.openURL(`${network.blockExplorer}/tx/${txReceipt.hash}`);
     } catch (error) {
-      // toast.show('Cannot open url', {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show('Cannot open url', {
+        type: 'danger'
+      });
     }
   };
 

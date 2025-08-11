@@ -1,6 +1,5 @@
 import BackButton from '@/components/buttons/BackButton';
 import { Blockie } from '@/components/eth-mobile';
-// import { useToast } from 'react-native-toast-notifications';
 import { Network } from '@/ethmobile.config';
 import { useNetwork } from '@/hooks/eth-mobile';
 // import { Account } from '@/store/reducers/Accounts';
@@ -22,6 +21,7 @@ import {
   MenuOptions,
   MenuTrigger
 } from 'react-native-popup-menu';
+import { useToast } from 'react-native-toast-notifications';
 
 export default function HomeHeader() {
   const { openModal } = useModal();
@@ -34,7 +34,7 @@ export default function HomeHeader() {
     address: '0x2656D1344a31fCCD050dFac53FA1406597B6f12e'
   };
 
-  // const toast = useToast();
+  const toast = useToast();
 
   const shareAddress = async () => {
     try {
@@ -52,10 +52,9 @@ export default function HomeHeader() {
         `${connectedNetwork.blockExplorer}/address/${connectedAccount.address}`
       );
     } catch (error) {
-      // toast.show('Cannot open url', {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show('Cannot open url', {
+        type: 'danger'
+      });
     }
   };
 

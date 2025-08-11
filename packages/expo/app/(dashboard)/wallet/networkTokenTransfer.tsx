@@ -15,7 +15,7 @@ import React, { useEffect, useState } from 'react';
 import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { Divider } from 'react-native-paper';
-// import { useToast } from 'react-native-toast-notifications';
+import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { Address, formatEther, parseEther } from 'viem';
 
@@ -23,7 +23,7 @@ export default function NetworkTokenTransfer() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 
-  // const toast = useToast();
+  const toast = useToast();
 
   const account = useAccount();
   const network = useNetwork();
@@ -105,33 +105,29 @@ export default function NetworkTokenTransfer() {
 
   const confirm = () => {
     if (!isAddress(recipient)) {
-      //   toast.show('Invalid address', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
+      toast.show('Invalid address', {
+        type: 'danger'
+      });
       return;
     }
 
     if (isNaN(Number(amount)) || Number(amount) < 0) {
-      //   toast.show('Invalid amount', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
+      toast.show('Invalid amount', {
+        type: 'danger'
+      });
       return;
     }
 
     if (amount.trim() && balance && gasCost && !isNaN(Number(amount))) {
       if (Number(amount) >= Number(formatEther(balance))) {
-        // toast.show('Insufficient amount', {
-        //   type: 'danger',
-        //   placement: 'top'
-        // });
+        toast.show('Insufficient amount', {
+          type: 'danger'
+        });
         return;
       } else if (Number(formatEther(balance - gasCost)) < Number(amount)) {
-        // toast.show('Insufficient amount for gas', {
-        //   type: 'danger',
-        //   placement: 'top'
-        // });
+        toast.show('Insufficient amount for gas', {
+          type: 'danger'
+        });
         return;
       }
     }

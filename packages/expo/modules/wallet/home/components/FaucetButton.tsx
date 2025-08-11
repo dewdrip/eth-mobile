@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { JsonRpcProvider, Wallet } from 'ethers';
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { parseEther } from 'viem';
 
 // Number of ETH faucet sends to an address
@@ -16,7 +17,7 @@ const FAUCET_PRIVATE_KEY =
 
 export default function FaucetButton() {
   const [loading, setLoading] = useState(false);
-
+  const toast = useToast();
   const connectedNetwork = useNetwork();
   const connectedAccount = useAccount();
 
@@ -35,10 +36,9 @@ export default function FaucetButton() {
       await tx.wait(1);
     } catch (error) {
       console.error('Faucet error: ', getParsedError(error));
-      // toast.show(getParsedError(error), {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show(getParsedError(error), {
+        type: 'danger'
+      });
     } finally {
       setLoading(false);
     }

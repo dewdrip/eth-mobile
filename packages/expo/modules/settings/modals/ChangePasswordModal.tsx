@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
-// import { useToast } from 'react-native-toast-notifications';
+import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
-  // const toast = useToast();
+  const toast = useToast();
   const { saveItem, saveItemWithBiometrics } = useSecureStorage();
   const wallet = useSelector((state: any) => state.wallet);
   const dispatch = useDispatch();
@@ -41,33 +41,33 @@ export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
       const confirmPassword = password.confirm.trim();
 
       if (!currentPassword || !newPassword || !confirmPassword) {
-        // toast.show('Password cannot be empty!', { type: 'warning' });
+        toast.show('Password cannot be empty!', { type: 'warning' });
         console.error('Password cannot be empty!');
         return;
       }
 
       if (newPassword.length < 8) {
-        // toast.show('Password must be at least 8 characters', {
-        //   type: 'warning'
-        // });
+        toast.show('Password must be at least 8 characters', {
+          type: 'warning'
+        });
         console.error('Password must be at least 8 characters');
         return;
       }
 
       if (currentPassword !== existingPassword) {
-        // toast.show('Incorrect password!', { type: 'warning' });
+        toast.show('Incorrect password!', { type: 'warning' });
         console.error('Incorrect password!');
         return;
       }
 
       if (currentPassword === newPassword) {
-        // toast.show('Cannot use current password', { type: 'warning' });
+        toast.show('Cannot use current password', { type: 'warning' });
         console.error('Cannot use current password');
         return;
       }
 
       if (newPassword !== confirmPassword) {
-        // toast.show('Passwords do not match!', { type: 'warning' });
+        toast.show('Passwords do not match!', { type: 'warning' });
         console.error('Passwords do not match!');
         return;
       }
@@ -96,9 +96,9 @@ export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
       await saveItem('accounts', encryptedAccounts);
 
       closeModal();
-      // toast.show('Password Changed Successfully', { type: 'success' });
+      toast.show('Password Changed Successfully', { type: 'success' });
     } catch (error) {
-      // toast.show('Failed to change password', { type: 'danger' });
+      toast.show('Failed to change password', { type: 'danger' });
     }
   };
 

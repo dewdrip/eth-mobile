@@ -5,6 +5,7 @@ import { Abi, AbiFunction, Address } from 'abitype';
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
+import { useToast } from 'react-native-toast-notifications';
 import { TransactionReceipt } from 'viem';
 import ContractInput from './ContractInput';
 import {
@@ -30,7 +31,7 @@ export default function WriteOnlyFunctionForm({
     getInitialFormState(abiFunction)
   );
   const [txValue, setTxValue] = useState<string | bigint>('');
-  // const toast = useToast();
+  const toast = useToast();
   const [txReceipt, setTxReceipt] = useState<TransactionReceipt | undefined>();
   const { openModal } = useModal();
 
@@ -50,7 +51,7 @@ export default function WriteOnlyFunctionForm({
       onChange();
     } catch (error) {
       console.error('Error writing to contract: ', error);
-      // toast.show(JSON.stringify(error), { type: 'danger', placement: 'top' });
+      toast.show(JSON.stringify(error), { type: 'danger' });
     }
   };
 

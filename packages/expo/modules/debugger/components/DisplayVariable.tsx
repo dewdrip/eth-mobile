@@ -6,6 +6,7 @@ import { AbiFunction, Address } from 'abitype';
 import { InterfaceAbi, isAddress } from 'ethers';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 
 type Props = {
   contractAddress: Address;
@@ -20,7 +21,7 @@ export default function DisplayVariable({
   abi,
   refreshDisplayVariables
 }: Props) {
-  // const toast = useToast();
+  const toast = useToast();
 
   const {
     data: result,
@@ -31,11 +32,9 @@ export default function DisplayVariable({
     functionName: abiFunction.name,
     abi: abi,
     onError: error => {
-      console.log('error: ', error);
-      // toast.show(JSON.stringify(error), {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show(JSON.stringify(error), {
+        type: 'danger'
+      });
     }
   });
 

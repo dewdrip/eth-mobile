@@ -1,9 +1,9 @@
-// import { useToast } from 'react-native-toast-notifications';
 import { useCryptoPrice, useNetwork } from '@/hooks/eth-mobile';
 import { COLORS } from '@/utils/constants';
 import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { useToast } from 'react-native-toast-notifications';
 import { formatEther } from 'viem';
 
 type Props = {
@@ -29,7 +29,7 @@ export default function Amount({
   const [dollarValue, setDollarValue] = useState('');
   const [isDollar, setIsDollar] = useState(false);
 
-  // const toast = useToast();
+  const toast = useToast();
 
   const network = useNetwork();
   const {
@@ -43,7 +43,7 @@ export default function Amount({
 
   const switchCurrency = () => {
     if (!dollarRate) {
-      // toast.show('Loading exchange rate', { placement: 'top' });
+      toast.show('Loading exchange rate', { type: 'info' });
 
       if (!isFetchingDollarRate) {
         fetchDollarRate();

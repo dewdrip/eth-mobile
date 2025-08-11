@@ -5,6 +5,7 @@ import { AbiFunction, Address } from 'abitype';
 import { InterfaceAbi } from 'ethers';
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import ContractInput from './ContractInput';
 import {
   getFunctionInputKey,
@@ -27,7 +28,7 @@ export default function ReadOnlyFunctionForm({
     getInitialFormState(abiFunction)
   );
   const [result, setResult] = useState<any>();
-  // const toast = useToast();
+  const toast = useToast();
 
   const { isLoading: isFetching, refetch } = useReadContract({
     address: contractAddress,
@@ -37,10 +38,9 @@ export default function ReadOnlyFunctionForm({
     enabled: false,
     onError: (error: any) => {
       console.error('Error reading from contract: ', error);
-      // toast.show(JSON.stringify(error), {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show(JSON.stringify(error), {
+        type: 'danger'
+      });
     }
   });
 

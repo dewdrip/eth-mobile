@@ -9,6 +9,7 @@ import { ethers } from 'ethers';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { useToast } from 'react-native-toast-notifications';
 import { useDispatch } from 'react-redux';
 
 type Props = {
@@ -33,7 +34,7 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
 
   const { nftExists } = useNFTs();
 
-  // const toast = useToast();
+  const toast = useToast();
 
   const importNFT = async () => {
     try {
@@ -48,10 +49,9 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
       }
 
       if (nftExists(address, Number(tokenId))) {
-        // toast.show('Token already exists!', {
-        //   type: 'danger',
-        //   placement: 'top'
-        // });
+        toast.show('Token already exists!', {
+          type: 'warning'
+        });
         return;
       }
 

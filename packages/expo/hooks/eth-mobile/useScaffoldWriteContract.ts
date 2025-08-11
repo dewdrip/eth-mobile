@@ -6,7 +6,7 @@ import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
 import { usePathname } from 'expo-router';
 import { useState } from 'react';
 import { useModal } from 'react-native-modalfy';
-// import { useToast } from 'react-native-toast-notifications';
+import { useToast } from 'react-native-toast-notifications';
 import { useSelector } from 'react-redux';
 import { Address, formatEther, TransactionReceipt } from 'viem';
 import { useAccount, useDeployedContractInfo, useNetwork } from '.';
@@ -42,7 +42,7 @@ export function useScaffoldWriteContract({
     contractName
   });
   const network = useNetwork();
-  // const toast = useToast();
+  const toast = useToast();
   const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
   const route = useRoute();
@@ -149,10 +149,9 @@ export function useScaffoldWriteContract({
           // @ts-ignore
           addTx(transaction);
 
-          // toast.show('Transaction Successful!', {
-          //   type: 'success',
-          //   placement: 'top'
-          // });
+          toast.show('Transaction Successful!', {
+            type: 'success'
+          });
           resolve(receipt);
         } catch (error) {
           reject(getParsedError(error));
@@ -170,10 +169,9 @@ export function useScaffoldWriteContract({
   const writeContract = (args: WriteContractArgs) => {
     executeTransaction(args).catch(error => {
       console.error('Transaction failed:', getParsedError(error));
-      // toast.show(getParsedError(error), {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show(getParsedError(error), {
+        type: 'danger'
+      });
     });
   };
 

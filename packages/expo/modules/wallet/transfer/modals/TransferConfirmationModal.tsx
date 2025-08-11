@@ -8,6 +8,7 @@ import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
 import { ethers, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
 import { Image, Linking, Text, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { formatEther } from 'viem';
 
 interface TxData {
@@ -35,7 +36,7 @@ export default function TransferConfirmationModal({
     params: { txData, estimateGasCost, token, isNativeToken, onTransfer }
   }
 }: Props) {
-  // const toast = useToast();
+  const toast = useToast();
   const [isSuccess, setIsSuccess] = useState(false);
   const network = useNetwork();
 
@@ -72,10 +73,9 @@ export default function TransferConfirmationModal({
       setIsSuccess(true);
     } catch (error) {
       console.error(error);
-      // toast.show('Failed to transfer', {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show('Failed to transfer', {
+        type: 'danger'
+      });
       return;
     } finally {
       setIsTransferring(false);
@@ -88,10 +88,9 @@ export default function TransferConfirmationModal({
     try {
       await Linking.openURL(`${network.blockExplorer}/tx/${txReceipt.hash}`);
     } catch (error) {
-      // toast.show('Cannot open url', {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show('Cannot open url', {
+        type: 'danger'
+      });
     }
   };
 

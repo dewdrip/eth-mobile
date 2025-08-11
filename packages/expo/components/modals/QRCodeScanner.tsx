@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { Camera, CameraType } from 'react-native-camera-kit';
+import { useToast } from 'react-native-toast-notifications';
 import { Camera as VCamera } from 'react-native-vision-camera';
 
 type Props = {
@@ -19,49 +20,37 @@ export default function QRCodeScanner({
   modal: { closeModal, params }
 }: Props) {
   const [isCameraPermitted, setIsCameraPermitted] = useState(false);
-
-  // const toast = useToast();
+  const toast = useToast();
 
   const requestCameraPermission = async () => {
     // check permission
-    const cameraPermission = await VCamera.getCameraPermissionStatus();
+    const status = await VCamera.getCameraPermissionStatus();
 
-    if (cameraPermission === 'restricted') {
-      // toast.show('Cannot use camera', {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
-      closeModal();
-    } else if (
-      cameraPermission === 'not-determined' ||
-      cameraPermission === 'denied'
-    ) {
-      try {
-        const newCameraPermission = await VCamera.requestCameraPermission();
-
-        if (newCameraPermission === 'granted') {
-          setIsCameraPermitted(true);
-        } else {
-          // toast.show(
-          //   'Camera permission denied. Go to your device settings to Enable Camera',
-          //   {
-          //     type: 'warning',
-          //     placement: 'top'
-          //   }
-          // );
-          closeModal();
-        }
-      } catch (error) {
-        // toast.show('Go to your device settings to Enable Camera', {
-        //   type: 'normal',
-        //   duration: 5000,
-        //   placement: 'top'
-        // });
-        closeModal();
-      }
-    } else {
-      setIsCameraPermitted(true);
+    if (status !== 'granted') {
+      toast.show('Cannot use camera', {
+        type: 'danger'
+      });
+      return;
     }
+
+    if (status === 'denied') {
+      toast.show(
+        'Camera permission is required to scan QR codes. Please grant camera permission in your device settings.',
+        {
+          type: 'warning'
+        }
+      );
+      return;
+    }
+
+    if (status === 'restricted') {
+      toast.show('Go to your device settings to Enable Camera', {
+        type: 'warning'
+      });
+      return;
+    }
+
+    setIsCameraPermitted(true);
   };
 
   useEffect(() => {

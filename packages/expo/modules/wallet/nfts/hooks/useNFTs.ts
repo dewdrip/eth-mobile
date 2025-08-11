@@ -33,7 +33,6 @@ const nftExists = (
 
   if (!nftCollection) return false;
 
-  console.log(nftCollection.tokens);
   return nftCollection.tokens.some(t => t.id == tokenId);
 };
 

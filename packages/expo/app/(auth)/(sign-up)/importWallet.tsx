@@ -17,12 +17,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import * as Keychain from 'react-native-keychain';
 import { Divider, Switch } from 'react-native-paper';
+import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 
 function ImportWallet() {
   const router = useRouter();
   const dispatch = useDispatch();
-  //   const toast = useToast();
+  const toast = useToast();
   const { saveItem, saveItemWithBiometrics } = useSecureStorage();
   const { importWallet } = useWallet();
   const [seedPhrase, setSeedPhrase] = useState('');
@@ -60,37 +61,29 @@ function ImportWallet() {
   const isInputValid = (): boolean => {
     // input validation
     if (!isValidMnemonic(seedPhrase)) {
-      //   toast.show('Invalid Seed Phrase', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
-      console.error('Invalid Seed Phrase');
+      toast.show('Invalid Seed Phrase', {
+        type: 'danger'
+      });
       return false;
     }
     if (!password) {
-      //   toast.show('Password cannot be empty!', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
-      console.error('Password cannot be empty!');
+      toast.show('Password cannot be empty!', {
+        type: 'danger'
+      });
       return false;
     }
 
     if (password.length < 8) {
-      //   toast.show('Password must be at least 8 characters', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
-      console.error('Password must be at least 8 characters');
+      toast.show('Password must be at least 8 characters', {
+        type: 'danger'
+      });
       return false;
     }
 
     if (password !== confirmPassword) {
-      //   toast.show('Passwords do not match!', {
-      //     type: 'danger',
-      //     placement: 'top'
-      //   });
-      console.error('Passwords do not match!');
+      toast.show('Passwords do not match!', {
+        type: 'danger'
+      });
       return false;
     }
 
@@ -161,13 +154,12 @@ function ImportWallet() {
         }, 200);
       }
     } catch (error) {
-      //   toast.show(
-      //     'Failed to import wallet. Please ensure you have a stable network connection and try again',
-      //     {
-      //       type: 'danger',
-      //       placement: 'top'
-      //     }
-      //   );
+      toast.show(
+        'Failed to import wallet. Please ensure you have a stable network connection and try again',
+        {
+          type: 'danger'
+        }
+      );
     } finally {
       setIsImporting(false);
     }

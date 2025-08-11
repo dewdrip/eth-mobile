@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
+import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
@@ -24,7 +25,7 @@ type Props = {
 
 export default function AccountsModal({ modal: { closeModal } }: Props) {
   const dispatch = useDispatch();
-  // const toast = useToast();
+  const toast = useToast();
   const { importWallet } = useWallet();
   const { saveItem } = useSecureStorage();
 
@@ -58,10 +59,9 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
     }
 
     if (!newAccount) {
-      // toast.show('Failed to create account!', {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show('Failed to create account!', {
+        type: 'danger'
+      });
       return;
     }
 

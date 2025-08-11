@@ -22,12 +22,12 @@ import {
   View
 } from 'react-native';
 import { useModal } from 'react-native-modalfy';
-// import { useToast } from 'react-native-toast-notifications';
+import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function Login() {
   const router = useRouter();
-  // const toast = useToast();
+  const toast = useToast();
   const dispatch = useDispatch();
   const { getItem, removeItem } = useSecureStorage();
 
@@ -53,11 +53,9 @@ export default function Login() {
     const seedPhrase = await encryptor.decrypt(encryptedSeedPhrase, password);
 
     if (!seedPhrase) {
-      console.log('Incorrect password!');
-      // toast.show('Incorrect password!', {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show('Incorrect password!', {
+        type: 'danger'
+      });
       return;
     }
 
@@ -99,10 +97,9 @@ export default function Login() {
       initAccounts(password);
     } catch (error) {
       console.log('Login Error: ', error);
-      // toast.show('Login Error!', {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show('Login Error!', {
+        type: 'danger'
+      });
     } finally {
       setIsLoggingIn(false);
     }
@@ -112,10 +109,9 @@ export default function Login() {
     if (isLoggingIn) return;
 
     if (!password) {
-      // toast.show('Password cannot be empty!', {
-      //   type: 'danger',
-      //   placement: 'top'
-      // });
+      toast.show('Password cannot be empty!', {
+        type: 'danger'
+      });
       return;
     }
 
@@ -124,6 +120,9 @@ export default function Login() {
       initAccounts(password);
     } catch (error) {
       console.log('Login Error: ', error);
+      toast.show('Login Error!', {
+        type: 'danger'
+      });
     } finally {
       setIsLoggingIn(false);
     }

@@ -31,7 +31,7 @@ import { PaperProvider } from 'react-native-paper';
 import { MenuProvider } from 'react-native-popup-menu';
 import { Provider as ReduxProvider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import ToastProvider from './Toast';
+import Toast from './Toast';
 
 const theme = {
   colors: {
@@ -77,7 +77,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ReduxProvider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ToastProvider>
+        <Toast>
           <PaperProvider theme={theme}>
             <MenuProvider>
               <GestureHandlerRootView style={{ flex: 1 }}>
@@ -85,7 +85,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               </GestureHandlerRootView>
             </MenuProvider>
           </PaperProvider>
-        </ToastProvider>
+        </Toast>
       </PersistGate>
     </ReduxProvider>
   );

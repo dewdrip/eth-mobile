@@ -1772,6 +1772,7 @@ __metadata:
     react-native-screens: 4.10.0
     react-native-svg: 15.11.2
     react-native-tab-view: 3.5.2
+    react-native-toast-notifications: ^3.4.0
     react-native-url-polyfill: 2.0.0
     react-native-vision-camera: 4.7.1
     react-native-web: 0.20.0
@@ -13391,6 +13392,16 @@ __metadata:
     react-native: "*"
     react-native-pager-view: ">= 6.0.0"
   checksum: 35e289ea10bc890c3fde2fbfb716a2df7418adcb027e70d18121a78cee30583676b64c211157a0ca022b125a476ef052650c41cc49c62e71ba8efc600622b0dc
+  languageName: node
+  linkType: hard
+
+"react-native-toast-notifications@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "react-native-toast-notifications@npm:3.4.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 734a54111e3657859d3cca9505a197bc6eb486e473e655d8aa087157de8f5e8b819083963f28e5e9155110be9a17774296bbfd721749f670c5f4e093557bd88f
   languageName: node
   linkType: hard
 

@@ -1,6 +1,6 @@
+import Providers from '@/modules/providers';
 import '../global.css';
 import 'expo-dev-client';
-import Providers from '@/components/Providers';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';

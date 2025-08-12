@@ -9,7 +9,7 @@ type Props = {
 export default function Logo({ size }: Props) {
   return (
     <Image
-      source={require('../assets/images/logo.png')}
+      source={require('../assets/icons/logo.png')}
       style={{
         width: size || Device.getDeviceWidth() * 0.3,
         height: size || Device.getDeviceWidth() * 0.3

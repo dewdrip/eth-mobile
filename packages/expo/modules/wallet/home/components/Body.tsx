@@ -36,7 +36,8 @@ function MainBalance() {
   const { openModal } = useModal();
 
   useEffect(() => {
-    if (!!balance && parseBalance(balance).length > 0) return;
+    if (!!balance && parseBalance(balance, network.token.decimals).length > 0)
+      return;
     fetchPrice();
   }, [balance, network]);
 
@@ -71,15 +72,15 @@ function MainBalance() {
         <View className="flex-col items-center mt-6">
           <Text className="text-4xl font-semibold font-[Poppins-semibold]">
             {balance !== null
-              ? `${Number(parseBalance(balance))} ${network.currencySymbol}`
+              ? `${Number(parseBalance(balance))} ${network.token.symbol}`
               : null}
           </Text>
 
           <Text className="text-lg font-medium font-[Poppins] text-gray-500">
             {price &&
               balance !== null &&
-              parseBalance(balance).length > 0 &&
-              `$${(Number(parseBalance(balance)) * price).toLocaleString('en-US')}`}
+              parseBalance(balance, network.token.decimals).length > 0 &&
+              `$${(Number(parseBalance(balance, network.token.decimals)) * price).toLocaleString('en-US')}`}
           </Text>
         </View>
 

@@ -51,7 +51,7 @@ export default function Transaction({ transaction: tx }: Props) {
 
       <View className="flex-col items-end">
         <Text className="text-lg font-[Poppins-SemiBold]">
-          {tx.value} {network.currencySymbol}
+          {tx.value} {network.token.symbol}
         </Text>
         <Text className="text-sm font-[Poppins]">
           {parseTimestamp(tx.timestamp)}

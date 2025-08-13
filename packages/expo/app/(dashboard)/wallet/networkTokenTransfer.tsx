@@ -17,7 +17,7 @@ import { useModal } from 'react-native-modalfy';
 import { Divider } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
-import { Address, formatEther, parseEther } from 'viem';
+import { Address, formatEther, parseUnits } from 'viem';
 
 export default function NetworkTokenTransfer() {
   const navigation = useNavigation();
@@ -73,7 +73,7 @@ export default function NetworkTokenTransfer() {
     const tx = await activeWallet.sendTransaction({
       from: sender.address,
       to: recipient,
-      value: parseEther(amount)
+      value: parseUnits(amount, network.token.decimals)
     });
 
     const txReceipt = await tx.wait(1);
@@ -86,7 +86,7 @@ export default function NetworkTokenTransfer() {
       : 0n;
     const transaction = {
       type: 'transfer',
-      title: `${network.currencySymbol} Transfer`,
+      title: `${network.token.symbol} Transfer`,
       hash: tx.hash,
       value: parseFloat(formatEther(tx.value), 8).toString(),
       timestamp: Date.now(),
@@ -140,7 +140,7 @@ export default function NetworkTokenTransfer() {
         balance: balance
       },
       estimateGasCost: gasCost,
-      token: network.currencySymbol,
+      token: network.token.symbol,
       isNativeToken: true,
       onTransfer: transfer
     });
@@ -175,13 +175,13 @@ export default function NetworkTokenTransfer() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 bg-white p-4">
-        <Header tokenSymbol={network.currencySymbol} />
+        <Header tokenSymbol={network.token.symbol} />
 
         <Sender
           account={sender}
           balance={
             balance !== null
-              ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
+              ? `${Number(parseBalance(balance, network.token.decimals)).toLocaleString('en-US')} ${network.token.symbol}`
               : null
           }
           onChange={setSender}
@@ -195,7 +195,7 @@ export default function NetworkTokenTransfer() {
 
         <Amount
           amount={amount}
-          token={network.currencySymbol}
+          token={network.token.symbol}
           balance={balance}
           gasCost={gasCost}
           onChange={setAmount}

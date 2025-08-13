@@ -51,7 +51,7 @@ export default function SignMessageModal({
           <Text className="text-lg font-[Poppins]">Balance</Text>
           <Text className="text-lg font-[Poppins]">
             {balance !== null
-              ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
+              ? `${Number(parseBalance(balance, network.token.decimals)).toLocaleString('en-US')} ${network.token.symbol}`
               : null}
           </Text>
         </View>

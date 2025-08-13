@@ -98,10 +98,10 @@ export default function TransactionDetailsModal({
             </View>
             <View className="w-1/2 items-end">
               <Text className="text-base font-[Poppins]">
-                {tx.value} {network.currencySymbol}
+                {tx.value} {network.token.symbol}
               </Text>
               <Text className="text-base font-[Poppins]">
-                {tx.gasFee} {network.currencySymbol}
+                {tx.gasFee} {network.token.symbol}
               </Text>
             </View>
           </View>
@@ -111,7 +111,7 @@ export default function TransactionDetailsModal({
           <View className="flex-row items-center justify-between">
             <Text className="text-lg font-[Poppins]">Total Cost</Text>
             <Text className="text-lg font-semibold font-[Poppins-SemiBold]">
-              {tx.total} {network.currencySymbol}
+              {tx.total} {network.token.symbol}
             </Text>
           </View>
         </View>

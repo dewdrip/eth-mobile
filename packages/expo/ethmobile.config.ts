@@ -3,11 +3,16 @@ export type Config = {
   networks: NetworkConfig;
 };
 
+export type Token = {
+  decimals: number;
+  symbol: string;
+};
+
 export type Network = {
   name: string;
   provider: string;
   id: number;
-  currencySymbol: string;
+  token: Token;
   coingeckoPriceId: string;
   blockExplorer: string | null;
 };
@@ -34,7 +39,10 @@ const config: Config = {
       name: 'Hardhat',
       provider: 'http://192.168.0.52:8545',
       id: 31337,
-      currencySymbol: 'ETH',
+      token: {
+        decimals: 18,
+        symbol: 'ETH'
+      },
       coingeckoPriceId: 'ethereum',
       blockExplorer: null
     },
@@ -42,7 +50,10 @@ const config: Config = {
       name: 'Ethereum',
       provider: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`,
       id: 1,
-      currencySymbol: 'ETH',
+      token: {
+        decimals: 18,
+        symbol: 'ETH'
+      },
       coingeckoPriceId: 'ethereum',
       blockExplorer: 'https://etherscan.io'
     },
@@ -50,7 +61,10 @@ const config: Config = {
       name: 'Sepolia',
       provider: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 11155111,
-      currencySymbol: 'SepoliaETH',
+      token: {
+        decimals: 18,
+        symbol: 'ETH'
+      },
       coingeckoPriceId: 'ethereum',
       blockExplorer: 'https://sepolia.etherscan.io'
     },
@@ -58,7 +72,10 @@ const config: Config = {
       name: 'Arbitrum',
       provider: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 42161,
-      currencySymbol: 'ETH',
+      token: {
+        decimals: 18,
+        symbol: 'ETH'
+      },
       coingeckoPriceId: 'ethereum',
       blockExplorer: 'https://arbiscan.io'
     },
@@ -66,7 +83,10 @@ const config: Config = {
       name: 'Arbitrum Goerli',
       provider: `https://arb-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 421613,
-      currencySymbol: 'AGOR',
+      token: {
+        decimals: 18,
+        symbol: 'ETH'
+      },
       coingeckoPriceId: 'arbitrum',
       blockExplorer: 'https://goerli.arbiscan.io'
     },
@@ -74,7 +94,10 @@ const config: Config = {
       name: 'Optimism',
       provider: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 10,
-      currencySymbol: 'OP',
+      token: {
+        decimals: 18,
+        symbol: 'ETH'
+      },
       coingeckoPriceId: 'optimism',
       blockExplorer: 'https://optimistic.etherscan.io'
     },
@@ -82,7 +105,10 @@ const config: Config = {
       name: 'Optimism Goerli',
       provider: `https://opt-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 420,
-      currencySymbol: 'ETH',
+      token: {
+        decimals: 18,
+        symbol: 'ETH'
+      },
       coingeckoPriceId: 'optimism',
       blockExplorer: 'https://goerli-optimism.etherscan.io'
     },
@@ -90,7 +116,10 @@ const config: Config = {
       name: 'Polygon',
       provider: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 137,
-      currencySymbol: 'MATIC',
+      token: {
+        decimals: 18,
+        symbol: 'MATIC'
+      },
       coingeckoPriceId: 'polygon-ecosystem-token',
       blockExplorer: 'https://polygonscan.com'
     },
@@ -98,7 +127,10 @@ const config: Config = {
       name: 'Polygon Mumbai',
       provider: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 80001,
-      currencySymbol: 'MATIC',
+      token: {
+        decimals: 18,
+        symbol: 'MATIC'
+      },
       coingeckoPriceId: 'polygon-ecosystem-token',
       blockExplorer: 'https://mumbai.polygonscan.com'
     }

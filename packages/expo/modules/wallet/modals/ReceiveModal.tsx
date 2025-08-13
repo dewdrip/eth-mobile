@@ -38,7 +38,7 @@ export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
     >
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-2xl font-semibold font-[Poppins-SemiBold]">
-          Receive {params?.tokenSymbol || connectedNetwork.currencySymbol}
+          Receive {params?.tokenSymbol || connectedNetwork.token.symbol}
         </Text>
         <Ionicons
           name="close-outline"
@@ -60,7 +60,7 @@ export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
       <View className="bg-primary-light p-4 rounded-lg mb-5">
         <Text className="text-center text-lg font-[Poppins]">
           Send only {connectedNetwork.name} (
-          {params?.tokenSymbol || connectedNetwork.currencySymbol}) to this
+          {params?.tokenSymbol || connectedNetwork.token.symbol}) to this
           address or risk losing your funds.
         </Text>
       </View>

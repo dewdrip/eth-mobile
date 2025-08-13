@@ -18,7 +18,7 @@ export function Balance({ address, style }: Props) {
     <View className="items-center">
       <Text className="text-lg font-[Poppins]" style={style}>
         {balance !== null
-          ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
+          ? `${Number(parseBalance(balance, network.token.decimals)).toLocaleString('en-US')} ${network.token.symbol}`
           : null}
       </Text>
     </View>

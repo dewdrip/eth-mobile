@@ -121,7 +121,7 @@ export default function NFTTransferConfirmationModal({
                 {String(
                   estimateGasCost && parseFloat(formatEther(estimateGasCost), 8)
                 )}{' '}
-                {network.currencySymbol}
+                {network.token.symbol}
               </Text>
             </View>
           </View>

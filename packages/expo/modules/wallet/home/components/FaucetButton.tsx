@@ -6,7 +6,7 @@ import { JsonRpcProvider, Wallet } from 'ethers';
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
-import { parseEther } from 'viem';
+import { parseUnits } from 'viem';
 
 // Number of ETH faucet sends to an address
 const NUM_OF_ETH = '1';
@@ -30,7 +30,7 @@ export default function FaucetButton() {
 
       const tx = await faucetWallet.sendTransaction({
         to: connectedAccount.address,
-        value: parseEther(NUM_OF_ETH)
+        value: parseUnits(NUM_OF_ETH, connectedNetwork.token.decimals)
       });
 
       await tx.wait(1);

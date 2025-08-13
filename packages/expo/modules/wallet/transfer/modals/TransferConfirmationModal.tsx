@@ -158,7 +158,7 @@ export default function TransferConfirmationModal({
                       8
                     ).toString()
                   : null}{' '}
-                {network.currencySymbol}
+                {network.token.symbol}
               </Text>
             </View>
 
@@ -171,7 +171,7 @@ export default function TransferConfirmationModal({
                     Total
                   </Text>
                   <Text className="text-lg font-medium font-[Poppins-Medium]">
-                    {calcTotal()} {network.currencySymbol}
+                    {calcTotal()} {network.token.symbol}
                   </Text>
                 </View>
               </>

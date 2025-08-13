@@ -135,7 +135,7 @@ export default function SignTransactionModal({
               <Text className="text-sm font-[Poppins]">
                 Balance:{' '}
                 {balance !== null
-                  ? `${Number(parseBalance(balance)).toLocaleString('en-US')} ${network.currencySymbol}`
+                  ? `${Number(parseBalance(balance, network.token.decimals)).toLocaleString('en-US')} ${network.token.symbol}`
                   : null}
               </Text>
             </View>
@@ -168,7 +168,7 @@ export default function SignTransactionModal({
       </View>
 
       <Text className="text-2xl font-[Poppins] text-center">
-        {formatEther(params.value)} {network.currencySymbol}
+        {formatEther(params.value)} {network.token.symbol}
       </Text>
 
       {/* Gas Fee Section */}
@@ -182,7 +182,7 @@ export default function SignTransactionModal({
           </View>
           <Text className="text-base font-[Poppins]">
             {estimatedGasCost.max ? parseGasCost(estimatedGasCost.max) : null}{' '}
-            {network.currencySymbol}
+            {network.token.symbol}
           </Text>
         </View>
 
@@ -193,7 +193,7 @@ export default function SignTransactionModal({
             Total
           </Text>
           <Text className="text-lg font-medium font-[Poppins-Medium]">
-            {calcTotal().max || ''} {network.currencySymbol}
+            {calcTotal().max || ''} {network.token.symbol}
           </Text>
         </View>
       </View>

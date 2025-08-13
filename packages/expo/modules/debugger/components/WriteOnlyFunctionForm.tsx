@@ -94,8 +94,14 @@ export default function WriteOnlyFunctionForm({
       ) : null}
       <View className="flex-row items-center justify-between mt-4">
         {txReceipt ? (
-          <Pressable className="rounded-full px-4 py-1" onPress={showReceipt}>
-            <Text className="text-base font-[Poppins]">Show Receipt</Text>
+          <Pressable
+            className="px-4 py-1 rounded-full"
+            onPress={showReceipt}
+            style={{ backgroundColor: COLORS.primary }}
+          >
+            <Text className="text-base text-white font-[Poppins]">
+              Show Receipt
+            </Text>
           </Pressable>
         ) : (
           <View />

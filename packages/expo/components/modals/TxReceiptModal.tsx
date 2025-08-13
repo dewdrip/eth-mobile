@@ -40,18 +40,18 @@ export default function TxReceiptModal({
         />
       </View>
 
-      <View className="gap-4">
+      <View className="gap-4 items-center">
         <Ionicons
           name={isError ? 'close-circle' : 'checkmark-circle'}
           size={FONT_SIZE['xl'] * 4}
           color={isError ? COLORS.error : COLORS.primary}
         />
-        <Text className="text-lg font-[Poppins]">
+        <Text className="text-lg font-[Poppins] text-center">
           {isError
             ? 'Something went wrong while sending your transaction.'
             : 'Your transaction has been sent to the network.'}
         </Text>
-        {!isError && (
+        {!isError && connectedNetwork.blockExplorer && (
           <Button
             text="View on Explorer"
             onPress={openExplorer}

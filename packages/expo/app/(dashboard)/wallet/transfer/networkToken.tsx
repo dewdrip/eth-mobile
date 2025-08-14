@@ -140,7 +140,7 @@ export default function NetworkTokenTransfer() {
         balance: balance
       },
       estimateGasCost: gasCost,
-      token: network.token.symbol,
+      tokenSymbol: network.token.symbol,
       isNativeToken: true,
       onTransfer: transfer
     });

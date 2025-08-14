@@ -23,7 +23,7 @@ type Props = {
     params: {
       txData: TxData;
       estimateGasCost: bigint | null;
-      token: string;
+      tokenSymbol: string;
       isNativeToken: boolean;
       onTransfer: () => Promise<TransactionReceipt | undefined>;
     };
@@ -33,7 +33,7 @@ type Props = {
 export default function TransferConfirmationModal({
   modal: {
     closeModal,
-    params: { txData, estimateGasCost, token, isNativeToken, onTransfer }
+    params: { txData, estimateGasCost, tokenSymbol, isNativeToken, onTransfer }
   }
 }: Props) {
   const toast = useToast();
@@ -115,7 +115,7 @@ export default function TransferConfirmationModal({
                   {txData.from.name}
                 </Text>
                 <Text className="text-sm font-[Poppins]">
-                  Balance: {formatBalance()} {token}
+                  Balance: {formatBalance()} {tokenSymbol}
                 </Text>
               </View>
             </View>
@@ -137,7 +137,7 @@ export default function TransferConfirmationModal({
           AMOUNT
         </Text>
         <Text className="text-2xl text-center font-[Poppins] -mt-1">
-          {txData.amount} {token}
+          {txData.amount} {tokenSymbol}
         </Text>
 
         {!isSuccess && (

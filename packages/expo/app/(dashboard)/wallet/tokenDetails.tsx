@@ -11,7 +11,6 @@ import { removeToken } from '@/store/reducers/Tokens';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { truncateAddress } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import { Address } from 'abitype';
 import { ethers } from 'ethers';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -23,7 +22,6 @@ import { useDispatch } from 'react-redux';
 
 export default function TokenDetails() {
   const router = useRouter();
-  const navigation = useNavigation();
   const dispatch = useDispatch();
   const { openModal } = useModal();
 
@@ -109,8 +107,14 @@ export default function TokenDetails() {
               containerColor={COLORS.primaryLight}
               size={48}
               onPress={() => {
-                // @ts-ignore
-                navigation.navigate('ERC20TokenTransfer', { token });
+                router.push({
+                  pathname: '/wallet/transfer/erc20Token',
+                  params: {
+                    name: token.name,
+                    symbol: token.symbol,
+                    address: token.address
+                  }
+                });
               }}
             />
             <Text className="text-lg font-[Poppins]">Send</Text>

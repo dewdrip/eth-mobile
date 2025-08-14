@@ -5,18 +5,18 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-type Feature = {
+type Asset = {
   title: string;
   icon: string;
   screen: any;
 };
 
-const features: Feature[] = [
+const assets: Asset[] = [
   { title: 'Tokens', icon: 'cash-outline', screen: '/wallet/tokens' },
   { title: 'NFTs', icon: 'images-outline', screen: '/wallet/nfts' }
 ];
 
-const FeatureCard = ({ title, icon, screen }: Feature) => {
+const AssetCard = ({ title, icon, screen }: Asset) => {
   return (
     <Link href={screen} push asChild>
       <Pressable
@@ -32,15 +32,15 @@ const FeatureCard = ({ title, icon, screen }: Feature) => {
   );
 };
 
-export default function Footer() {
+export default function Assets() {
   return (
     <View className="flex-col justify-center items-center gap-y-6 mt-10">
-      {features.map(feature => (
-        <FeatureCard
-          key={feature.title}
-          title={feature.title}
-          icon={feature.icon}
-          screen={feature.screen}
+      {assets.map(asset => (
+        <AssetCard
+          key={asset.title}
+          title={asset.title}
+          icon={asset.icon}
+          screen={asset.screen}
         />
       ))}
     </View>

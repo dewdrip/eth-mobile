@@ -1,6 +1,6 @@
 import { useAccount } from '@/hooks/eth-mobile';
+import Assets from '@/modules/wallet/home/components/Assets';
 import Body from '@/modules/wallet/home/components/Body';
-import Footer from '@/modules/wallet/home/components/Footer';
 import Header from '@/modules/wallet/home/components/Header';
 import { setPendingWalletCreation } from '@/store/reducers/Navigation';
 import { useRoute } from '@react-navigation/native';
@@ -43,7 +43,7 @@ export default function Wallet() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
         <Body />
-        <Footer />
+        <Assets />
       </ScrollView>
     </SafeAreaView>
   );

@@ -181,7 +181,7 @@ export default function NetworkTokenTransfer() {
           account={sender}
           balance={
             balance !== null
-              ? `${Number(parseBalance(balance, network.token.decimals)).toLocaleString('en-US')} ${network.token.symbol}`
+              ? `${parseBalance(balance, network.token.decimals)} ${network.token.symbol}`
               : null
           }
           onChange={setSender}

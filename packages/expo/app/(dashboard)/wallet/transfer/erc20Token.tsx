@@ -204,9 +204,7 @@ export default function ERC20TokenTransfer() {
           account={sender}
           balance={
             tokenMetadata && balance
-              ? `${Number(
-                  formatUnits(balance, tokenMetadata?.decimals)
-                ).toLocaleString('en-US')} ${token.symbol}`
+              ? `${formatUnits(balance, tokenMetadata?.decimals)} ${token.symbol}`
               : null
           }
           onChange={setSender}

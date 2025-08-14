@@ -4,7 +4,7 @@ import { useNetwork } from '@/hooks/eth-mobile';
 import { Account } from '@/store/reducers/Accounts';
 import { FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
-import { parseFloat, truncateAddress } from '@/utils/eth-mobile';
+import { parseBalance, parseFloat, truncateAddress } from '@/utils/eth-mobile';
 import { ethers, TransactionReceipt } from 'ethers';
 import React, { useState } from 'react';
 import { Image, Linking, Text, View } from 'react-native';
@@ -47,7 +47,7 @@ export default function TransferConfirmationModal({
 
   const formatBalance = () => {
     return txData.balance && Number(formatEther(txData.balance))
-      ? Number(formatEther(txData.balance)).toLocaleString('en-US')
+      ? parseBalance(txData.balance)
       : 0;
   };
 
@@ -202,16 +202,16 @@ export default function TransferConfirmationModal({
             text={isSuccess ? 'Close' : 'Cancel'}
           />
 
-          {!isSuccess && (network.blockExplorer || !txReceipt) ? (
+          {!isSuccess ? (
             <Button
               onPress={transfer}
               loading={isTransferring}
               style={{ flex: 1 }}
               text="Confirm"
             />
-          ) : (
+          ) : network.blockExplorer && txReceipt ? (
             <Button text="Review" style={{ flex: 1 }} onPress={viewTxDetails} />
-          )}
+          ) : null}
         </View>
       </View>
     </View>

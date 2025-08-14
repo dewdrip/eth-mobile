@@ -1,3 +1,4 @@
+import { COLORS } from '@/utils/constants';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, Text } from 'react-native';
 import { InputBase } from '.';
@@ -50,9 +51,13 @@ export function IntegerInput({
           <Pressable
             onPress={multiplyBy1e18}
             disabled={disabled}
-            className="px-4 mt-3.5"
+            className="px-4 flex-row items-start rounded-2xl mr-2"
+            style={{
+              backgroundColor: COLORS.primary
+            }}
           >
-            <Text className="text-3xl font-[Poppins] font-bold">*</Text>
+            <Text className="text-lg text-white font-[Poppins]">10</Text>
+            <Text className="text-xs text-white font-[Poppins]">18</Text>
           </Pressable>
         )
       }

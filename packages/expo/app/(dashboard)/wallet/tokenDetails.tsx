@@ -1,5 +1,6 @@
 import BackButton from '@/components/buttons/BackButton';
 import { Blockie, CopyableText } from '@/components/eth-mobile';
+import { ConsentModalParams } from '@/components/modals/ConsentModal';
 import {
   useAccount,
   useERC20Balance,
@@ -13,14 +14,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Address } from 'abitype';
 import { ethers } from 'ethers';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { IconButton, Text } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 
 export default function TokenDetails() {
+  const router = useRouter();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { openModal } = useModal();
@@ -39,20 +41,32 @@ export default function TokenDetails() {
   const { balance } = useERC20Balance({ token: token.address });
 
   const remove = () => {
-    dispatch(
-      removeToken({
-        networkId: network.id.toString(),
-        accountAddress: account.address,
-        tokenAddress: token.address
-      })
-    );
-    navigation.goBack();
+    const params: ConsentModalParams = {
+      title: 'Remove Token',
+      description:
+        'Are you sure you want to remove this token from your wallet?',
+      okText: 'Remove',
+      iconColor: COLORS.error,
+      titleStyle: { color: COLORS.error },
+      okButtonStyle: { backgroundColor: COLORS.error },
+      onAccept: () => {
+        dispatch(
+          removeToken({
+            networkId: network.id.toString(),
+            accountAddress: account.address,
+            tokenAddress: token.address
+          })
+        );
+        router.back();
+      }
+    };
+    openModal('ConsentModal', params);
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       <View className="flex-row items-center justify-between border-b border-gray-300 p-4">
-        <View className="flex-row items-center gap-x-2">
+        <View className="flex-row items-center gap-x-4">
           <BackButton />
           <Text className="text-xl font-semibold font-[Poppins-SemiBold]">
             {token.name} ({token.symbol})
@@ -67,9 +81,9 @@ export default function TokenDetails() {
         />
       </View>
 
-      <View className="flex-col items-center gap-y-2">
-        <View className="flex-row items-center gap-x-2">
-          <Blockie address={token.address} size={2.5 * FONT_SIZE['xl']} />
+      <View className="flex-col items-center gap-y-2 mt-4">
+        <View className="items-center gap-y-4">
+          <Blockie address={token.address} size={FONT_SIZE.xl * 3} />
 
           <Text className="text-2xl font-semibold font-[Poppins-SemiBold]">
             {tokenMetadata && balance
@@ -125,26 +139,25 @@ export default function TokenDetails() {
         </View>
       </View>
 
-      <Text className="text-xl font-semibold font-[Poppins-SemiBold]">
-        Token Details
-      </Text>
-      <View className="flex-row items-center justify-between">
-        <Text className="text-lg font-[Poppins]">Contract address</Text>
-        <CopyableText
-          displayText={truncateAddress(token.address)}
-          value={token.address}
-          containerStyle={styles.addressContainer}
-          textStyle={styles.addressText}
-          iconStyle={{ color: COLORS.primary }}
-        />
+      <View className="flex-col gap-y-2 mt-4 px-4">
+        <View className="flex-row items-center justify-between">
+          <Text className="text-lg font-[Poppins]">Contract Address</Text>
+          <CopyableText
+            displayText={truncateAddress(token.address)}
+            value={token.address}
+            containerStyle={styles.addressContainer}
+            textStyle={styles.addressText}
+            iconStyle={{ color: COLORS.primary }}
+          />
+        </View>
+        <View className="flex-row items-center justify-between">
+          <Text className="text-lg font-[Poppins]">Decimal</Text>
+          <Text className="text-lg font-[Poppins]">
+            {tokenMetadata?.decimals?.toString()}
+          </Text>
+        </View>
       </View>
-      <View className="flex-row items-center justify-between">
-        <Text className="text-lg font-[Poppins]">Token decimal</Text>
-        <Text className="text-lg font-[Poppins]">
-          {tokenMetadata?.decimals?.toString()}
-        </Text>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

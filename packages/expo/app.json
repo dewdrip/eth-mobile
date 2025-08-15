@@ -10,7 +10,8 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "ETH Mobile needs to access your Camera"
+        "NSCameraUsageDescription": "ETH Mobile needs to access your Camera",
+        "ITSAppUsesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.ethmobile",
       "icon": {

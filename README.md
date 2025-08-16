@@ -2,9 +2,7 @@
 
 ✍️ **ETH Mobile** is an open-source toolkit for building mobile decentralized applications (dApps) on Ethereum and other EVM-compatible blockchains. It simplifies mobile dApp development with fast, secure and customizable pre-built components to create, deploy and interact with smart contracts.
 
-[Watch me mint a Snowman NFT!☃️](https://youtu.be/CaJTnRtLOK8)
-
-⚙️ **Tech Stack**: Built with React Native, Hardhat, Ethers, and TypeScript to streamline mobile dApp development.
+⚙️ **Tech Stack**: Built with React Native(Expo), Hardhat, Ethers, and TypeScript to streamline mobile dApp development.
 
 ### Key Features
 
@@ -24,10 +22,9 @@
 
 Before you begin, you need to install the following tools:
 
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
+- [Yarn](https://yarnpkg.com/getting-started/install)
 - [Git](https://git-scm.com/downloads)
 - [React Native](https://reactnative.dev/docs/environment-setup?guide=native&platform=android)
-- [Yeet CLI](https://npmjs.com/package/yeet-cli)
 
 ## Quickstart
 
@@ -41,10 +38,6 @@ git clone https://github.com/dewdrip/eth-mobile.git
 cd eth-mobile
 
 yarn install
-
-cd packages/reactnative
-
-npx pod-install
 ```
 
 2. Connect your WIFI to your computer. if you wish to run your app in a physical device, your device must be connected to the same WIFI
@@ -67,50 +60,36 @@ yarn deploy
 
 This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
 
-5. Set the `ALCHEMY_KEY` and `localhost.provider`(port **8545**) variables in `packages/reactnative/ethmobile.config.ts`
-
-#### To determine your local IP address:
-
-#### Mac:
+5. Configure the local network provider:
 
 ```
-ipconfig getifaddr en0
+yarn configure-network
 ```
 
-#### Windows:
+This command sets your local IP address as your `hardhat.provider` in `ethmobile.config.ts`. It uses the script located in `packages/expo/utils/eth-mobile/configureLocalNetwork.ts`
 
-```
-ipconfig
-```
-
-6. Connect your device via USB or Run an emulator
+6. Set the `ALCHEMY_KEY` in `ethmobile.config.ts`
 
 7. Run on device:
-
-#### Android
 
 ```
 yarn android
 ```
 
-#### IOS
-
 ```
 yarn ios
 ```
 
-8. Import one of the funded accounts in your local blockchain into your wallet to have funds for testing
-
-You can interact with your smart contract using the `DebugContracts` tab. You can configure your supported networks in `packages/reactnative/ethmobile.config.ts`.
+You can interact with your smart contract using the `debugContracts` screen. You can configure your supported networks in `ethmobile.config.ts`.
 
 Run smart contract test with `yarn hardhat:test`
 
 - Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend in `packages/reactnative/src/screens`
 - Edit your deployment scripts in `packages/hardhat/deploy`
+- Edit your frontend in `packages/expo/app`
 
 ## Contributing to ETH Mobile
 
-We welcome contributions to ETH Mobile!
+Contributors are always welcome to ETH Mobile!
 
 Please see [CONTRIBUTING.MD](https://github.com/dewdrip/eth-mobile/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to ETH Mobile.

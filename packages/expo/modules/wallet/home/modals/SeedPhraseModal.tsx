@@ -36,7 +36,7 @@ export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
     }
 
     // retrieve seed phrase
-    setSeedPhrase(wallet.mnemonic);
+    setSeedPhrase(JSON.parse(wallet.mnemonic));
   };
 
   const handleInputChange = (value: string) => {

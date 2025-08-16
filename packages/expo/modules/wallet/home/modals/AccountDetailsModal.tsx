@@ -1,6 +1,7 @@
 import CustomButton from '@/components/buttons/CustomButton';
 import { Blockie, CopyableText } from '@/components/eth-mobile';
 import EditAccountNameForm from '@/components/forms/EditAccountNameForm';
+import { ConsentModalParams } from '@/components/modals/ConsentModal';
 import { useAccount } from '@/hooks/eth-mobile';
 import { Account, removeAccount } from '@/store/reducers/Accounts';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
@@ -29,8 +30,22 @@ export default function AccountDetailsModal({ modal: { closeModal } }: Props) {
   const [isEditingAccountName, setIsEditingAccountName] = useState(false);
 
   const handleAccountRemoval = () => {
-    closeModal();
-    dispatch(removeAccount(connectedAccount.address));
+    if (accounts.length === 1) return;
+
+    const params: ConsentModalParams = {
+      title: 'Remove account',
+      description: 'Are you sure you want to remove this account?',
+      okText: 'Remove',
+      cancelText: 'Cancel',
+      iconColor: COLORS.error,
+      titleStyle: { color: COLORS.error },
+      okButtonStyle: { backgroundColor: COLORS.error },
+      onAccept: () => {
+        closeModal();
+        dispatch(removeAccount(connectedAccount.address));
+      }
+    };
+    openModal('ConsentModal', params);
   };
 
   return (

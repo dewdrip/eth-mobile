@@ -40,9 +40,7 @@ cd eth-mobile
 yarn install
 ```
 
-2. Connect your WIFI to your computer. if you wish to run your app in a physical device, your device must be connected to the same WIFI
-
-3. From the root folder, run a local network in the first terminal
+2. From the root folder, run a local network in the first terminal
 
 ```
 yarn chain
@@ -52,7 +50,7 @@ This command starts a local Ethereum network hosted on your local IP address. Th
 
 Alternatively, you can use [Ganache](https://archive.trufflesuite.com/ganache/) to persist the blockchain state during development
 
-4. On a second terminal, deploy the test contract:
+3. On a second terminal, deploy the test contract:
 
 ```
 yarn deploy
@@ -60,7 +58,7 @@ yarn deploy
 
 This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
 
-5. Configure the local network provider:
+4. Configure the local network provider:
 
 ```
 yarn configure-network
@@ -68,9 +66,9 @@ yarn configure-network
 
 This command sets your local IP address as your `hardhat.provider` in `ethmobile.config.ts`. It uses the script located in `packages/expo/utils/eth-mobile/configureLocalNetwork.ts`
 
-6. Set the `ALCHEMY_KEY` in `ethmobile.config.ts`
+5. Set the `ALCHEMY_KEY` in `ethmobile.config.ts`
 
-7. Run on device:
+6. Run on device:
 
 ```
 yarn android
@@ -79,6 +77,8 @@ yarn android
 ```
 yarn ios
 ```
+
+> **Note:** if you wish to run your app in a physical device, your device must be connected to the same WIFI
 
 You can interact with your smart contract using the `debugContracts` screen. You can configure your supported networks in `ethmobile.config.ts`.
 

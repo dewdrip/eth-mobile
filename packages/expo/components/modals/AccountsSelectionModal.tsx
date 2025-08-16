@@ -1,10 +1,12 @@
 import { Blockie } from '@/components/eth-mobile';
 import { Account } from '@/store/reducers/Accounts';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
+import Device from '@/utils/device';
 import { truncateAddress } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 
 type Props = {
   modal: {
@@ -22,22 +24,21 @@ export default function AccountsSelectionModal({
     params: { selectedAccount, onSelect }
   }
 }: Props) {
-  // const accounts: Account[] = useSelector((state: any) => state.accounts);
-  const accounts: any[] = [
-    {
-      address: '0x1234567890123456789012345678901234567890',
-      name: 'Account 1'
-    }
-  ];
+  const accounts: Account[] = useSelector((state: any) => state.accounts);
 
   const handleSelection = (account: Account) => {
     closeModal();
     onSelect(account);
   };
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="bg-white rounded-3xl p-5"
+      style={{ width: Device.getDeviceWidth() * 0.9 }}
+    >
       <View className="flex-row justify-between items-center mb-4">
-        <Text className="text-2xl font-[Poppins]">Accounts</Text>
+        <Text className="text-2xl font-semibold font-[Poppins-SemiBold]">
+          Accounts
+        </Text>
         <Ionicons
           name="close-outline"
           size={FONT_SIZE['xl'] * 1.7}
@@ -45,9 +46,7 @@ export default function AccountsSelectionModal({
         />
       </View>
 
-      <View className="h-1 bg-gray-200 my-4" />
-
-      <ScrollView className="max-h-[20%]">
+      <ScrollView style={{ maxHeight: Device.getDeviceHeight() * 0.2 }}>
         {accounts.map((account, index) => (
           <Pressable
             key={account.address}

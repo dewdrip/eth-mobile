@@ -1,7 +1,7 @@
 {
   "name": "@ethmobile/expo",
   "main": "./index.js",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "scripts": {
     "android": "expo run:android",
     "configure-network": "ts-node utils/eth-mobile/configureLocalNetwork.ts",

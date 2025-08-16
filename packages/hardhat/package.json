@@ -1,6 +1,6 @@
 {
   "name": "@ethmobile/hardhat",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "scripts": {
     "account": "hardhat run scripts/listAccount.ts",
     "account:generate": "hardhat run scripts/generateAccount.ts",

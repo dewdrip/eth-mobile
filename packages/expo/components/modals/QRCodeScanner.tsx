@@ -24,33 +24,38 @@ export default function QRCodeScanner({
 
   const requestCameraPermission = async () => {
     // check permission
-    const status = await VCamera.getCameraPermissionStatus();
+    const cameraPermission = VCamera.getCameraPermissionStatus();
 
-    if (status !== 'granted') {
+    if (cameraPermission === 'restricted') {
       toast.show('Cannot use camera', {
         type: 'danger'
       });
-      return;
-    }
+      closeModal();
+    } else if (
+      cameraPermission === 'not-determined' ||
+      cameraPermission === 'denied'
+    ) {
+      try {
+        const newCameraPermission = await VCamera.requestCameraPermission();
 
-    if (status === 'denied') {
-      toast.show(
-        'Camera permission is required to scan QR codes. Please grant camera permission in your device settings.',
-        {
-          type: 'warning'
+        if (newCameraPermission === 'granted') {
+          setIsCameraPermitted(true);
+        } else {
+          toast.show(
+            'Camera permission denied. Go to your device settings to Enable Camera',
+            {
+              type: 'warning'
+            }
+          );
+          closeModal();
         }
-      );
-      return;
+      } catch (error) {
+        toast.show('Go to your device settings to Enable Camera');
+        closeModal();
+      }
+    } else {
+      setIsCameraPermitted(true);
     }
-
-    if (status === 'restricted') {
-      toast.show('Go to your device settings to Enable Camera', {
-        type: 'warning'
-      });
-      return;
-    }
-
-    setIsCameraPermitted(true);
   };
 
   useEffect(() => {

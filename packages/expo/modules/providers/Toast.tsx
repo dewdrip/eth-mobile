@@ -1,7 +1,6 @@
 import Device from '@/utils/device';
 import globalStyles from '@/utils/globalStyles';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
 import { Text, View } from 'react-native';
 import { ToastProvider as Provider } from 'react-native-toast-notifications';
 

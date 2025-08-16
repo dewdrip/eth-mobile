@@ -68,7 +68,13 @@ This command sets your local IP address as your `hardhat.provider` in `ethmobile
 
 5. Set the `ALCHEMY_KEY` in `ethmobile.config.ts`
 
-6. Run on device:
+6. Prebuild native modules:
+
+```
+yarn prebuild
+```
+
+7. Run on device:
 
 ```
 yarn android

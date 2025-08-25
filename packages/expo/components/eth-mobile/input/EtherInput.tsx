@@ -24,7 +24,7 @@ type Props = {
  * @param balance The user's ETH balance (optional)
  * @returns A component that allows the user to input an amount of ETH
  */
-export default function EtherInput({
+export function EtherInput({
   value,
   disabled,
   onChange,

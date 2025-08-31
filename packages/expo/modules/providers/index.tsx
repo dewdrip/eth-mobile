@@ -4,7 +4,7 @@ import { PaperProvider } from 'react-native-paper';
 import { MenuProvider } from 'react-native-popup-menu';
 import Modals from './modals';
 import Store from './store';
-import Toast from './toast';
+import Toast from './Toast';
 
 const theme = {
   colors: {

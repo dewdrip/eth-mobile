@@ -2,5 +2,7 @@
 name = "noir"
 type = "bin"
 authors = ["Valentine Orga"]
+entry = "circuits/main.nr"
+license = "MIT"
 
 [dependencies]

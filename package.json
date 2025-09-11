@@ -17,6 +17,7 @@
     "bb:prove": "yarn workspace @ethmobile/hardhat bb:prove",
     "bb:verify": "yarn workspace @ethmobile/hardhat bb:verify",
     "bb:write-vk": "yarn workspace @ethmobile/hardhat bb:write-vk",
+    "bb:write-solidity-verifier": "yarn workspace @ethmobile/hardhat bb:write-solidity-verifier",
     "chain": "yarn hardhat:chain",
     "clean": "yarn hardhat:clean",
     "compile": "yarn hardhat:compile",

@@ -2,6 +2,7 @@ node_modules
 .env
 coverage
 coverage.json
+target
 typechain
 typechain-types
 temp
@@ -16,3 +17,5 @@ cache-zk
 
 deployments/localhost
 deployments/ganache
+
+Prover.toml

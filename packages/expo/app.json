@@ -5,15 +5,17 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
-    "scheme": "com.ethmobile",
+    "scheme": "ethmobile",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "ETH Mobile needs to access your Camera",
+        "NSFaceIDUsageDescription": "ETH Mobile needs to access your Face ID",
+        "NSLocationWhenInUseUsageDescription": "ETH Mobile needs to access your Location",
         "ITSAppUsesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.ethmobile",
+      "bundleIdentifier": "com.dewdrip.ethmobile",
       "icon": {
         "light": "./assets/icons/ios-light.png",
         "dark": "./assets/icons/ios-dark.png",
@@ -26,7 +28,7 @@
         "monochromeImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.ethmobile",
+      "package": "com.dewdrip.ethmobile",
       "intentFilters": [
         {
           "autoVerify": true,

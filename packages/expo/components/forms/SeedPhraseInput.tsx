@@ -30,7 +30,11 @@ export default function SeedPhraseInput({
         <TextInput
           mode="outlined"
           style={{ flex: 1, paddingRight: 55, paddingVertical: 5 }}
-          contentStyle={{ fontSize: FONT_SIZE['lg'], fontFamily: 'Poppins' }}
+          contentStyle={{
+            fontSize: FONT_SIZE.lg,
+            fontFamily: 'Poppins',
+            color: 'black'
+          }}
           outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
           activeOutlineColor={COLORS.primary}
           value={value}

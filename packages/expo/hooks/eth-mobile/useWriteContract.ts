@@ -73,7 +73,7 @@ export function useWriteContract({
             sourceScreen: pathname,
             sourceParams: route.params
           });
-          return;
+          reject(null);
         }
 
         const activeWallet = new Wallet(activeAccount.privateKey, provider);

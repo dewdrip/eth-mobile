@@ -36,6 +36,7 @@ export default function SeedPhraseInput({
             color: 'black'
           }}
           outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
+          placeholderTextColor="#a3a3a3"
           activeOutlineColor={COLORS.primary}
           value={value}
           secureTextEntry={!show}

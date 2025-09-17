@@ -39,6 +39,7 @@ export default function PasswordInput({
           value={value}
           mode="outlined"
           outlineStyle={{ borderRadius: 12, borderColor: COLORS.gray }}
+          placeholderTextColor="#a3a3a3"
           activeOutlineColor={COLORS.primary}
           style={{ flex: 1, paddingRight: 55 }}
           contentStyle={{

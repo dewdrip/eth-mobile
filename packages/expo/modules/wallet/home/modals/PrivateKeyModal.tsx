@@ -16,7 +16,7 @@ type Props = {
 };
 
 export default function PrivateKeyModal({ modal: { closeModal } }: Props) {
-  const connectedAccount: Account = useAccount();
+  const connectedAccount = useAccount();
   const wallet = useSelector((state: any) => state.wallet);
   const { copy, isCopied } = useClipboard();
 
@@ -25,6 +25,11 @@ export default function PrivateKeyModal({ modal: { closeModal } }: Props) {
   const [privateKey, setPrivateKey] = useState('');
 
   const showPrivateKey = async () => {
+    if (!connectedAccount) {
+      setError('No account connected');
+      return;
+    }
+
     if (!password) {
       setError('Password cannot be empty');
       return;
@@ -40,8 +45,17 @@ export default function PrivateKeyModal({ modal: { closeModal } }: Props) {
         walletAccount.address === connectedAccount.address
     );
 
-    setPrivateKey(account!.privateKey);
+    if (!account) {
+      setError('Account not found');
+      return;
+    }
+
+    setPrivateKey(account.privateKey);
   };
+
+  if (!connectedAccount) {
+    return null;
+  }
 
   const handleInputChange = (value: string) => {
     setPassword(value);

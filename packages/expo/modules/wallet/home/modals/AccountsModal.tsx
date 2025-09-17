@@ -36,7 +36,7 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
   const { openModal } = useModal();
 
   const handleAccountSelection = (account: string) => {
-    if (account !== connectedAccount.address) {
+    if (connectedAccount && account !== connectedAccount.address) {
       dispatch(switchAccount(account));
       closeModal();
     }

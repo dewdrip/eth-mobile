@@ -36,8 +36,12 @@ export default function SignTransactionModal({
   const account = useAccount();
   const network = useNetwork();
   const { balance } = useBalance({
-    address: account.address
+    address: account?.address || ''
   });
+
+  if (!account) {
+    return null;
+  }
 
   const [estimatedGasCost, setEstimatedGasCost] = useState<GasCost>({
     min: null,

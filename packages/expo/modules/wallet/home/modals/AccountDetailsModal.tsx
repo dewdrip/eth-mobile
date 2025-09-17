@@ -23,14 +23,14 @@ export default function AccountDetailsModal({ modal: { closeModal } }: Props) {
   const dispatch = useDispatch();
 
   const accounts: Account[] = useSelector((state: any) => state.accounts);
-  const connectedAccount: Account = useAccount();
+  const connectedAccount = useAccount();
 
   const { openModal } = useModal();
 
   const [isEditingAccountName, setIsEditingAccountName] = useState(false);
 
   const handleAccountRemoval = () => {
-    if (accounts.length === 1) return;
+    if (!connectedAccount || accounts.length === 1) return;
 
     const params: ConsentModalParams = {
       title: 'Remove account',
@@ -47,6 +47,10 @@ export default function AccountDetailsModal({ modal: { closeModal } }: Props) {
     };
     openModal('ConsentModal', params);
   };
+
+  if (!connectedAccount) {
+    return null;
+  }
 
   return (
     <View

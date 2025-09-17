@@ -30,6 +30,8 @@ export default function Recipient({ recipient, onChange, onSubmit }: Props) {
   };
 
   const selectAccount = () => {
+    if (!account) return;
+
     if (accounts.length > 1) {
       openModal('AccountsSelectionModal', {
         selectedAccount: recipient,

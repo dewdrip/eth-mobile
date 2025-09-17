@@ -15,12 +15,17 @@ export default function EditAccountNameForm({ close }: Props) {
   const dispatch = useDispatch();
 
   const accounts: Account[] = useSelector((state: any) => state.accounts);
-  const connectedAccount: Account = useAccount();
+  const connectedAccount = useAccount();
 
-  const [name, setName] = useState(connectedAccount.name);
+  const [name, setName] = useState(connectedAccount?.name || '');
   const [error, setError] = useState('');
 
   const editName = () => {
+    if (!connectedAccount) {
+      setError('No account connected');
+      return;
+    }
+
     if (name.trim().length === 0) {
       setError('Account name cannot be empty');
       return;
@@ -32,6 +37,10 @@ export default function EditAccountNameForm({ close }: Props) {
     dispatch(changeName({ address: connectedAccount.address, newName: name }));
     close();
   };
+
+  if (!connectedAccount) {
+    return null;
+  }
 
   const handleInputChange = (value: string) => {
     setName(value);

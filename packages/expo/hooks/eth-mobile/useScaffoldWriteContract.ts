@@ -113,7 +113,7 @@ export function useScaffoldWriteContract({
           const activeAccount = wallet.accounts.find(
             (account: Account) =>
               account.address.toLowerCase() ===
-              connectedAccount.address.toLowerCase()
+              connectedAccount?.address.toLowerCase()
           );
 
           const activeWallet = new Wallet(activeAccount.privateKey, provider);

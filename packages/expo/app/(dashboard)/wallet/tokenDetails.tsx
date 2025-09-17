@@ -39,6 +39,8 @@ export default function TokenDetails() {
   const { balance } = useERC20Balance({ token: token.address });
 
   const remove = () => {
+    if (!account) return;
+
     const params: ConsentModalParams = {
       title: 'Remove Token',
       description:
@@ -60,6 +62,10 @@ export default function TokenDetails() {
     };
     openModal('ConsentModal', params);
   };
+
+  if (!account) {
+    return null;
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">

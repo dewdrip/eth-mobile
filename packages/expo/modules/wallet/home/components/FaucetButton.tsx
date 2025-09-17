@@ -22,6 +22,13 @@ export default function FaucetButton() {
   const connectedAccount = useAccount();
 
   const sendETH = async () => {
+    if (!connectedAccount) {
+      toast.show('No account connected', {
+        type: 'danger'
+      });
+      return;
+    }
+
     try {
       setLoading(true);
 

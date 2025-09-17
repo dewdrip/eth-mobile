@@ -34,7 +34,7 @@ export function useERC20Balance({
   userAddress: defaultUserAddress,
   watch = false
 }: UseERC20BalanceOptions = {}): UseERC20BalanceResult {
-  const { address: connectedAddress } = useAccount();
+  const account = useAccount();
   const network = useNetwork();
   const { readContract } = useReadContract();
 
@@ -53,11 +53,14 @@ export function useERC20Balance({
     async (
       token: Address = defaultToken!,
       userAddress: Address = defaultUserAddress ||
-        (connectedAddress as `0x${string}`)
+        (account?.address as `0x${string}`) ||
+        ''
     ) => {
       try {
         if (!token) throw new Error('Token address is required');
         if (!userAddress) throw new Error('User address is required');
+        if (!account?.address && !defaultUserAddress)
+          throw new Error('No connected account');
 
         setIsLoading(true);
         setError(null);
@@ -83,7 +86,7 @@ export function useERC20Balance({
         setIsLoading(false);
       }
     },
-    [defaultToken, defaultUserAddress, connectedAddress]
+    [defaultToken, defaultUserAddress, account?.address]
   );
 
   // Automatically fetch the balance when the token or userAddress changes
@@ -107,7 +110,7 @@ export function useERC20Balance({
     return () => {
       provider.off('block');
     };
-  }, [defaultToken, defaultUserAddress, connectedAddress, watch]);
+  }, [defaultToken, defaultUserAddress, account?.address, watch]);
 
   return {
     isLoading,

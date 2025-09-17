@@ -51,11 +51,11 @@ export function useNFTs() {
 
   // Compute the key based on the network ID and account address
   const storageKey = useMemo(() => {
-    if (!network.id || !account.address) return null;
+    if (!network.id || !account?.address) return null;
     return keccak256(
       toUtf8Bytes(`${network.id}-${account.address.toLowerCase()}`)
     );
-  }, [network.id, account.address]);
+  }, [network.id, account?.address]);
 
   // Fetch NFTs based on the computed storage key
   useEffect(() => {
@@ -66,6 +66,8 @@ export function useNFTs() {
   return {
     nfts: importedNFTs,
     nftExists: (nftAddress: string, tokenId: number) =>
-      nftExists(nftsState, network.id, account.address, nftAddress, tokenId)
+      account?.address
+        ? nftExists(nftsState, network.id, account.address, nftAddress, tokenId)
+        : false
   };
 }

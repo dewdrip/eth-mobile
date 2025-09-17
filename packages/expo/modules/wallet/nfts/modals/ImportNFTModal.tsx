@@ -38,6 +38,11 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
 
   const importNFT = async () => {
     try {
+      if (!account) {
+        setAddressError('No account connected');
+        return;
+      }
+
       if (!ethers.isAddress(address)) {
         setAddressError('Invalid address');
         return;

@@ -34,12 +34,12 @@ export default function NetworkTokenTransfer() {
 
   const [gasCost, setGasCost] = useState<bigint | null>(null);
 
-  const [sender, setSender] = useState<Account>(account);
+  const [sender, setSender] = useState<Account | undefined>(account);
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
 
   const { balance } = useBalance({
-    address: sender.address
+    address: sender?.address || ''
   });
 
   const wallet = useSelector((state: any) => state.wallet);
@@ -64,14 +64,14 @@ export default function NetworkTokenTransfer() {
     // @ts-ignore
     const activeAccount = wallet.accounts.find(
       (account: Account) =>
-        account.address.toLowerCase() === sender.address.toLowerCase()
+        account.address.toLowerCase() === sender?.address.toLowerCase()
     );
 
     const provider = new JsonRpcProvider(network.provider);
     const activeWallet = new Wallet(activeAccount.privateKey, provider);
 
     const tx = await activeWallet.sendTransaction({
-      from: sender.address,
+      from: sender?.address,
       to: recipient,
       value: parseUnits(amount, network.token.decimals)
     });

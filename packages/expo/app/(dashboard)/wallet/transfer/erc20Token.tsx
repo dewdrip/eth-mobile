@@ -58,7 +58,7 @@ export default function ERC20TokenTransfer() {
 
   const [gasCost, setGasCost] = useState<bigint | null>(null);
 
-  const [sender, setSender] = useState<Account>(account);
+  const [sender, setSender] = useState<Account | undefined>(account);
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
 
@@ -69,7 +69,7 @@ export default function ERC20TokenTransfer() {
       // @ts-ignore
       const activeAccount = wallet.accounts.find(
         (account: Account) =>
-          account.address.toLowerCase() === sender.address.toLowerCase()
+          account.address.toLowerCase() === sender?.address.toLowerCase()
       );
 
       const provider = new JsonRpcProvider(network.provider);
@@ -98,7 +98,7 @@ export default function ERC20TokenTransfer() {
     // @ts-ignore
     const activeAccount = wallet.accounts.find(
       (account: Account) =>
-        account.address.toLowerCase() === sender.address.toLowerCase()
+        account.address.toLowerCase() === sender?.address.toLowerCase()
     );
 
     const provider = new JsonRpcProvider(network.provider);

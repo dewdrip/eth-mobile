@@ -43,6 +43,8 @@ export default function NFTDetailsModal({
   };
 
   const remove = () => {
+    if (!account) return;
+
     closeModal();
     dispatch(
       removeNFT({

@@ -14,6 +14,11 @@ export function useTokens() {
   const [importedTokens, setImportedTokens] = useState<Token[]>();
 
   function setTokens() {
+    if (!account?.address) {
+      setImportedTokens([]);
+      return;
+    }
+
     const key = keccak256(
       toUtf8Bytes(`${network.id}${account.address.toLowerCase()}`)
     );

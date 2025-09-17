@@ -9,7 +9,7 @@ import { Text } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 type Props = {
-  account: Account;
+  account: Account | undefined;
   balance?: string | null;
   hideBalance?: boolean;
   onChange: (account: Account) => void;
@@ -28,7 +28,7 @@ export default function Sender({
   const selectAccount = () => {
     if (accounts.length > 1) {
       openModal('AccountsSelectionModal', {
-        selectedAccount: account.address,
+        selectedAccount: account?.address,
         onSelect: (account: Account) => onChange(account)
       });
     }
@@ -43,10 +43,13 @@ export default function Sender({
         className="flex-row items-center justify-between p-3 mt-2 bg-[#f5f5f5] rounded-lg"
       >
         <View className="flex-row items-center">
-          <Blockie address={account.address} size={1.8 * FONT_SIZE['xl']} />
+          <Blockie
+            address={account?.address || ''}
+            size={1.8 * FONT_SIZE['xl']}
+          />
 
           <View className="ml-2 w-[75%]">
-            <Text className="text-lg font-[Poppins]">{account.name}</Text>
+            <Text className="text-lg font-[Poppins]">{account?.name}</Text>
             {!hideBalance && (
               <Text className="text-lg font-[Poppins]">
                 Balance: {balance?.toString()}

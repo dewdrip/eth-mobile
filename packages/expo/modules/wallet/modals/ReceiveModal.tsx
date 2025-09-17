@@ -18,18 +18,24 @@ type Props = {
 };
 
 export default function ReceiveModal({ modal: { closeModal, params } }: Props) {
-  const connectedAccount: Account = useAccount();
+  const connectedAccount = useAccount();
   const connectedNetwork: Network = useNetwork();
 
   const { copy, isCopied } = useClipboard();
 
   const shareAddress = async () => {
+    if (!connectedAccount) return;
+
     try {
       await Share.share({ message: connectedAccount.address });
     } catch (error) {
       return;
     }
   };
+
+  if (!connectedAccount) {
+    return null;
+  }
 
   return (
     <View

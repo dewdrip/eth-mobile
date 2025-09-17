@@ -25,7 +25,7 @@ function MainBalance() {
   const network = useNetwork();
   const account = useAccount();
   const { balance, isRefetching, refetch } = useBalance({
-    address: account.address,
+    address: account?.address || '',
     watch: true
   });
   const { price, fetchPrice } = useCryptoPrice({
@@ -45,6 +45,11 @@ function MainBalance() {
     refetch();
     fetchPrice();
   };
+
+  // Don't render if no account is connected
+  if (!account) {
+    return null;
+  }
 
   return (
     <ScrollView

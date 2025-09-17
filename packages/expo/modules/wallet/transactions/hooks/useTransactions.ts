@@ -57,7 +57,7 @@ export function useTransactions() {
    * @param transaction - The transaction object to be added.
    */
   const addTx = (transaction: Transaction) => {
-    if (!storageKey) return;
+    if (!storageKey || !account?.address) return;
     dispatch(
       addTransaction({
         networkId: network.id.toString(),
@@ -73,7 +73,7 @@ export function useTransactions() {
    * @param hash - The transaction hash to be removed.
    */
   const removeTx = (hash: string) => {
-    if (!storageKey) return;
+    if (!storageKey || !account?.address) return;
     dispatch(
       removeTransaction({
         networkId: network.id,

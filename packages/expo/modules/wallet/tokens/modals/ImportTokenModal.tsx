@@ -44,6 +44,11 @@ export default function ImportTokenModal({ modal: { closeModal } }: Props) {
 
   const getTokenData = async () => {
     try {
+      if (!account) {
+        setAddressError('No account connected');
+        return;
+      }
+
       if (!ethers.isAddress(address)) {
         setAddressError('Invalid address');
         return;
@@ -89,6 +94,8 @@ export default function ImportTokenModal({ modal: { closeModal } }: Props) {
   };
 
   const importToken = () => {
+    if (!account) return;
+
     const payload = {
       networkId: network.id,
       accountAddress: account.address,

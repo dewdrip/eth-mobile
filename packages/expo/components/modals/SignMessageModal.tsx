@@ -21,9 +21,13 @@ type Props = {
 export default function SignMessageModal({
   modal: { closeModal, params }
 }: Props) {
-  const account: Account = useAccount();
+  const account = useAccount();
   const network = useNetwork();
-  const { balance } = useBalance({ address: account.address });
+  const { balance } = useBalance({ address: account?.address || '' });
+
+  if (!account) {
+    return null;
+  }
 
   const sign = () => {
     closeModal('SignMessageModal', params.onConfirm);

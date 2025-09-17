@@ -129,7 +129,7 @@ export default function HomeHeader() {
                   color="black"
                 />
                 <Text className="text-lg font-medium font-[Poppins]">
-                  View on block explorer
+                  View on explorer
                 </Text>
               </MenuOption>
             )}

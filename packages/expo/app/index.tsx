@@ -12,7 +12,7 @@ export default function Onboarding() {
 
   const handleSkip = () => {
     dispatch(setHasOnboarded());
-    router.replace('/(dashboard)');
+    router.replace('/home');
   };
 
   return (

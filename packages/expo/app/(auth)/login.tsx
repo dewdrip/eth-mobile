@@ -83,7 +83,7 @@ export default function Login() {
     }
 
     setTimeout(() => {
-      router.replace('/(dashboard)');
+      router.replace('/home');
     }, 200);
   };
 

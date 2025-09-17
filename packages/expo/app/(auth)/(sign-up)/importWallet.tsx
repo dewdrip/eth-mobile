@@ -150,7 +150,7 @@ function ImportWallet() {
       } else {
         // Default navigation to dashboard
         setTimeout(() => {
-          router.replace('/(dashboard)');
+          router.replace('/home');
         }, 200);
       }
     } catch (error) {

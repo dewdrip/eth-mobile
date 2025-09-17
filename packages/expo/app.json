@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ETH Mobile",
-    "slug": "ethmobile",
+    "slug": "eth-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/logo.png",
@@ -92,7 +92,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "7a28eb44-e95b-4ff7-bbac-f8da469d660f"
+        "projectId": "65d7b5ca-83fe-497c-bbfd-e30071e62002"
       }
     },
     "owner": "dewdrip"

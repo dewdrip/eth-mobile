@@ -123,7 +123,7 @@ function MainBalance() {
           </Link>
         </View>
 
-        <FaucetButton />
+        {network.id === 31337 && <FaucetButton />}
       </View>
     </ScrollView>
   );

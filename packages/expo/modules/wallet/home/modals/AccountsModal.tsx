@@ -43,7 +43,7 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
   };
 
   const createAccount = async () => {
-    const mnemonic = JSON.parse(wallet.mnemonic);
+    const mnemonic = wallet.mnemonic;
     let newAccount;
 
     for (let i = 0; i < Infinity; i++) {

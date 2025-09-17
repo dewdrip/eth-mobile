@@ -113,10 +113,6 @@ export default function ImportAccountModal({ modal: { closeModal } }: Props) {
         {error && (
           <Text className="text-sm font-[Poppins] text-red-500">{error}</Text>
         )}
-
-        {error && (
-          <Text className="text-sm font-[Poppins] text-red-500">{error}</Text>
-        )}
       </View>
 
       <View className="flex-row gap-4">

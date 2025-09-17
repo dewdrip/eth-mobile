@@ -36,6 +36,7 @@ export function InputBase<
         className="flex-1 px-4 py-3"
         selectionColor={COLORS.primary}
         cursorColor={COLORS.primary}
+        placeholderTextColor="#a3a3a3"
         placeholder={placeholder}
         onChangeText={handleChange}
       />

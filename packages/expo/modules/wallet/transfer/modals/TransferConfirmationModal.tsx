@@ -158,7 +158,9 @@ export default function TransferConfirmationModal({
                       8
                     ).toString()
                   : null}{' '}
-                {network.token.symbol}
+                {network.token.symbol.length > 5
+                  ? network.token.symbol.slice(0, 5) + '...'
+                  : network.token.symbol}
               </Text>
             </View>
 
@@ -171,7 +173,10 @@ export default function TransferConfirmationModal({
                     Total
                   </Text>
                   <Text className="text-lg font-medium font-[Poppins-Medium]">
-                    {calcTotal()} {network.token.symbol}
+                    {calcTotal()}{' '}
+                    {network.token.symbol.length > 5
+                      ? network.token.symbol.slice(0, 5) + '...'
+                      : network.token.symbol}
                   </Text>
                 </View>
               </>

@@ -121,7 +121,9 @@ export default function NFTTransferConfirmationModal({
                 {String(
                   estimateGasCost && parseFloat(formatEther(estimateGasCost), 8)
                 )}{' '}
-                {network.token.symbol}
+                {network.token.symbol.length > 5
+                  ? network.token.symbol.slice(0, 5) + '...'
+                  : network.token.symbol}
               </Text>
             </View>
           </View>

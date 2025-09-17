@@ -75,16 +75,20 @@ export default function ReadOnlyFunctionForm({
           }}
         >
           <Text className="text-lg font-[Poppins]">Result:</Text>
-          {result.map((data: any) => (
-            <Text
-              key={Math.random().toString()}
-              className="text-lg font-[Poppins]"
-            >
-              {typeof data == 'object' && isNaN(data)
-                ? JSON.stringify(data)
-                : data?.toString()}
-            </Text>
-          ))}
+          {result.map((data: any) => {
+            const replacer = (_key: string, value: any) =>
+              typeof value === 'bigint' ? value.toString() : value;
+            return (
+              <Text
+                key={Math.random().toString()}
+                className="text-lg font-[Poppins]"
+              >
+                {typeof data == 'object' && isNaN(data)
+                  ? JSON.stringify(data, replacer)
+                  : data?.toString()}
+              </Text>
+            );
+          })}
         </View>
       )}
 

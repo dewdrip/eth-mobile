@@ -186,7 +186,9 @@ export default function SignTransactionModal({
           </View>
           <Text className="text-base font-[Poppins]">
             {estimatedGasCost.max ? parseGasCost(estimatedGasCost.max) : null}{' '}
-            {network.token.symbol}
+            {network.token.symbol.length > 5
+              ? network.token.symbol.slice(0, 5) + '...'
+              : network.token.symbol}
           </Text>
         </View>
 
@@ -197,7 +199,10 @@ export default function SignTransactionModal({
             Total
           </Text>
           <Text className="text-lg font-medium font-[Poppins-Medium]">
-            {calcTotal().max || ''} {network.token.symbol}
+            {calcTotal().max || ''}{' '}
+            {network.token.symbol.length > 5
+              ? network.token.symbol.slice(0, 5) + '...'
+              : network.token.symbol}
           </Text>
         </View>
       </View>

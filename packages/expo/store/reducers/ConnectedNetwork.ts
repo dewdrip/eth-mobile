@@ -1,7 +1,11 @@
 import ethmobileConfig, { Network } from '@/ethmobile.config';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: Network = Object.values(ethmobileConfig.networks)[0];
+const initialState: Network =
+  ethmobileConfig.defaultNetwork &&
+  ethmobileConfig.networks[ethmobileConfig.defaultNetwork]
+    ? ethmobileConfig.networks[ethmobileConfig.defaultNetwork]
+    : Object.values(ethmobileConfig.networks)[0];
 
 export const connectedNetworkSlice = createSlice({
   name: 'CONNECTED_NETWORK',

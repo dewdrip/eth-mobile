@@ -1,5 +1,5 @@
 export type Config = {
-  defaultNetwork: string;
+  defaultNetwork?: string;
   networks: NetworkConfig;
 };
 

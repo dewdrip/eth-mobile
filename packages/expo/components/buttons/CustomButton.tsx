@@ -1,7 +1,14 @@
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import React from 'react';
-import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
-import { Button as PaperButton } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle
+} from 'react-native';
 
 type Props = {
   text: string;
@@ -15,50 +22,63 @@ type Props = {
 
 export default function CustomButton({
   text,
-  type,
+  type = 'normal',
   loading,
   disabled,
   style,
   labelStyle,
   onPress
 }: Props) {
+  const isOutline = type === 'outline';
+
   return (
-    <PaperButton
-      mode={type === 'outline' ? 'outlined' : 'contained'}
+    <TouchableOpacity
       onPress={onPress}
-      loading={loading}
-      disabled={disabled}
+      disabled={disabled || loading}
       style={[
         styles.button,
-        type === 'outline' && styles.outlineButton,
+        isOutline && styles.outlineButton,
         disabled && styles.disabledButton,
         style
       ]}
-      contentStyle={styles.content}
-      labelStyle={[
-        styles.label,
-        type === 'outline' && styles.outlineLabel,
-        labelStyle
-      ]}
+      activeOpacity={0.7}
     >
-      {text}
-    </PaperButton>
+      <View style={styles.content}>
+        {loading ? (
+          <ActivityIndicator
+            size="small"
+            color={isOutline ? COLORS.primary : 'white'}
+            style={{ marginRight: 8 }}
+          />
+        ) : null}
+        <Text
+          style={[styles.label, isOutline && styles.outlineLabel, labelStyle]}
+        >
+          {text}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
     borderRadius: 12,
-    width: '100%'
+    width: '100%',
+    backgroundColor: COLORS.primary
   },
   outlineButton: {
     backgroundColor: '#E8F7ED',
     borderColor: 'transparent'
   },
   disabledButton: {
-    backgroundColor: '#2A974D'
+    backgroundColor: '#2A974D',
+    opacity: 0.7
   },
   content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 8
   },
   label: {

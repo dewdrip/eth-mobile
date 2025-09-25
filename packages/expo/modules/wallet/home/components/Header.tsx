@@ -1,8 +1,8 @@
 import BackButton from '@/components/buttons/BackButton';
 import { Blockie } from '@/components/eth-mobile';
 import { Network } from '@/ethmobile.config';
-import { useNetwork } from '@/hooks/eth-mobile';
-// import { Account } from '@/store/reducers/Accounts';
+import { useAccount, useNetwork } from '@/hooks/eth-mobile';
+import { Account } from '@/store/reducers/Accounts';
 import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -28,15 +28,12 @@ export default function HomeHeader() {
 
   const connectedNetwork: Network = useNetwork();
 
-  //   const connectedAccount: Account = useAccount();
-  const connectedAccount = {
-    name: 'Account 1',
-    address: '0x2656D1344a31fCCD050dFac53FA1406597B6f12e'
-  };
+  const connectedAccount: Account | undefined = useAccount();
 
   const toast = useToast();
 
   const shareAddress = async () => {
+    if (!connectedAccount) return;
     try {
       await Share.share({ message: connectedAccount.address });
     } catch (error) {
@@ -45,7 +42,7 @@ export default function HomeHeader() {
   };
 
   const viewOnBlockExplorer = async () => {
-    if (!connectedNetwork.blockExplorer) return;
+    if (!connectedNetwork.blockExplorer || !connectedAccount) return;
 
     try {
       await Linking.openURL(
@@ -77,7 +74,7 @@ export default function HomeHeader() {
         <Menu>
           <MenuTrigger>
             <Blockie
-              address={connectedAccount.address}
+              address={connectedAccount?.address || ''}
               size={1.7 * FONT_SIZE['xl']}
             />
           </MenuTrigger>

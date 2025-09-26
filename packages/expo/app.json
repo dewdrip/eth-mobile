@@ -28,6 +28,7 @@
         "monochromeImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "package": "com.dewdrip.ethmobile",
       "intentFilters": [
         {

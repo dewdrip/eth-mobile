@@ -27,7 +27,13 @@ import {
 } from 'ethers';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  BackHandler,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StyleSheet
+} from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { Divider } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
@@ -197,7 +203,10 @@ export default function ERC20TokenTransfer() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1 bg-white p-4">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        className="flex-1 bg-white p-4"
+      >
         <Header tokenSymbol={token.symbol} />
 
         <Sender
@@ -230,7 +239,7 @@ export default function ERC20TokenTransfer() {
         <PastRecipients onSelect={setRecipient} />
 
         <CustomButton text="Next" onPress={confirm} />
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

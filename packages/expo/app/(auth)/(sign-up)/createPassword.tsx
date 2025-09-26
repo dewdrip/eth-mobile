@@ -5,7 +5,14 @@ import { setBiometrics } from '@/store/reducers/Settings';
 import { COLORS } from '@/utils/constants';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View
+} from 'react-native';
 import * as Keychain from 'react-native-keychain';
 import { Divider, Switch } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
@@ -84,64 +91,69 @@ function CreatePassword() {
       />
 
       <ScrollView className="flex-1 px-4 mt-4">
-        <Text
-          className="text-3xl font-[Poppins]"
-          style={{ color: COLORS.primary }}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          className="flex-1 w-full"
         >
-          Create Password
-        </Text>
-        <Text className="text-lg text-gray-500 font-[Poppins]">
-          This password will unlock ETH Mobile only on this device
-        </Text>
+          <Text
+            className="text-3xl font-[Poppins]"
+            style={{ color: COLORS.primary }}
+          >
+            Create Password
+          </Text>
+          <Text className="text-lg text-gray-500 font-[Poppins]">
+            This password will unlock ETH Mobile only on this device
+          </Text>
 
-        <View className="w-full gap-y-6 mt-6">
-          <PasswordInput
-            label="New Password"
-            value={password}
-            infoText={password.length < 8 && 'Must be at least 8 characters'}
-            onChange={setPassword}
-            onSubmit={createPassword}
-          />
-          <PasswordInput
-            label="Confirm New Password"
-            value={confirmPassword}
-            infoText={
-              password &&
-              confirmPassword &&
-              password !== confirmPassword &&
-              'Password must match'
-            }
-            onChange={setConfirmPassword}
-            onSubmit={createPassword}
-          />
+          <View className="w-full gap-y-6 mt-6">
+            <PasswordInput
+              label="New Password"
+              value={password}
+              infoText={password.length < 8 && 'Must be at least 8 characters'}
+              onChange={setPassword}
+              onSubmit={createPassword}
+            />
+            <PasswordInput
+              label="Confirm New Password"
+              value={confirmPassword}
+              infoText={
+                password &&
+                confirmPassword &&
+                password !== confirmPassword &&
+                'Password must match'
+              }
+              onChange={setConfirmPassword}
+              onSubmit={createPassword}
+            />
 
-          {biometricType && (
-            <>
-              <Divider style={{ backgroundColor: COLORS.gray }} />
+            {biometricType && (
+              <>
+                <Divider style={{ backgroundColor: COLORS.gray }} />
 
-              <View className="flex-row items-center justify-between">
-                <Text className="text-lg font-[Poppins]">
-                  Sign in with {biometricType}
-                </Text>
-                <Switch
-                  value={isBiometricsEnabled}
-                  onValueChange={setIsBiometricsEnabled}
-                  color={COLORS.primary}
-                />
-              </View>
-            </>
-          )}
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-lg font-[Poppins]">
+                    Sign in with {biometricType}
+                  </Text>
+                  <Switch
+                    value={isBiometricsEnabled}
+                    onValueChange={setIsBiometricsEnabled}
+                    color={COLORS.primary}
+                  />
+                </View>
+              </>
+            )}
 
-          <Button
-            text="Continue"
-            loading={isCreating}
-            onPress={createPassword}
-            style={{
-              marginTop: 20,
-              marginBottom: 50
-            }}
-          />
-        </View>
+            <Button
+              text="Continue"
+              loading={isCreating}
+              onPress={createPassword}
+              style={{
+                marginTop: 20,
+                marginBottom: 50
+              }}
+            />
+          </View>
+        </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
   );

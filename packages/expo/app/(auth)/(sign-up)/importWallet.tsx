@@ -14,7 +14,14 @@ import { COLORS } from '@/utils/constants';
 import { Encryptor } from '@/utils/eth-mobile/encryptor';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View
+} from 'react-native';
 import * as Keychain from 'react-native-keychain';
 import { Divider, Switch } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
@@ -177,7 +184,10 @@ function ImportWallet() {
       </View>
 
       <ScrollView className="flex-1 px-4">
-        <View className="w-full gap-y-6 mt-2">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          className="flex-1 w-full gap-y-6 mt-2"
+        >
           <SeedPhraseInput
             value={seedPhrase}
             onChange={setSeedPhrase}
@@ -230,7 +240,7 @@ function ImportWallet() {
               marginBottom: 50
             }}
           />
-        </View>
+        </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
   );

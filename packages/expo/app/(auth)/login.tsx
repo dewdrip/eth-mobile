@@ -15,6 +15,8 @@ import { useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import {
   BackHandler,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -175,52 +177,57 @@ export default function Login() {
   };
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView
-        contentContainerClassName="flex-1 justify-center items-center"
-        className="p-4"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        className="flex-1"
       >
-        <Logo />
-        <Text
-          className="text-3xl font-[Poppins] mt-10"
-          style={{ color: COLORS.primary }}
+        <ScrollView
+          contentContainerClassName="flex-1 justify-center items-center"
+          className="p-4"
         >
-          Welcome Back!
-        </Text>
-
-        <View className="my-4 w-full">
-          <PasswordInput
-            label="Password"
-            value={password}
-            onChange={setPassword}
-            onSubmit={unlockWithPassword}
-          />
-        </View>
-
-        <Button
-          text={
-            isBiometricsEnabled && !password
-              ? 'SIGN IN WITH BIOMETRICS'
-              : 'SIGN IN'
-          }
-          loading={isLoggingIn}
-          onPress={
-            isBiometricsEnabled && !password
-              ? unlockWithBiometrics
-              : unlockWithPassword
-          }
-        />
-
-        <Text className="text-base text-center mt-2 font-[Poppins] text-gray-700">
-          Wallet won't unlock? You can ERASE your current wallet and setup a new
-          one
-        </Text>
-
-        <Pressable onPress={handleResetWallet} className="mt-10">
-          <Text className="text-xl text-red-400 font-[Poppins]">
-            Reset Wallet
+          <Logo />
+          <Text
+            className="text-3xl font-[Poppins] mt-10"
+            style={{ color: COLORS.primary }}
+          >
+            Welcome Back!
           </Text>
-        </Pressable>
-      </ScrollView>
+
+          <View className="my-4 w-full">
+            <PasswordInput
+              label="Password"
+              value={password}
+              onChange={setPassword}
+              onSubmit={unlockWithPassword}
+            />
+          </View>
+
+          <Button
+            text={
+              isBiometricsEnabled && !password
+                ? 'SIGN IN WITH BIOMETRICS'
+                : 'SIGN IN'
+            }
+            loading={isLoggingIn}
+            onPress={
+              isBiometricsEnabled && !password
+                ? unlockWithBiometrics
+                : unlockWithPassword
+            }
+          />
+
+          <Text className="text-base text-center mt-2 font-[Poppins] text-gray-700">
+            Wallet won't unlock? You can ERASE your current wallet and setup a
+            new one
+          </Text>
+
+          <Pressable onPress={handleResetWallet} className="mt-10">
+            <Text className="text-xl text-red-400 font-[Poppins]">
+              Reset Wallet
+            </Text>
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

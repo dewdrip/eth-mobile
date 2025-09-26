@@ -12,7 +12,13 @@ import { parseBalance, parseFloat } from '@/utils/eth-mobile';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { isAddress, JsonRpcProvider, TransactionReceipt, Wallet } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  BackHandler,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StyleSheet
+} from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { Divider } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
@@ -174,7 +180,10 @@ export default function NetworkTokenTransfer() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1 bg-white p-4">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        className="flex-1 bg-white p-4"
+      >
         <Header tokenSymbol={network.token.symbol} />
 
         <Sender
@@ -208,7 +217,7 @@ export default function NetworkTokenTransfer() {
         <PastRecipients onSelect={setRecipient} />
 
         <Button text="Next" onPress={confirm} />
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

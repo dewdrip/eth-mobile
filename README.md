@@ -1,6 +1,6 @@
-# 📲 Mobile dApps On-Chain! 🚀
+# 📲 ETH Mobile
 
-✍️ **ETH Mobile** is an open-source toolkit for building mobile decentralized applications (dApps) on Ethereum and other EVM-compatible blockchains. It simplifies mobile dApp development with fast, secure and customizable pre-built components to create, deploy and interact with smart contracts.
+An open-source toolkit for building mobile decentralized applications (dApps) on Ethereum and other EVM-compatible blockchains. It simplifies mobile dApp development with fast, secure and customizable pre-built components to create, deploy and interact with smart contracts.
 
 ⚙️ **Tech Stack**: Built with React Native(Expo), Hardhat, Ethers, and TypeScript to streamline mobile dApp development.
 
@@ -93,6 +93,12 @@ Run smart contract test with `yarn hardhat:test`
 - Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
 - Edit your deployment scripts in `packages/hardhat/deploy`
 - Edit your frontend in `packages/expo/app`
+
+## Documentation
+
+Visit our [docs](https://docs.ethmobile.io) to learn how to start building with ETH Mobile.
+
+To know more about its features, check out our [website](https://www.ethmobile.io).
 
 ## Contributing to ETH Mobile
 

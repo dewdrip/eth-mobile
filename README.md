@@ -2,7 +2,7 @@
 
 An open-source toolkit for building mobile decentralized applications (dApps) on Ethereum and other EVM-compatible blockchains. It simplifies mobile dApp development with fast, secure and customizable pre-built components to create, deploy and interact with smart contracts.
 
-⚙️ **Tech Stack**: Built with React Native(Expo), Hardhat, Ethers, and TypeScript to streamline mobile dApp development.
+⚙️ **Tech Stack**: Built with React Native, Hardhat, Ethers, and TypeScript to streamline mobile dApp development.
 
 ### Key Features
 
@@ -22,9 +22,10 @@ An open-source toolkit for building mobile decentralized applications (dApps) on
 
 Before you begin, you need to install the following tools:
 
+- [Node (>= v20.18.3)](https://nodejs.org/en/download/)
 - [Yarn](https://yarnpkg.com/getting-started/install)
 - [Git](https://git-scm.com/downloads)
-- [React Native](https://reactnative.dev/docs/environment-setup?guide=native&platform=android)
+- [React Native](https://reactnative.dev/docs/set-up-your-environment)
 
 ## Quickstart
 
@@ -37,7 +38,7 @@ git clone https://github.com/dewdrip/eth-mobile.git
 
 cd eth-mobile
 
-yarn install
+yarn
 ```
 
 2. From the root folder, run a local network in the first terminal

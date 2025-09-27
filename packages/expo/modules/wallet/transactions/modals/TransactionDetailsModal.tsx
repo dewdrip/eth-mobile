@@ -117,7 +117,10 @@ export default function TransactionDetailsModal({
         </View>
 
         {network.blockExplorer && (
-          <Text className="text-lg font-[Poppins]" onPress={viewOnExplorer}>
+          <Text
+            className="text-lg text-center text-primary font-[Poppins]"
+            onPress={viewOnExplorer}
+          >
             View on Explorer
           </Text>
         )}

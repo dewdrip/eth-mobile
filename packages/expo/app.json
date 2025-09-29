@@ -91,9 +91,6 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "65d7b5ca-83fe-497c-bbfd-e30071e62002"
       }
     },
     "owner": "dewdrip"

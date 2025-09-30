@@ -1,12 +1,11 @@
 import ethmobileConfig, { Network } from '@/ethmobile.config';
 import { useNetwork } from '@/hooks/eth-mobile';
-import { switchNetwork } from '@/store/reducers/ConnectedNetwork';
+import { useNetworkStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { useDispatch } from 'react-redux';
 
 type Props = {
   modal: {
@@ -15,13 +14,12 @@ type Props = {
 };
 
 export default function SwitchNetworkModal({ modal: { closeModal } }: Props) {
-  const dispatch = useDispatch();
-
+  const switchNetwork = useNetworkStore(state => state.switchNetwork);
   const connectedNetwork = useNetwork();
 
   const handleNetworkSelecttion = (id: number) => {
     closeModal();
-    dispatch(switchNetwork(id));
+    switchNetwork(id);
   };
 
   return (

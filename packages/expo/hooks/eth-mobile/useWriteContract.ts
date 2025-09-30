@@ -1,5 +1,5 @@
 import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
-import { Account } from '@/store/reducers/Wallet';
+import { Account, useWalletStore } from '@/stores';
 import { getParsedError, parseFloat } from '@/utils/eth-mobile';
 import { useRoute } from '@react-navigation/native';
 import { Abi } from 'abitype';
@@ -8,7 +8,6 @@ import { usePathname } from 'expo-router';
 import { useState } from 'react';
 import { useModal } from 'react-native-modalfy';
 import { useToast } from 'react-native-toast-notifications';
-import { useSelector } from 'react-redux';
 import { Address, formatEther, TransactionReceipt } from 'viem';
 import { useAccount, useNetwork } from '.';
 
@@ -45,7 +44,7 @@ export function useWriteContract({
   const network = useNetwork();
   const toast = useToast();
   const connectedAccount = useAccount();
-  const wallet = useSelector((state: any) => state.wallet);
+  const wallet = useWalletStore(state => state);
   const route = useRoute();
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);

@@ -1,11 +1,11 @@
 import Providers from '@/modules/providers';
+import { useAuthStore } from '@/stores';
 import '../global.css';
 import 'expo-dev-client';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -21,7 +21,7 @@ function RootLayout() {
     }
   }, [loaded]);
 
-  const auth = useSelector((state: any) => state.auth);
+  const auth = useAuthStore(state => state);
 
   if (!loaded) {
     return null;

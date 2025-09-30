@@ -1,7 +1,6 @@
 import Button from '@/components/buttons/CustomButton';
 import { useSecureStorage } from '@/hooks/eth-mobile';
-import { Account, addAccount, switchAccount } from '@/store/reducers/Accounts';
-import { addAccount as addWalletAccount } from '@/store/reducers/Wallet';
+import { Account, useAccountsStore, useWalletStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Encryptor } from '@/utils/eth-mobile/encryptor';
@@ -11,7 +10,6 @@ import React, { useState } from 'react';
 import { Keyboard, StyleSheet, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { TextInput } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
   modal: {
@@ -24,9 +22,11 @@ export default function ImportAccountModal({ modal: { closeModal } }: Props) {
   const [error, setError] = useState('');
 
   const { saveItem } = useSecureStorage();
-  const dispatch = useDispatch();
-  const accounts: Account[] = useSelector((state: any) => state.accounts);
-  const wallet = useSelector((state: any) => state.wallet);
+  const accounts = useAccountsStore(state => state.accounts);
+  const wallet = useWalletStore(state => state);
+  const addAccount = useAccountsStore(state => state.addAccount);
+  const switchAccount = useAccountsStore(state => state.switchAccount);
+  const addWalletAccount = useWalletStore(state => state.addAccount);
   const { openModal } = useModal();
 
   const importWallet = async () => {
@@ -49,9 +49,9 @@ export default function ImportAccountModal({ modal: { closeModal } }: Props) {
 
       await saveItem('accounts', encryptedAccounts);
 
-      dispatch(addWalletAccount(newAccount));
-      dispatch(addAccount({ address: newAccount.address }));
-      dispatch(switchAccount(newAccount.address));
+      addWalletAccount(newAccount);
+      addAccount({ address: newAccount.address });
+      switchAccount(newAccount.address);
 
       closeModal();
     } catch (error) {

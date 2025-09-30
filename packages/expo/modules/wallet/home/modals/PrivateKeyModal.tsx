@@ -1,13 +1,12 @@
 import Button from '@/components/buttons/CustomButton';
 import { useAccount, useClipboard } from '@/hooks/eth-mobile';
-import { Account } from '@/store/reducers/Accounts';
+import { Account, useAccountsStore, useWalletStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { useSelector } from 'react-redux';
 
 type Props = {
   modal: {
@@ -17,7 +16,7 @@ type Props = {
 
 export default function PrivateKeyModal({ modal: { closeModal } }: Props) {
   const connectedAccount = useAccount();
-  const wallet = useSelector((state: any) => state.wallet);
+  const wallet = useWalletStore(state => state);
   const { copy, isCopied } = useClipboard();
 
   const [password, setPassword] = useState('');

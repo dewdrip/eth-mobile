@@ -1,12 +1,11 @@
 import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
-import { Account } from '@/store/reducers/Wallet';
+import { Account, useWalletStore } from '@/stores';
 import { parseFloat } from '@/utils/eth-mobile';
 import { useRoute } from '@react-navigation/native';
 import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
 import { usePathname } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 import { useModal } from 'react-native-modalfy';
-import { useSelector } from 'react-redux';
 import { Address, formatEther } from 'viem';
 import { useAccount, useDeployedContractInfo, useNetwork } from '.';
 
@@ -51,7 +50,7 @@ export function useScaffoldContract({
 }: UseScaffoldContractOptions): ContractInstance {
   const network = useNetwork();
   const connectedAccount = useAccount();
-  const wallet = useSelector((state: any) => state.wallet);
+  const wallet = useWalletStore(state => state);
   const route = useRoute();
   const pathname = usePathname();
   const { openModal } = useModal();

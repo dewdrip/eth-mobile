@@ -1,17 +1,16 @@
 import Button from '@/components/buttons/CustomButton';
-import { setHasOnboarded } from '@/store/reducers/Auth';
+import { useAuthStore } from '@/stores';
 import { COLORS } from '@/utils/constants';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native';
-import { useDispatch } from 'react-redux';
 
 export default function Onboarding() {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const setHasOnboarded = useAuthStore(state => state.setHasOnboarded);
 
   const handleSkip = () => {
-    dispatch(setHasOnboarded());
+    setHasOnboarded();
     router.replace('/home');
   };
 

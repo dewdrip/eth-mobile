@@ -1,12 +1,12 @@
 import Button from '@/components/buttons/CustomButton';
 import { useClipboard } from '@/hooks/eth-mobile';
+import { useWalletStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { useSelector } from 'react-redux';
 
 type Props = {
   modal: {
@@ -16,7 +16,7 @@ type Props = {
 
 export default function SeedPhraseModal({ modal: { closeModal } }: Props) {
   // const toast = useToast();
-  const wallet = useSelector((state: any) => state.wallet);
+  const wallet = useWalletStore(state => state);
 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

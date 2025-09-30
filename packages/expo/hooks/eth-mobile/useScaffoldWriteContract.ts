@@ -1,5 +1,5 @@
 import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
-import { Account } from '@/store/reducers/Wallet';
+import { Account, useWalletStore } from '@/stores';
 import { getParsedError, parseFloat } from '@/utils/eth-mobile';
 import { useRoute } from '@react-navigation/native';
 import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
@@ -7,7 +7,6 @@ import { usePathname } from 'expo-router';
 import { useState } from 'react';
 import { useModal } from 'react-native-modalfy';
 import { useToast } from 'react-native-toast-notifications';
-import { useSelector } from 'react-redux';
 import { Address, formatEther, TransactionReceipt } from 'viem';
 import { useAccount, useDeployedContractInfo, useNetwork } from '.';
 
@@ -44,7 +43,7 @@ export function useScaffoldWriteContract({
   const network = useNetwork();
   const toast = useToast();
   const connectedAccount = useAccount();
-  const wallet = useSelector((state: any) => state.wallet);
+  const wallet = useWalletStore(state => state);
   const route = useRoute();
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);

@@ -1,7 +1,7 @@
 import Button from '@/components/buttons/CustomButton';
 import { useAccount, useERC721Metadata, useNetwork } from '@/hooks/eth-mobile';
 import { useNFTs } from '@/modules/wallet/nfts/hooks/useNFTs';
-import { addNFT } from '@/store/reducers/NFTs';
+import { useNFTsStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { Address } from 'abitype';
@@ -10,7 +10,6 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
-import { useDispatch } from 'react-redux';
 
 type Props = {
   modal: {
@@ -28,7 +27,7 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
   const account = useAccount();
   const network = useNetwork();
 
-  const dispatch = useDispatch();
+  const addNFT = useNFTsStore(state => state.addNFT);
 
   const { getERC721Metadata } = useERC721Metadata();
 
@@ -85,7 +84,7 @@ export default function ImportNFTModal({ modal: { closeModal } }: Props) {
       };
 
       closeModal();
-      dispatch(addNFT(payload));
+      addNFT(payload);
     } catch (error) {
       console.error(error);
     } finally {

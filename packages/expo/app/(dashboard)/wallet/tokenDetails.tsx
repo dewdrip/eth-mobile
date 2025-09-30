@@ -7,7 +7,7 @@ import {
   useERC20Metadata,
   useNetwork
 } from '@/hooks/eth-mobile';
-import { removeToken } from '@/store/reducers/Tokens';
+import { useTokensStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { truncateAddress } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,12 +18,11 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { IconButton, Text } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
 
 export default function TokenDetails() {
   const router = useRouter();
-  const dispatch = useDispatch();
   const { openModal } = useModal();
+  const removeToken = useTokensStore(state => state.removeToken);
 
   const network = useNetwork();
   const account = useAccount();
@@ -50,13 +49,11 @@ export default function TokenDetails() {
       titleStyle: { color: COLORS.error },
       okButtonStyle: { backgroundColor: COLORS.error },
       onAccept: () => {
-        dispatch(
-          removeToken({
-            networkId: network.id.toString(),
-            accountAddress: account.address,
-            tokenAddress: token.address
-          })
-        );
+        removeToken({
+          networkId: network.id.toString(),
+          accountAddress: account.address,
+          tokenAddress: token.address
+        });
         router.back();
       }
     };

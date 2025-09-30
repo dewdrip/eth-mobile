@@ -2,27 +2,26 @@ import { useAccount } from '@/hooks/eth-mobile';
 import Assets from '@/modules/wallet/home/components/Assets';
 import Body from '@/modules/wallet/home/components/Body';
 import Header from '@/modules/wallet/home/components/Header';
-import { setPendingWalletCreation } from '@/store/reducers/Navigation';
+import { useNavigationStore } from '@/stores';
 import { useRoute } from '@react-navigation/native';
 import { usePathname, useRouter } from 'expo-router';
 import React from 'react';
 import { Button, SafeAreaView, ScrollView, Text, View } from 'react-native';
-import { useDispatch } from 'react-redux';
 
 export default function Wallet() {
-  const dispatch = useDispatch();
+  const setPendingWalletCreation = useNavigationStore(
+    state => state.setPendingWalletCreation
+  );
   const account = useAccount();
   const pathname = usePathname();
   const route = useRoute();
   const router = useRouter();
 
   const initWalletCreation = () => {
-    dispatch(
-      setPendingWalletCreation({
-        screen: pathname,
-        params: route.params
-      })
-    );
+    setPendingWalletCreation({
+      screen: pathname,
+      params: route.params
+    });
 
     router.push('/walletSetup');
   };

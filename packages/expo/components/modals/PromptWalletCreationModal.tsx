@@ -1,12 +1,11 @@
 import Button from '@/components/buttons/CustomButton';
-import { setPendingWalletCreation } from '@/store/reducers/Navigation';
+import { useNavigationStore } from '@/stores';
 import { FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { useDispatch } from 'react-redux';
 
 type Props = {
   modal: {
@@ -25,17 +24,17 @@ export default function PromptWalletCreationModal({
   }
 }: Props) {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const setPendingWalletCreation = useNavigationStore(
+    state => state.setPendingWalletCreation
+  );
 
   const handleCreateWallet = () => {
     // Store the current screen context
     if (sourceScreen) {
-      dispatch(
-        setPendingWalletCreation({
-          screen: sourceScreen,
-          params: sourceParams
-        })
-      );
+      setPendingWalletCreation({
+        screen: sourceScreen,
+        params: sourceParams
+      });
     }
 
     closeModal();

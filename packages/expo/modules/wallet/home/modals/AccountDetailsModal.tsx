@@ -3,7 +3,7 @@ import { Blockie, CopyableText } from '@/components/eth-mobile';
 import EditAccountNameForm from '@/components/forms/EditAccountNameForm';
 import { ConsentModalParams } from '@/components/modals/ConsentModal';
 import { useAccount } from '@/hooks/eth-mobile';
-import { Account, removeAccount } from '@/store/reducers/Accounts';
+import { useAccountsStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,7 +11,6 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import QRCode from 'react-native-qrcode-svg';
-import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
   modal: {
@@ -20,9 +19,8 @@ type Props = {
 };
 
 export default function AccountDetailsModal({ modal: { closeModal } }: Props) {
-  const dispatch = useDispatch();
-
-  const accounts: Account[] = useSelector((state: any) => state.accounts);
+  const accounts = useAccountsStore(state => state.accounts);
+  const removeAccount = useAccountsStore(state => state.removeAccount);
   const connectedAccount = useAccount();
 
   const { openModal } = useModal();
@@ -42,7 +40,7 @@ export default function AccountDetailsModal({ modal: { closeModal } }: Props) {
       okButtonStyle: { backgroundColor: COLORS.error },
       onAccept: () => {
         closeModal();
-        dispatch(removeAccount(connectedAccount.address));
+        removeAccount(connectedAccount.address);
       }
     };
     openModal('ConsentModal', params);

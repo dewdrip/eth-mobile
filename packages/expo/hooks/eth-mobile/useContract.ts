@@ -1,10 +1,9 @@
-import { Account } from '@/store/reducers/Wallet';
+import { Account, useWalletStore } from '@/stores';
 import { parseFloat } from '@/utils/eth-mobile';
 import { Abi } from 'abitype';
 import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
 import { useCallback, useMemo } from 'react';
 import { useModal } from 'react-native-modalfy';
-import { useSelector } from 'react-redux';
 import { Address, formatEther } from 'viem';
 import { useAccount, useNetwork } from '.';
 
@@ -51,7 +50,7 @@ export function useContract({
 }: UseContractOptions): ContractInstance {
   const network = useNetwork();
   const connectedAccount = useAccount();
-  const wallet = useSelector((state: any) => state.wallet);
+  const wallet = useWalletStore(state => state);
 
   const { openModal } = useModal();
 

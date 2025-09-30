@@ -1,18 +1,11 @@
-import { persistor, store } from '@/store';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
 
 type Props = {
   children: React.ReactNode;
 };
 
 export default function Store({ children }: Props) {
-  return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        {children}
-      </PersistGate>
-    </Provider>
-  );
+  // With Zustand, we don't need a provider since stores are global
+  // Persistence is handled automatically by the persist middleware
+  return <>{children}</>;
 }

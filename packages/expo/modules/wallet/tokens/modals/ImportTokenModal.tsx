@@ -7,7 +7,7 @@ import {
   useNetwork
 } from '@/hooks/eth-mobile';
 import { useTokens } from '@/modules/wallet/tokens/hooks/useTokens';
-import { addToken, Token } from '@/store/reducers/Tokens';
+import { Token, useTokensStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,7 +15,6 @@ import { ethers } from 'ethers';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
 import { Address } from 'viem';
 
 type Props = {
@@ -25,7 +24,7 @@ type Props = {
 };
 
 export default function ImportTokenModal({ modal: { closeModal } }: Props) {
-  const dispatch = useDispatch();
+  const addToken = useTokensStore(state => state.addToken);
 
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [addressError, setAddressError] = useState<string | null>(null);
@@ -101,7 +100,7 @@ export default function ImportTokenModal({ modal: { closeModal } }: Props) {
       accountAddress: account.address,
       token
     };
-    dispatch(addToken(payload));
+    addToken(payload);
     closeModal();
   };
   return (

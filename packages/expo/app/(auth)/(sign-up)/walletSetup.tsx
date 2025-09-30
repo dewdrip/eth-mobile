@@ -1,14 +1,14 @@
 import BackButton from '@/components/buttons/BackButton';
 import Button from '@/components/buttons/CustomButton';
+import { useAuthStore } from '@/stores';
 import { COLORS } from '@/utils/constants';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
 
 export default function WalletSetup() {
   const router = useRouter();
-  const auth = useSelector((state: any) => state.auth);
+  const auth = useAuthStore(state => state);
 
   return (
     <SafeAreaView className="flex-1 bg-white">

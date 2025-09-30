@@ -6,8 +6,7 @@ import Header from '@/modules/wallet/transfer/components/Header';
 import PastRecipients from '@/modules/wallet/transfer/components/PastRecipients';
 import Recipient from '@/modules/wallet/transfer/components/Recipient';
 import Sender from '@/modules/wallet/transfer/components/Sender';
-import { Account } from '@/store/reducers/Accounts';
-import { addRecipient } from '@/store/reducers/Recipients';
+import { useAccountsStore, useRecipientsStore, useWalletStore } from '@/stores';
 import { parseBalance, parseFloat } from '@/utils/eth-mobile';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { isAddress, JsonRpcProvider, TransactionReceipt, Wallet } from 'ethers';
@@ -22,7 +21,6 @@ import {
 import { useModal } from 'react-native-modalfy';
 import { Divider } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
-import { useDispatch, useSelector } from 'react-redux';
 import { Address, formatEther, parseUnits } from 'viem';
 
 export default function NetworkTokenTransfer() {
@@ -36,7 +34,8 @@ export default function NetworkTokenTransfer() {
 
   const { openModal } = useModal();
 
-  const dispatch = useDispatch();
+  const addRecipient = useRecipientsStore(state => state.addRecipient);
+  const wallet = useWalletStore(state => state);
 
   const [gasCost, setGasCost] = useState<bigint | null>(null);
 
@@ -47,8 +46,6 @@ export default function NetworkTokenTransfer() {
   const { balance } = useBalance({
     address: sender?.address || ''
   });
-
-  const wallet = useSelector((state: any) => state.wallet);
 
   const estimateGasCost = async () => {
     try {
@@ -84,9 +81,9 @@ export default function NetworkTokenTransfer() {
 
     const txReceipt = await tx.wait(1);
 
-    dispatch(addRecipient(recipient));
+    addRecipient(recipient);
 
-    // Add transaction to Redux store
+    // Add transaction to Zustand store
     const gasFee = txReceipt?.gasUsed
       ? txReceipt.gasUsed * txReceipt.gasPrice
       : 0n;

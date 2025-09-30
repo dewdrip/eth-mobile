@@ -1,20 +1,19 @@
 import { Blockie } from '@/components/eth-mobile';
 import { ConsentModalParams } from '@/components/modals/ConsentModal';
-import { clearRecipients } from '@/store/reducers/Recipients';
+import { useRecipientsStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { truncateAddress } from '@/utils/eth-mobile';
 import React from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
-import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
   onSelect: (recipient: string) => void;
 };
 
 export default function PastRecipients({ onSelect }: Props) {
-  const recipients: string[] = useSelector((state: any) => state.recipients);
-  const dispatch = useDispatch();
+  const recipients = useRecipientsStore(state => state.recipients);
+  const clearRecipients = useRecipientsStore(state => state.clearRecipients);
 
   const { openModal } = useModal();
 
@@ -26,7 +25,7 @@ export default function PastRecipients({ onSelect }: Props) {
       iconColor: COLORS.error,
       titleStyle: { color: COLORS.error },
       okButtonStyle: { backgroundColor: COLORS.error },
-      onAccept: () => dispatch(clearRecipients())
+      onAccept: () => clearRecipients()
     };
 
     openModal('ConsentModal', params);

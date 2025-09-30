@@ -1,13 +1,10 @@
 import { useAccount, useNetwork } from '@/hooks/eth-mobile';
-import { Token } from '@/store/reducers/Tokens';
+import { Token, useTokensStore } from '@/stores';
 import { keccak256, toUtf8Bytes } from 'ethers';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 export function useTokens() {
-  // @ts-ignore
-  const tokens = useSelector(state => state.tokens);
-
+  const tokens = useTokensStore(state => state.tokens);
   const network = useNetwork();
   const account = useAccount();
 

@@ -1,11 +1,7 @@
 import Button from '@/components/buttons/CustomButton';
 import { Blockie } from '@/components/eth-mobile';
 import { useAccount, useSecureStorage, useWallet } from '@/hooks/eth-mobile';
-import { Account, addAccount, switchAccount } from '@/store/reducers/Accounts';
-import {
-  addAccount as addWalletAccount,
-  Wallet
-} from '@/store/reducers/Wallet';
+import { Account, useAccountsStore, useWalletStore, Wallet } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { truncateAddress } from '@/utils/eth-mobile';
@@ -15,7 +11,6 @@ import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { useToast } from 'react-native-toast-notifications';
-import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
   modal: {
@@ -24,20 +19,22 @@ type Props = {
 };
 
 export default function AccountsModal({ modal: { closeModal } }: Props) {
-  const dispatch = useDispatch();
   const toast = useToast();
   const { importWallet } = useWallet();
   const { saveItem } = useSecureStorage();
 
-  const accounts: Account[] = useSelector((state: any) => state.accounts);
-  const wallet: Wallet = useSelector((state: any) => state.wallet);
+  const accounts = useAccountsStore(state => state.accounts);
+  const wallet = useWalletStore(state => state);
+  const addAccount = useAccountsStore(state => state.addAccount);
+  const switchAccount = useAccountsStore(state => state.switchAccount);
+  const addWalletAccount = useWalletStore(state => state.addAccount);
   const connectedAccount = useAccount();
 
   const { openModal } = useModal();
 
   const handleAccountSelection = (account: string) => {
     if (connectedAccount && account !== connectedAccount.address) {
-      dispatch(switchAccount(account));
+      switchAccount(account);
       closeModal();
     }
   };
@@ -74,9 +71,9 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
 
     await saveItem('accounts', encryptedAccounts);
 
-    dispatch(addWalletAccount(newAccount));
-    dispatch(addAccount({ address: newAccount.address }));
-    dispatch(switchAccount(newAccount.address));
+    addWalletAccount(newAccount);
+    addAccount({ address: newAccount.address });
+    switchAccount(newAccount.address);
 
     closeModal();
   };

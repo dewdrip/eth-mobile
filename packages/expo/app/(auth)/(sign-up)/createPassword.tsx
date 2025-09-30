@@ -1,7 +1,7 @@
 import BackButton from '@/components/buttons/BackButton';
 import Button from '@/components/buttons/CustomButton';
 import PasswordInput from '@/components/forms/PasswordInput';
-import { setBiometrics } from '@/store/reducers/Settings';
+import { useSettingsStore } from '@/stores';
 import { COLORS } from '@/utils/constants';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -16,7 +16,6 @@ import {
 import * as Keychain from 'react-native-keychain';
 import { Divider, Switch } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
-import { useDispatch } from 'react-redux';
 
 function CreatePassword() {
   const router = useRouter();
@@ -29,7 +28,7 @@ function CreatePassword() {
     useState<Keychain.BIOMETRY_TYPE | null>(null);
   const [isBiometricsEnabled, setIsBiometricsEnabled] = useState(false);
 
-  const dispatch = useDispatch();
+  const setBiometrics = useSettingsStore(state => state.setBiometrics);
 
   useEffect(() => {
     Keychain.getSupportedBiometryType().then(type => {
@@ -63,7 +62,7 @@ function CreatePassword() {
       setIsCreating(true);
 
       if (isBiometricsEnabled) {
-        dispatch(setBiometrics(true));
+        setBiometrics(true);
       }
 
       // clean up

@@ -1,13 +1,12 @@
 import { useAccount, useNetwork } from '@/hooks/eth-mobile';
-import { NFT } from '@/store/reducers/NFTs';
+import { NFT, useNFTsStore } from '@/stores';
 import { keccak256, toUtf8Bytes } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 /**
  * Checks if an NFT already exists in the store for the given address and token ID.
  *
- * @param nftsState - The NFT store state from Redux.
+ * @param nftsState - The NFT store state from Zustand.
  * @param networkId - The current network ID.
  * @param accountAddress - The user's account address.
  * @param nftAddress - The address of the NFT contract.
@@ -38,7 +37,7 @@ const nftExists = (
 
 /**
  * Custom hook to retrieve imported NFTs for the current account and network.
- * It listens for changes in the Redux store and updates the NFT list accordingly.
+ * It listens for changes in the Zustand store and updates the NFT list accordingly.
  *
  * @returns {Object} An object containing `nfts`, the list of imported NFTs, and `nftExists` to check for token existence.
  */
@@ -46,7 +45,7 @@ export function useNFTs() {
   const network = useNetwork();
   const account = useAccount();
 
-  const nftsState = useSelector((state: any) => state.nfts);
+  const nftsState = useNFTsStore(state => state.nfts);
   const [importedNFTs, setImportedNFTs] = useState<NFT[]>([]);
 
   // Compute the key based on the network ID and account address

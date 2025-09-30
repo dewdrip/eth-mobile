@@ -2,10 +2,13 @@ import BackButton from '@/components/buttons/BackButton';
 import Button from '@/components/buttons/CustomButton';
 import SeedPhrase from '@/components/SeedPhrase';
 import { useSecureStorage, useWallet } from '@/hooks/eth-mobile';
-import { initAccounts } from '@/store/reducers/Accounts';
-import { initAuth } from '@/store/reducers/Auth';
-import { clearPendingWalletCreation } from '@/store/reducers/Navigation';
-import { initWallet } from '@/store/reducers/Wallet';
+import {
+  useAccountsStore,
+  useAuthStore,
+  useNavigationStore,
+  useSettingsStore,
+  useWalletStore
+} from '@/stores';
 import { COLORS } from '@/utils/constants';
 import { Encryptor } from '@/utils/eth-mobile/encryptor';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -20,7 +23,6 @@ import {
 } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
-import { useDispatch, useSelector } from 'react-redux';
 
 interface Wallet {
   mnemonic: string;
@@ -30,7 +32,6 @@ interface Wallet {
 
 export default function CreateWallet() {
   const router = useRouter();
-  const dispatch = useDispatch();
   const { password } = useLocalSearchParams<{ password: string }>();
   const toast = useToast();
   const { createWallet } = useWallet();
@@ -41,12 +42,17 @@ export default function CreateWallet() {
 
   const [isSaving, setIsSaving] = useState(false);
 
-  const isBiometricsEnabled = useSelector(
-    (state: any) => state.settings.isBiometricsEnabled as boolean
+  const isBiometricsEnabled = useSettingsStore(
+    state => state.isBiometricsEnabled
   );
-
-  const pendingWalletCreation = useSelector(
-    (state: any) => state.navigation.pendingWalletCreation
+  const pendingWalletCreation = useNavigationStore(
+    state => state.pendingWalletCreation
+  );
+  const initAccounts = useAccountsStore(state => state.initAccounts);
+  const initWallet = useWalletStore(state => state.initWallet);
+  const initAuth = useAuthStore(state => state.initAuth);
+  const clearPendingWalletCreation = useNavigationStore(
+    state => state.clearPendingWalletCreation
   );
 
   const copySeedPhrase = () => {
@@ -99,19 +105,17 @@ export default function CreateWallet() {
 
       await saveItem('accounts', encryptedAccount);
 
-      dispatch(initAccounts([account.address]));
-      dispatch(
-        initWallet({
-          password,
-          mnemonic: wallet.mnemonic,
-          accounts: [account]
-        })
-      );
-      dispatch(initAuth());
+      initAccounts([account.address]);
+      initWallet({
+        password,
+        mnemonic: wallet.mnemonic,
+        accounts: [account]
+      });
+      initAuth();
 
       // Check if we need to navigate back to a pending screen
       if (pendingWalletCreation.screen) {
-        dispatch(clearPendingWalletCreation());
+        clearPendingWalletCreation();
 
         // Navigate back to the original screen
         setTimeout(() => {

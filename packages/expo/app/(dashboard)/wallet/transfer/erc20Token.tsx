@@ -11,8 +11,7 @@ import Header from '@/modules/wallet/transfer/components/Header';
 import PastRecipients from '@/modules/wallet/transfer/components/PastRecipients';
 import Recipient from '@/modules/wallet/transfer/components/Recipient';
 import Sender from '@/modules/wallet/transfer/components/Sender';
-import { Account } from '@/store/reducers/Accounts';
-import { addRecipient } from '@/store/reducers/Recipients';
+import { Account, useRecipientsStore, useWalletStore } from '@/stores';
 import { parseFloat } from '@/utils/eth-mobile';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import {
@@ -37,7 +36,6 @@ import {
 import { useModal } from 'react-native-modalfy';
 import { Divider } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
-import { useDispatch, useSelector } from 'react-redux';
 import { Address, erc20Abi } from 'viem';
 
 export default function ERC20TokenTransfer() {
@@ -60,15 +58,14 @@ export default function ERC20TokenTransfer() {
 
   const { openModal } = useModal();
 
-  const dispatch = useDispatch();
+  const addRecipient = useRecipientsStore(state => state.addRecipient);
+  const wallet = useWalletStore(state => state);
 
   const [gasCost, setGasCost] = useState<bigint | null>(null);
 
   const [sender, setSender] = useState<Account | undefined>(account);
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
-
-  const wallet = useSelector((state: any) => state.wallet);
 
   const estimateGasCost = async () => {
     try {
@@ -119,9 +116,9 @@ export default function ERC20TokenTransfer() {
 
     const txReceipt = await tx.wait(1);
 
-    dispatch(addRecipient(recipient));
+    addRecipient(recipient);
 
-    // Add transaction to Redux store
+    // Add transaction to Zustand store
     const gasFee = txReceipt?.gasUsed
       ? txReceipt.gasUsed * txReceipt.gasPrice
       : 0n;

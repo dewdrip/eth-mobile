@@ -5,11 +5,13 @@ import PasswordInput from '@/components/forms/PasswordInput';
 import SeedPhraseInput from '@/components/forms/SeedPhraseInput';
 import { useSecureStorage, useWallet } from '@/hooks/eth-mobile';
 import { ethers } from '@/patches/ethers';
-import { initAccounts } from '@/store/reducers/Accounts';
-import { initAuth, setHasOnboarded } from '@/store/reducers/Auth';
-import { clearPendingWalletCreation } from '@/store/reducers/Navigation';
-import { setBiometrics } from '@/store/reducers/Settings';
-import { initWallet } from '@/store/reducers/Wallet';
+import {
+  useAccountsStore,
+  useAuthStore,
+  useNavigationStore,
+  useSettingsStore,
+  useWalletStore
+} from '@/stores';
 import { COLORS } from '@/utils/constants';
 import { Encryptor } from '@/utils/eth-mobile/encryptor';
 import { useRouter } from 'expo-router';
@@ -25,11 +27,9 @@ import {
 import * as Keychain from 'react-native-keychain';
 import { Divider, Switch } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
-import { useDispatch, useSelector } from 'react-redux';
 
 function ImportWallet() {
   const router = useRouter();
-  const dispatch = useDispatch();
   const toast = useToast();
   const { saveItem, saveItemWithBiometrics } = useSecureStorage();
   const { importWallet } = useWallet();
@@ -41,8 +41,16 @@ function ImportWallet() {
     useState<Keychain.BIOMETRY_TYPE | null>(null);
   const [isBiometricsEnabled, setIsBiometricsEnabled] = useState(false);
 
-  const pendingWalletCreation = useSelector(
-    (state: any) => state.navigation.pendingWalletCreation
+  const pendingWalletCreation = useNavigationStore(
+    state => state.pendingWalletCreation
+  );
+  const setBiometrics = useSettingsStore(state => state.setBiometrics);
+  const initAccounts = useAccountsStore(state => state.initAccounts);
+  const initWallet = useWalletStore(state => state.initWallet);
+  const initAuth = useAuthStore(state => state.initAuth);
+  const setHasOnboarded = useAuthStore(state => state.setHasOnboarded);
+  const clearPendingWalletCreation = useNavigationStore(
+    state => state.clearPendingWalletCreation
   );
 
   useEffect(() => {
@@ -109,7 +117,7 @@ function ImportWallet() {
       if (isBiometricsEnabled) {
         await saveItemWithBiometrics('password', password);
 
-        dispatch(setBiometrics(true));
+        setBiometrics(true);
       }
 
       const encryptor = new Encryptor();
@@ -128,30 +136,30 @@ function ImportWallet() {
       const encryptedAccount = await encryptor.encrypt([account], password);
       await saveItem('accounts', encryptedAccount);
 
-      dispatch(initAccounts([account.address]));
-      dispatch(
-        initWallet({
-          password,
-          mnemonic: wallet.mnemonic,
-          accounts: [account]
-        })
-      );
-      dispatch(initAuth());
-      dispatch(setHasOnboarded());
+      initAccounts([account.address]);
+      initWallet({
+        password,
+        mnemonic: wallet.mnemonic,
+        accounts: [account]
+      });
+      initAuth();
+      setHasOnboarded();
 
       // Check if we need to navigate back to a pending screen
       if (pendingWalletCreation.screen) {
-        dispatch(clearPendingWalletCreation());
+        clearPendingWalletCreation();
 
         // Navigate back to the original screen
         setTimeout(() => {
-          if (pendingWalletCreation.params) {
-            router.dismissTo({
-              pathname: pendingWalletCreation.screen,
-              params: pendingWalletCreation.params
-            });
-          } else {
-            router.dismissTo(pendingWalletCreation.screen);
+          if (pendingWalletCreation.screen) {
+            if (pendingWalletCreation.params) {
+              router.dismissTo({
+                pathname: pendingWalletCreation.screen as any,
+                params: pendingWalletCreation.params
+              });
+            } else {
+              router.dismissTo(pendingWalletCreation.screen as any);
+            }
           }
         }, 200);
       } else {

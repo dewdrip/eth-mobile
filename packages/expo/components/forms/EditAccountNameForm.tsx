@@ -1,20 +1,18 @@
 import { useAccount } from '@/hooks/eth-mobile';
-import { Account, changeName } from '@/store/reducers/Accounts';
+import { useAccountsStore } from '@/stores';
 import { COLORS } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
   close: () => void;
 };
 
 export default function EditAccountNameForm({ close }: Props) {
-  const dispatch = useDispatch();
-
-  const accounts: Account[] = useSelector((state: any) => state.accounts);
+  const accounts = useAccountsStore(state => state.accounts);
+  const changeName = useAccountsStore(state => state.changeName);
   const connectedAccount = useAccount();
 
   const [name, setName] = useState(connectedAccount?.name || '');
@@ -34,7 +32,7 @@ export default function EditAccountNameForm({ close }: Props) {
       setError('Account name already exists');
       return;
     }
-    dispatch(changeName({ address: connectedAccount.address, newName: name }));
+    changeName({ address: connectedAccount.address, newName: name });
     close();
   };
 

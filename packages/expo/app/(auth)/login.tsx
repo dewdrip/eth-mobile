@@ -3,11 +3,13 @@ import PasswordInput from '@/components/forms/PasswordInput';
 import Logo from '@/components/Logo';
 import { ConsentModalParams } from '@/components/modals/ConsentModal';
 import { useSecureStorage } from '@/hooks/eth-mobile';
-import { clearAccounts } from '@/store/reducers/Accounts';
-import { initAuth, resetAuth } from '@/store/reducers/Auth';
-import { clearRecipients } from '@/store/reducers/Recipients';
-import { clearSettings } from '@/store/reducers/Settings';
-import { clearWallet, initWallet } from '@/store/reducers/Wallet';
+import {
+  useAccountsStore,
+  useAuthStore,
+  useRecipientsStore,
+  useSettingsStore,
+  useWalletStore
+} from '@/stores';
 import { COLORS } from '@/utils/constants';
 import { EncryptedData, Encryptor } from '@/utils/eth-mobile/encryptor';
 import { useFocusEffect } from '@react-navigation/native';
@@ -25,18 +27,23 @@ import {
 } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { useToast } from 'react-native-toast-notifications';
-import { useDispatch, useSelector } from 'react-redux';
 
 export default function Login() {
   const router = useRouter();
   const toast = useToast();
-  const dispatch = useDispatch();
   const { getItem, removeItem } = useSecureStorage();
 
-  const auth = useSelector((state: any) => state.auth);
-  const isBiometricsEnabled = useSelector(
-    (state: any) => state.settings.isBiometricsEnabled as boolean
+  const auth = useAuthStore(state => state);
+  const isBiometricsEnabled = useSettingsStore(
+    state => state.isBiometricsEnabled
   );
+  const clearAccounts = useAccountsStore(state => state.clearAccounts);
+  const initAuth = useAuthStore(state => state.initAuth);
+  const resetAuth = useAuthStore(state => state.resetAuth);
+  const clearRecipients = useRecipientsStore(state => state.clearRecipients);
+  const clearSettings = useSettingsStore(state => state.clearSettings);
+  const clearWallet = useWalletStore(state => state.clearWallet);
+  const initWallet = useWalletStore(state => state.initWallet);
 
   const [password, setPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -68,16 +75,14 @@ export default function Login() {
 
     const accounts = JSON.parse(decryptedAccounts!) as string[];
 
-    dispatch(
-      initWallet({
-        password,
-        mnemonic: seedPhrase,
-        accounts: accounts
-      })
-    );
+    initWallet({
+      password,
+      mnemonic: seedPhrase,
+      accounts: accounts
+    });
 
     if (!auth.isSignedUp) {
-      dispatch(initAuth());
+      initAuth();
     }
 
     if (password) {
@@ -133,11 +138,11 @@ export default function Login() {
   const resetWallet = async () => {
     await removeItem('seedPhrase');
     await removeItem('accounts');
-    dispatch(clearAccounts());
-    dispatch(clearRecipients());
-    dispatch(clearWallet());
-    dispatch(clearSettings());
-    dispatch(resetAuth());
+    clearAccounts();
+    clearRecipients();
+    clearWallet();
+    clearSettings();
+    resetAuth();
     setTimeout(() => {
       router.replace('/walletSetup');
     }, 100);
@@ -146,7 +151,7 @@ export default function Login() {
   useFocusEffect(
     useCallback(() => {
       if (isBiometricsEnabled) {
-        dispatch(clearWallet());
+        clearWallet();
         unlockWithBiometrics();
       }
 

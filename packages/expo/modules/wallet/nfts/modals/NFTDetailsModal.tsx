@@ -1,13 +1,12 @@
 import Button from '@/components/buttons/CustomButton';
 import { useAccount, useNetwork } from '@/hooks/eth-mobile';
-import { removeNFT } from '@/store/reducers/NFTs';
+import { useNFTsStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { parseIPFS } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import { Address } from 'abitype';
 import React, { useEffect, useState } from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
-import { useDispatch } from 'react-redux';
 
 type Props = {
   modal: {
@@ -31,7 +30,7 @@ export default function NFTDetailsModal({
     params: { nft, onSend }
   }
 }: Props) {
-  const dispatch = useDispatch();
+  const removeNFT = useNFTsStore(state => state.removeNFT);
   const network = useNetwork();
   const account = useAccount();
 
@@ -46,14 +45,12 @@ export default function NFTDetailsModal({
     if (!account) return;
 
     closeModal();
-    dispatch(
-      removeNFT({
-        networkId: network.id,
-        accountAddress: account.address,
-        nftAddress: nft.address,
-        tokenId: nft.id
-      })
-    );
+    removeNFT({
+      networkId: network.id,
+      accountAddress: account.address,
+      nftAddress: nft.address,
+      tokenId: nft.id
+    });
   };
 
   useEffect(() => {

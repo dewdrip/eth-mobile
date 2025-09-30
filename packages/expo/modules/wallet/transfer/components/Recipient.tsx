@@ -1,11 +1,10 @@
 import { AddressInput } from '@/components/eth-mobile';
 import { useAccount } from '@/hooks/eth-mobile';
-import { Account } from '@/store/reducers/Accounts';
+import { Account, useAccountsStore } from '@/stores';
 import { COLORS } from '@/utils/constants';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
-import { useSelector } from 'react-redux';
 
 type Props = {
   recipient: string;
@@ -16,7 +15,7 @@ type Props = {
 export default function Recipient({ recipient, onChange, onSubmit }: Props) {
   const { openModal } = useModal();
 
-  const accounts: Account[] = useSelector((state: any) => state.accounts);
+  const accounts = useAccountsStore(state => state.accounts);
 
   const account = useAccount();
 

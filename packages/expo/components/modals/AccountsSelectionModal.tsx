@@ -1,12 +1,11 @@
 import { Blockie } from '@/components/eth-mobile';
-import { Account } from '@/store/reducers/Accounts';
+import { Account, useAccountsStore } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { truncateAddress } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
 
 type Props = {
   modal: {
@@ -24,7 +23,7 @@ export default function AccountsSelectionModal({
     params: { selectedAccount, onSelect }
   }
 }: Props) {
-  const accounts: Account[] = useSelector((state: any) => state.accounts);
+  const accounts = useAccountsStore(state => state.accounts);
 
   const handleSelection = (account: Account) => {
     closeModal();

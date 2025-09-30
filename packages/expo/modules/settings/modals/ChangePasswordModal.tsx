@@ -1,7 +1,7 @@
 import Button from '@/components/buttons/CustomButton';
 import PasswordInput from '@/components/forms/PasswordInput';
 import { useSecureStorage } from '@/hooks/eth-mobile';
-import { setPassword as setWalletPassword } from '@/store/reducers/Wallet';
+import { useSettingsStore, useWalletStore } from '@/stores';
 import { FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Encryptor } from '@/utils/eth-mobile/encryptor';
@@ -10,7 +10,6 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
-import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
   modal: {
@@ -21,10 +20,10 @@ type Props = {
 export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
   const toast = useToast();
   const { saveItem, saveItemWithBiometrics } = useSecureStorage();
-  const wallet = useSelector((state: any) => state.wallet);
-  const dispatch = useDispatch();
-  const isBiometricsEnabled = useSelector(
-    (state: any) => state.settings.isBiometricsEnabled as boolean
+  const wallet = useWalletStore(state => state);
+  const setWalletPassword = useWalletStore(state => state.setPassword);
+  const isBiometricsEnabled = useSettingsStore(
+    state => state.isBiometricsEnabled
   );
 
   const [password, setPassword] = useState({
@@ -76,8 +75,7 @@ export default function ChangePasswordModal({ modal: { closeModal } }: Props) {
         await saveItemWithBiometrics('password', newPassword);
       }
 
-      // @ts-ignore
-      dispatch(setWalletPassword(newPassword));
+      setWalletPassword(newPassword);
 
       const encryptor = new Encryptor();
 

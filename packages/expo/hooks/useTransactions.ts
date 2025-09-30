@@ -1,15 +1,10 @@
-import { useAccount, useNetwork } from '@/hooks/eth-mobile';
 import { Transaction, useTransactionsStore } from '@/stores';
 import { keccak256, toUtf8Bytes } from 'ethers';
 import { useMemo } from 'react';
+import { useAccount } from './useAccount';
+import { useNetwork } from './useNetwork';
 
-/**
- * Generates a unique storage key based on network ID and account address.
- * @param networkId - The ID of the blockchain network.
- * @param accountAddress - The user's wallet address.
- * @returns A unique hash representing the storage key.
- */
-const getStorageKey = (networkId: number, accountAddress: string): string =>
+const getStorageKey = (networkId: number, accountAddress: string) =>
   keccak256(toUtf8Bytes(`${networkId}${accountAddress.toLowerCase()}`));
 
 /**

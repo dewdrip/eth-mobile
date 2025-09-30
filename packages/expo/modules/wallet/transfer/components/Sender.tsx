@@ -1,12 +1,11 @@
 import { Blockie } from '@/components/eth-mobile';
-import { Account } from '@/store/reducers/Accounts';
+import { Account, useAccountsStore } from '@/stores';
 import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { Text } from 'react-native-paper';
-import { useSelector } from 'react-redux';
 
 type Props = {
   account: Account | undefined;
@@ -21,7 +20,7 @@ export default function Sender({
   hideBalance,
   onChange
 }: Props) {
-  const accounts: Account[] = useSelector((state: any) => state.accounts);
+  const accounts = useAccountsStore(state => state.accounts);
 
   const { openModal } = useModal();
 

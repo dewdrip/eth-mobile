@@ -1,4 +1,4 @@
-import { Account } from '@/store/reducers/Wallet';
+import { Account, useWalletStore } from '@/stores';
 import { getParsedError } from '@/utils/eth-mobile';
 import {
   Contract,
@@ -8,7 +8,6 @@ import {
   Wallet
 } from 'ethers';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useAccount, useNetwork } from '.';
 
 interface UseReadContractConfig {
@@ -41,7 +40,7 @@ export function useReadContract({
 }: Partial<UseReadContractConfig> = {}) {
   const network = useNetwork();
   const connectedAccount = useAccount();
-  const wallet = useSelector((state: any) => state.wallet);
+  const wallet = useWalletStore(state => state);
 
   const [data, setData] = useState<ReadContractResult>(null);
   const [isLoading, setIsLoading] = useState(enabled);

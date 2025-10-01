@@ -1,5 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface RecipientsState {
   recipients: string[];
@@ -40,7 +41,8 @@ export const useRecipientsStore = create<RecipientsState & RecipientsActions>()(
       clearRecipients: () => set({ recipients: [] })
     }),
     {
-      name: 'recipients-storage'
+      name: 'recipients-storage',
+      storage: createJSONStorage(() => AsyncStorage)
     }
   )
 );

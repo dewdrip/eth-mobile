@@ -1,7 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { keccak256, toUtf8Bytes } from 'ethers';
 import { Address } from 'viem';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type TransactionType = 'transfer' | 'contract';
 
@@ -85,7 +86,8 @@ export const useTransactionsStore = create<
         })
     }),
     {
-      name: 'transactions-storage'
+      name: 'transactions-storage',
+      storage: createJSONStorage(() => AsyncStorage)
     }
   )
 );

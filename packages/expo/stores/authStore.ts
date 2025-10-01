@@ -1,5 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface AuthState {
   hasOnboarded: boolean;
@@ -26,7 +27,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       setHasOnboarded: () => set({ hasOnboarded: true })
     }),
     {
-      name: 'auth-storage'
+      name: 'auth-storage',
+      storage: createJSONStorage(() => AsyncStorage)
     }
   )
 );

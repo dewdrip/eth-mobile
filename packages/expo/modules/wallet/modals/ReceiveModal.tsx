@@ -1,6 +1,5 @@
 import { Network } from '@/ethmobile.config';
 import { useAccount, useClipboard, useNetwork } from '@/hooks/eth-mobile';
-import { Account } from '@/store/reducers/Accounts';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';

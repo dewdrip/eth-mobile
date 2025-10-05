@@ -1,5 +1,5 @@
 import { useNetwork } from '@/hooks/eth-mobile';
-import { Transaction as TransactionType } from '@/store/reducers/Transactions';
+import { Transaction } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { parseTimestamp, truncateAddress } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import { useModal } from 'react-native-modalfy';
 import { Text } from 'react-native-paper';
 
 type Props = {
-  transaction: TransactionType;
+  transaction: Transaction;
 };
 
 export default function Transaction({ transaction: tx }: Props) {

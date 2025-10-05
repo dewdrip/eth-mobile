@@ -1,6 +1,6 @@
 import { CopyableText } from '@/components/eth-mobile';
 import { useNetwork } from '@/hooks/eth-mobile';
-import { Transaction } from '@/store/reducers/Transactions';
+import { Transaction } from '@/stores';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { parseTimestamp, truncateAddress } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';

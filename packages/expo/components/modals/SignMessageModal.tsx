@@ -1,6 +1,5 @@
 import Button from '@/components/buttons/CustomButton';
 import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
-import { Account } from '@/store/reducers/Accounts';
 import { FONT_SIZE } from '@/utils/constants';
 import { parseBalance } from '@/utils/eth-mobile';
 import React from 'react';

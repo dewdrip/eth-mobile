@@ -1,4 +1,4 @@
-import { NFTToken, NFT as NFTType } from '@/store/reducers/NFTs';
+import { NFTToken, NFT as NFTType } from '@/stores';
 import { COLORS } from '@/utils/constants';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';

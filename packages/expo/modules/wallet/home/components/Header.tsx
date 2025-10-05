@@ -2,7 +2,7 @@ import BackButton from '@/components/buttons/BackButton';
 import { Blockie } from '@/components/eth-mobile';
 import { Network } from '@/ethmobile.config';
 import { useAccount, useNetwork } from '@/hooks/eth-mobile';
-import { Account } from '@/store/reducers/Accounts';
+import { Account } from '@/stores';
 import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';

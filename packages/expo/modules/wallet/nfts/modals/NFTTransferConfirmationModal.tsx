@@ -1,7 +1,7 @@
 import Button from '@/components/buttons/CustomButton';
 import { Blockie } from '@/components/eth-mobile';
 import { useNetwork } from '@/hooks/eth-mobile';
-import { Account } from '@/store/reducers/Accounts';
+import { Account } from '@/stores';
 import { FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { parseFloat, truncateAddress } from '@/utils/eth-mobile';

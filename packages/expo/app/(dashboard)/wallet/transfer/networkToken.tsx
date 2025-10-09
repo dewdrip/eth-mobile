@@ -6,7 +6,7 @@ import Header from '@/modules/wallet/transfer/components/Header';
 import PastRecipients from '@/modules/wallet/transfer/components/PastRecipients';
 import Recipient from '@/modules/wallet/transfer/components/Recipient';
 import Sender from '@/modules/wallet/transfer/components/Sender';
-import { useAccountsStore, useRecipientsStore, useWalletStore } from '@/stores';
+import { Account, useRecipientsStore, useWalletStore } from '@/stores';
 import { parseBalance, parseFloat } from '@/utils/eth-mobile';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { isAddress, JsonRpcProvider, TransactionReceipt, Wallet } from 'ethers';

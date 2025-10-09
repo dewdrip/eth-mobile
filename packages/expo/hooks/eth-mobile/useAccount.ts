@@ -1,12 +1,14 @@
-import { useAccountsStore } from '@/stores';
+import { Account, useAccountsStore } from '@/stores';
 
 /**
  *
  * @returns The connected account
  */
 export function useAccount() {
-  const accounts = useAccountsStore(state => state.accounts);
-  const connectedAccount = accounts.find(account => account.isConnected);
+  const accounts: Account[] = useAccountsStore(state => state.accounts);
+  const connectedAccount: Account | undefined = accounts.find(
+    account => account.isConnected
+  );
 
   return connectedAccount;
 }

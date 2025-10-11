@@ -81,21 +81,21 @@ try {
 }
 
 if (
-  process.env.LOCALHOST_KEYSTORE_ACCOUNT !== "eth-mobile-default" &&
+  process.env.ETH_KEYSTORE_ACCOUNT !== "eth-mobile-default" &&
   network === "localhost"
 ) {
   console.log(`
-⚠️ Warning: Using ${process.env.LOCALHOST_KEYSTORE_ACCOUNT} keystore account on localhost.
+⚠️ Warning: Using ${process.env.ETH_KEYSTORE_ACCOUNT} keystore account on localhost.
 
 You can either:
-1. Enter the password for ${process.env.LOCALHOST_KEYSTORE_ACCOUNT} account
+1. Enter the password for ${process.env.ETH_KEYSTORE_ACCOUNT} account
    OR
 2. Set the localhost keystore account in your .env and re-run the command to skip password prompt:
-   LOCALHOST_KEYSTORE_ACCOUNT='eth-mobile-default'
+   ETH_KEYSTORE_ACCOUNT='eth-mobile-default'
 `);
 }
 
-let selectedKeystore = process.env.LOCALHOST_KEYSTORE_ACCOUNT;
+let selectedKeystore = process.env.ETH_KEYSTORE_ACCOUNT;
 if (network !== "localhost") {
   if (keystoreArg) {
     // Use the keystore provided via command line argument

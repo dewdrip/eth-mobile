@@ -227,11 +227,11 @@ function main() {
     });
   });
 
-  const REACTNATIVE_TARGET_DIR = "../reactnative/contracts/";
+  const EXPO_TARGET_DIR = "../expo/contracts/";
 
   // Ensure target directories exist
-  if (!existsSync(REACTNATIVE_TARGET_DIR)) {
-    mkdirSync(REACTNATIVE_TARGET_DIR, { recursive: true });
+  if (!existsSync(EXPO_TARGET_DIR)) {
+    mkdirSync(EXPO_TARGET_DIR, { recursive: true });
   }
 
   // Generate the deployedContracts content
@@ -257,15 +257,36 @@ function main() {
   `;
 
   writeFileSync(
-    `${REACTNATIVE_TARGET_DIR}deployedContracts.ts`,
+    `${EXPO_TARGET_DIR}deployedContracts.ts`,
     format(fileTemplate("../src/utils/eth-mobile/contract"), {
       parser: "typescript",
     })
   );
 
   console.log(
-    `📝 Updated TypeScript contract definition file on ${REACTNATIVE_TARGET_DIR}deployedContracts.ts`
+    `📝 Updated TypeScript contract definition file on ${EXPO_TARGET_DIR}deployedContracts.ts`
   );
+
+  // Copy noir_foundry.json from target to expo/assets/keys
+  const SOURCE_NOIR_FILE = "../target/noir_foundry.json";
+  const EXPO_KEYS_DIR = "../expo/assets/keys/";
+  const DEST_NOIR_FILE = EXPO_KEYS_DIR + "noir_foundry.json";
+
+  // Ensure assets/keys directory exists
+  if (!existsSync(EXPO_KEYS_DIR)) {
+    mkdirSync(EXPO_KEYS_DIR, { recursive: true });
+  }
+
+  // Read the noir_foundry.json file from target and write it to assets/keys in expo
+  if (existsSync(SOURCE_NOIR_FILE)) {
+    const noirData = readFileSync(SOURCE_NOIR_FILE, "utf8");
+    writeFileSync(DEST_NOIR_FILE, noirData, "utf8");
+    console.log(`📝 Copied noir_foundry.json to ${DEST_NOIR_FILE}`);
+  } else {
+    console.warn(
+      `⚠️  ${SOURCE_NOIR_FILE} does not exist. Have you run ./build.sh?`
+    );
+  }
 }
 
 try {

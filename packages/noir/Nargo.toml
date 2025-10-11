@@ -1,0 +1,9 @@
+[package]
+name = "noir_foundry"
+type = "bin"
+authors = ["Valentine Orga"]
+compiler_version = ">=1.0.0"
+entry = "circuits/main.nr"
+license = "MIT"
+
+[dependencies]

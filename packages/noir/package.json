@@ -1,0 +1,47 @@
+{
+  "name": "@ethmobile/noir",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "account": "make account",
+    "account:generate": "node scripts-js/generateKeystore.js",
+    "account:import": "node scripts-js/importAccount.js",
+    "account:reveal-pk": "node scripts-js/revealPK.js",
+    "generate-proof": "tsx ./scripts-js/generateProof.ts",
+    "bb:verify": "bb verify -k ./target/vk -p ./target/proof",
+    "bb:write-vk": "bb write_vk --oracle_hash keccak -b ./target/noir.json -o ./target",
+    "generate-verifier": "./build.sh",
+    "chain": "anvil --host 0.0.0.0",
+    "clean": "forge clean",
+    "compile": "make compile",
+    "deploy": "node scripts-js/parseArgs.js",
+    "flatten": "make flatten",
+    "fork": "make fork FORK_URL=${1:-mainnet}",
+    "format": "make format",
+    "postinstall": "shx cp -n .env.example .env",
+    "lint": "make lint",
+    "nargo:check": "nargo check",
+    "nargo:compile": "nargo compile",
+    "nargo:execute": "nargo execute",
+    "test": "forge test",
+    "verify": "make verify RPC_URL=${1:-localhost}"
+  },
+  "dependencies": {
+    "@aztec/bb.js": "0.87.0",
+    "@noir-lang/noir_js": "^1.0.0-beta.11",
+    "dotenv": "~16.3.1",
+    "envfile": "~6.18.0",
+    "ethers": "~5.7.1",
+    "prettier": "~2.8.8",
+    "qrcode": "~1.5.3",
+    "toml": "~3.0.0",
+    "viem": "^2.21.54"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "shx": "^0.3.4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.7.2"
+  }
+}

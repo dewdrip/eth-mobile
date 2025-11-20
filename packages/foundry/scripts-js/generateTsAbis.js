@@ -227,7 +227,7 @@ function main() {
     });
   });
 
-  const REACTNATIVE_TARGET_DIR = "../reactnative/contracts/";
+  const REACTNATIVE_TARGET_DIR = "../expo/contracts/";
 
   // Ensure target directories exist
   if (!existsSync(REACTNATIVE_TARGET_DIR)) {

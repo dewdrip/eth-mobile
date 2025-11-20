@@ -16,7 +16,7 @@ import "../contracts/YourContract.sol";
  */
 contract DeployYourContract is ScaffoldETHDeploy {
     /**
-     * @dev Deployer setup based on `ETH_KEYSTORE_ACCOUNT` in `.env`:
+     * @dev Deployer setup based on `LOCALHOST_KEYSTORE_ACCOUNT` in `.env`:
      *      - "eth-mobile-default": Uses Anvil's account #9 (0xa0Ee7A142d267C1f36714E4a8F75612F20a79720), no password prompt
      *      - "eth-mobile-custom": requires password used while creating keystore
      *

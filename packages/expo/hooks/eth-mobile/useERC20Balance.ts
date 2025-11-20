@@ -1,0 +1,121 @@
+import { getParsedError } from '@/utils/eth-mobile';
+import { ethers } from 'ethers';
+import { useCallback, useEffect, useState } from 'react';
+import { Address, erc20Abi } from 'viem';
+import { useAccount, useNetwork, useReadContract } from '.';
+
+/**
+ * Hook to retrieve the balance of a specified ERC20 token for a user.
+ *
+ * @param {Object} options - Optional parameters.
+ * @param {Address} options.token - The ERC20 token contract address.
+ * @param {Address} options.userAddress - The address of the user to fetch the token balance for.
+ * @param {boolean} options.watch - Whether to watch for balance changes.
+ * @returns {Object} - An object containing loading state, error, balance, and the `getBalance` function.
+ */
+interface UseERC20BalanceOptions {
+  token?: Address;
+  userAddress?: Address;
+  watch?: boolean;
+}
+
+interface UseERC20BalanceResult {
+  isLoading: boolean;
+  error: string | null;
+  balance: bigint | null;
+  getBalance: (
+    token?: Address,
+    userAddress?: Address
+  ) => Promise<bigint | undefined>;
+}
+
+export function useERC20Balance({
+  token: defaultToken,
+  userAddress: defaultUserAddress,
+  watch = false
+}: UseERC20BalanceOptions = {}): UseERC20BalanceResult {
+  const account = useAccount();
+  const network = useNetwork();
+  const { readContract } = useReadContract();
+
+  const [balance, setBalance] = useState<bigint | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  /**
+   * Fetch the token balance for a specified user and token.
+   *
+   * @param {Address} token - The token address. Defaults to the provided `defaultToken`.
+   * @param {Address} userAddress - The user's address. Defaults to the provided `userAddress` or the connected address.
+   * @returns {Promise<bigint>} - The token balance of the user.
+   */
+  const getBalance = useCallback(
+    async (
+      token: Address = defaultToken!,
+      userAddress: Address = defaultUserAddress ||
+        (account?.address as `0x${string}`) ||
+        ''
+    ) => {
+      try {
+        if (!token) throw new Error('Token address is required');
+        if (!userAddress) throw new Error('User address is required');
+        if (!account?.address && !defaultUserAddress)
+          throw new Error('No connected account');
+
+        setIsLoading(true);
+        setError(null);
+
+        const balance = await readContract({
+          address: token,
+          abi: erc20Abi,
+          functionName: 'balanceOf',
+          args: [userAddress]
+        });
+
+        if (balance === undefined) {
+          throw new Error('Failed to retrieve balance');
+        }
+
+        const balanceBigInt = balance as bigint;
+        setBalance(balanceBigInt);
+        return balanceBigInt;
+      } catch (error) {
+        setError(getParsedError(error));
+        setBalance(null);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [defaultToken, defaultUserAddress, account?.address]
+  );
+
+  // Automatically fetch the balance when the token or userAddress changes
+  useEffect(() => {
+    const provider = new ethers.JsonRpcProvider(network.provider);
+
+    provider.off('block');
+
+    if (defaultToken) {
+      getBalance();
+    }
+
+    if (watch) {
+      provider.on('block', blockNumber => {
+        if (defaultToken) {
+          getBalance();
+        }
+      });
+    }
+
+    return () => {
+      provider.off('block');
+    };
+  }, [defaultToken, defaultUserAddress, account?.address, watch]);
+
+  return {
+    isLoading,
+    error,
+    balance,
+    getBalance
+  };
+}

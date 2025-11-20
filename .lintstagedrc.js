@@ -13,7 +13,7 @@ const buildHardhatEslintCommand = (filenames) =>
     .join(" ")}`;
 
 module.exports = {
-  "packages/reactnative/**/*.{ts,tsx}": [
+  "packages/expo/**/*.{ts,tsx}": [
     buildNextEslintCommand,
     checkTypesNextCommand,
   ],

@@ -1,0 +1,230 @@
+import Button from '@/components/buttons/CustomButton';
+import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
+import Amount from '@/modules/wallet/transfer/components/Amount';
+import Header from '@/modules/wallet/transfer/components/Header';
+import PastRecipients from '@/modules/wallet/transfer/components/PastRecipients';
+import Recipient from '@/modules/wallet/transfer/components/Recipient';
+import Sender from '@/modules/wallet/transfer/components/Sender';
+import { Account } from '@/store/reducers/Accounts';
+import { addRecipient } from '@/store/reducers/Recipients';
+import { parseBalance, parseFloat } from '@/utils/eth-mobile';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { isAddress, JsonRpcProvider, TransactionReceipt, Wallet } from 'ethers';
+import React, { useEffect, useState } from 'react';
+import {
+  BackHandler,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StyleSheet
+} from 'react-native';
+import { useModal } from 'react-native-modalfy';
+import { Divider } from 'react-native-paper';
+import { useToast } from 'react-native-toast-notifications';
+import { useDispatch, useSelector } from 'react-redux';
+import { Address, formatEther, parseUnits } from 'viem';
+
+export default function NetworkTokenTransfer() {
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+
+  const toast = useToast();
+
+  const account = useAccount();
+  const network = useNetwork();
+
+  const { openModal } = useModal();
+
+  const dispatch = useDispatch();
+
+  const [gasCost, setGasCost] = useState<bigint | null>(null);
+
+  const [sender, setSender] = useState<Account | undefined>(account);
+  const [recipient, setRecipient] = useState('');
+  const [amount, setAmount] = useState('');
+
+  const { balance } = useBalance({
+    address: sender?.address || ''
+  });
+
+  const wallet = useSelector((state: any) => state.wallet);
+
+  const estimateGasCost = async () => {
+    try {
+      const provider = new JsonRpcProvider(network.provider);
+      const feeData = await provider.getFeeData();
+
+      const gasCost = feeData.gasPrice! * BigInt(21000);
+
+      setGasCost(gasCost);
+    } catch (error) {
+      console.error('Error estimating gas cost: ', error);
+      return;
+    }
+  };
+
+  const { addTx } = useTransactions();
+
+  const transfer = async (): Promise<TransactionReceipt | null> => {
+    // @ts-ignore
+    const activeAccount = wallet.accounts.find(
+      (account: Account) =>
+        account.address.toLowerCase() === sender?.address.toLowerCase()
+    );
+
+    const provider = new JsonRpcProvider(network.provider);
+    const activeWallet = new Wallet(activeAccount.privateKey, provider);
+
+    const tx = await activeWallet.sendTransaction({
+      from: sender?.address,
+      to: recipient,
+      value: parseUnits(amount, network.token.decimals)
+    });
+
+    const txReceipt = await tx.wait(1);
+
+    dispatch(addRecipient(recipient));
+
+    // Add transaction to Redux store
+    const gasFee = txReceipt?.gasUsed
+      ? txReceipt.gasUsed * txReceipt.gasPrice
+      : 0n;
+    const transaction = {
+      type: 'transfer',
+      title: `${network.token.symbol} Transfer`,
+      hash: tx.hash,
+      value: parseFloat(formatEther(tx.value), 8).toString(),
+      timestamp: Date.now(),
+      from: tx.from as Address,
+      to: tx.to as Address,
+      nonce: tx.nonce,
+      gasFee: parseFloat(formatEther(gasFee), 8).toString(),
+      total: parseFloat(formatEther(tx.value + gasFee), 8).toString()
+    };
+
+    // @ts-ignore
+    addTx(transaction);
+
+    return txReceipt;
+  };
+
+  const confirm = () => {
+    if (!isAddress(recipient)) {
+      toast.show('Invalid address', {
+        type: 'danger'
+      });
+      return;
+    }
+
+    if (isNaN(Number(amount)) || Number(amount) < 0) {
+      toast.show('Invalid amount', {
+        type: 'danger'
+      });
+      return;
+    }
+
+    if (amount.trim() && balance && gasCost && !isNaN(Number(amount))) {
+      if (Number(amount) >= Number(formatEther(balance))) {
+        toast.show('Insufficient amount', {
+          type: 'danger'
+        });
+        return;
+      } else if (Number(formatEther(balance - gasCost)) < Number(amount)) {
+        toast.show('Insufficient amount for gas', {
+          type: 'danger'
+        });
+        return;
+      }
+    }
+
+    openModal('TransferConfirmationModal', {
+      txData: {
+        from: sender,
+        to: recipient,
+        amount: parseFloat(amount, 8),
+        balance: balance
+      },
+      estimateGasCost: gasCost,
+      tokenSymbol: network.token.symbol,
+      isNativeToken: true,
+      onTransfer: transfer
+    });
+  };
+
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+    navigation.goBack();
+
+    return true;
+  });
+
+  useEffect(() => {
+    if (!isFocused) return;
+    const provider = new JsonRpcProvider(network.provider);
+
+    provider.off('block');
+
+    estimateGasCost();
+
+    provider.on('block', () => {
+      estimateGasCost();
+    });
+
+    return () => {
+      provider.off('block');
+      backHandler.remove();
+    };
+  }, []);
+
+  if (!isFocused) return;
+
+  return (
+    <SafeAreaView className="flex-1 bg-white">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        className="flex-1 bg-white p-4"
+      >
+        <Header tokenSymbol={network.token.symbol} />
+
+        <Sender
+          account={sender}
+          balance={
+            balance !== null
+              ? `${parseBalance(balance, network.token.decimals)} ${network.token.symbol}`
+              : null
+          }
+          onChange={setSender}
+        />
+
+        <Recipient
+          recipient={recipient}
+          onChange={setRecipient}
+          onSubmit={confirm}
+        />
+
+        <Amount
+          amount={amount}
+          token={network.token.symbol}
+          balance={balance}
+          gasCost={gasCost}
+          onChange={setAmount}
+          onConfirm={confirm}
+          isNativeToken
+        />
+
+        <Divider style={styles.divider} />
+
+        <PastRecipients onSelect={setRecipient} />
+
+        <Button text="Next" onPress={confirm} />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  divider: {
+    backgroundColor: '#e0e0e0',
+    marginVertical: 16
+  }
+});

@@ -1,0 +1,45 @@
+import Aes from 'react-native-aes-crypto';
+
+export interface EncryptedData {
+  cipher: string;
+  iv: string;
+}
+
+export class Encryptor {
+  generateKey = (
+    password: string,
+    salt: string,
+    cost: number,
+    length: number
+  ) => Aes.pbkdf2(password, salt, cost, length, 'sha256');
+
+  encrypt = async (data: any, password: string): Promise<EncryptedData> => {
+    const key = await this.generateKey(password, 'salt', 5000, 256);
+    const iv = await Aes.randomKey(16);
+    const cipher = await Aes.encrypt(
+      JSON.stringify(data),
+      key,
+      iv,
+      'aes-256-cbc'
+    );
+    return { cipher, iv };
+  };
+
+  decrypt = async (
+    encryptedData: EncryptedData,
+    password: string
+  ): Promise<string | undefined> => {
+    try {
+      const key = await this.generateKey(password, 'salt', 5000, 256);
+      const decrypted = await Aes.decrypt(
+        encryptedData.cipher,
+        key,
+        encryptedData.iv,
+        'aes-256-cbc'
+      );
+      return decrypted;
+    } catch (error) {
+      return undefined;
+    }
+  };
+}

@@ -148,7 +148,7 @@ export function useReadContract({
     return () => {
       provider.off('block');
     };
-  }, [enabled, watch, network]);
+  }, [enabled, watch, network, args, functionName]);
 
   return {
     data,

@@ -37,7 +37,7 @@ const config: Config = {
   networks: {
     localhost: {
       name: 'Localhost',
-      provider: 'http://10.56.26.115:8545',
+      provider: 'http://0.0.0.0:8545',
       id: 31337,
       token: {
         decimals: 18,

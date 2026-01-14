@@ -43,7 +43,18 @@ export default function AccountsModal({ modal: { closeModal } }: Props) {
   };
 
   const createAccount = async () => {
-    const mnemonic = wallet.mnemonic;
+    // Ensure mnemonic is not wrapped in unwanted quotes
+    let mnemonic = wallet.mnemonic;
+    if (typeof mnemonic === 'string') {
+      // This line first trims whitespace from the mnemonic,
+      // then removes a pair of wrapping double OR single quotes if present (from beginning and end),
+      // then trims again to catch any new whitespace.
+      mnemonic = mnemonic
+        .trim()
+        .replace(/^"(.*)"$/, '$1')
+        .replace(/^'(.*)'$/, '$1')
+        .trim();
+    }
     let newAccount;
 
     for (let i = 0; i < Infinity; i++) {

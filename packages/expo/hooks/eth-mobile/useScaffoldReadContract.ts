@@ -136,6 +136,7 @@ export function useScaffoldReadContract({
 
   useEffect(() => {
     if (!enable) return;
+    if (!deployedContractData) return;
 
     const provider = new JsonRpcProvider(network.provider);
 
@@ -151,7 +152,16 @@ export function useScaffoldReadContract({
     return () => {
       provider.off('block');
     };
-  }, [isLoadingDeployedContractData, watch, network, connectedAccount]);
+  }, [
+    isLoadingDeployedContractData,
+    watch,
+    network,
+    connectedAccount,
+    args,
+    functionName,
+    enable,
+    deployedContractData
+  ]);
 
   return {
     data,

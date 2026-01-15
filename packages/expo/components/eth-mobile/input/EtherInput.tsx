@@ -1,7 +1,7 @@
 import { useCryptoPrice, useNetwork } from '@/hooks/eth-mobile';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
@@ -46,6 +46,38 @@ export function EtherInput({
     priceID: network.coingeckoPriceId,
     enabled: true
   });
+
+  // Sync dollarValue when value prop changes externally or exchange rate updates
+  useEffect(() => {
+    if (!dollarRate) {
+      // If no exchange rate, clear dollar value
+      if (dollarValue) {
+        setDollarValue('');
+      }
+      return;
+    }
+
+    // If value is empty, clear dollar value
+    if (!value || value.trim() === '') {
+      if (dollarValue) {
+        setDollarValue('');
+      }
+      return;
+    }
+
+    // Recalculate dollar value based on current ETH value and exchange rate
+    const numericValue = parseFloat(value);
+    if (!isNaN(numericValue) && numericValue >= 0) {
+      const newDollarValue = (numericValue * dollarRate).toFixed(2);
+      // Only update if different to avoid unnecessary re-renders
+      if (dollarValue !== newDollarValue) {
+        setDollarValue(newDollarValue);
+      }
+    } else if (dollarValue) {
+      // If value is invalid, clear dollar value
+      setDollarValue('');
+    }
+  }, [value, dollarRate]);
 
   const switchCurrency = () => {
     if (!dollarRate) {

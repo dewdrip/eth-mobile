@@ -167,7 +167,7 @@ export function useScaffoldReadContract({
     data,
     isLoading,
     error,
-    refatch: fetchData,
+    refetch: fetchData,
     readContract
   };
 }

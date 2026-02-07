@@ -47,37 +47,33 @@ export function EtherInput({
     enabled: true
   });
 
-  // Sync dollarValue when value prop changes externally or exchange rate updates
+  // Sync dollarValue when value prop changes externally or exchange rate updates.
+  // When isDollar is true, the user is typing in USD and value is derived from that—
+  // do not overwrite dollarValue with .toFixed(2) or we turn "1" into "1.00".
   useEffect(() => {
+    if (isDollar) return;
+
     if (!dollarRate) {
-      // If no exchange rate, clear dollar value
-      if (dollarValue) {
-        setDollarValue('');
-      }
+      if (dollarValue) setDollarValue('');
       return;
     }
 
-    // If value is empty, clear dollar value
     if (!value || value.trim() === '') {
-      if (dollarValue) {
-        setDollarValue('');
-      }
+      if (dollarValue) setDollarValue('');
       return;
     }
 
-    // Recalculate dollar value based on current ETH value and exchange rate
     const numericValue = parseFloat(value);
-    if (!isNaN(numericValue) && numericValue >= 0) {
-      const newDollarValue = (numericValue * dollarRate).toFixed(2);
-      // Only update if different to avoid unnecessary re-renders
-      if (dollarValue !== newDollarValue) {
-        setDollarValue(newDollarValue);
-      }
-    } else if (dollarValue) {
-      // If value is invalid, clear dollar value
-      setDollarValue('');
+    if (isNaN(numericValue) || numericValue < 0) {
+      if (dollarValue) setDollarValue('');
+      return;
     }
-  }, [value, dollarRate]);
+
+    const newDollarValue = (numericValue * dollarRate).toFixed(2);
+    if (dollarValue !== newDollarValue) {
+      setDollarValue(newDollarValue);
+    }
+  }, [value, dollarRate, isDollar]);
 
   const switchCurrency = () => {
     if (!dollarRate) {

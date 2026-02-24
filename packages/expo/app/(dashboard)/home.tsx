@@ -1,8 +1,14 @@
 import deployedContracts from '@/contracts/deployedContracts';
-import { useDeployedContractInfo, useNetwork } from '@/hooks/eth-mobile';
+import {
+  useDeployedContractInfo,
+  useNetwork,
+  useReadContract,
+  useScaffoldReadContract
+} from '@/hooks/eth-mobile';
 import { client } from '@/modules/providers/Thirdweb';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
+import { InterfaceAbi } from 'ethers';
 import { Link } from 'expo-router';
 import { useMemo } from 'react';
 import {
@@ -17,24 +23,41 @@ import { getContract, prepareContractCall } from 'thirdweb';
 import { defineChain } from 'thirdweb/chains';
 import {
   ConnectButton,
-  useReadContract,
+  useActiveAccount,
   useSendTransaction
 } from 'thirdweb/react';
 
 function YourContractReads({
-  contract
+  contract,
+  abi
 }: {
   contract: ReturnType<typeof getContract>;
+  abi: InterfaceAbi;
 }) {
+  const account = useActiveAccount();
+  const address = contract.address as string;
+  const enable = !!address && !!abi;
+
   const {
     data: greeting,
     isLoading: greetingLoading,
     error: greetingError,
     refetch: refetchGreeting
-  } = useReadContract({
-    contract,
-    method: 'function greeting() view returns (string)',
-    params: []
+  } = useScaffoldReadContract({
+    contractName: 'YourContract',
+    functionName: 'greeting',
+    args: [account?.address as `0x${string}`]
+  });
+
+  const {
+    data: userGreetingCounter,
+    isLoading: userGreetingCounterLoading,
+    error: userGreetingCounterError
+  } = useScaffoldReadContract({
+    contractName: 'YourContract',
+    functionName: 'userGreetingCounter',
+    args: [account?.address as `0x${string}`],
+    enable: !!account?.address
   });
 
   const {
@@ -42,9 +65,10 @@ function YourContractReads({
     isLoading: counterLoading,
     error: counterError
   } = useReadContract({
-    contract,
-    method: 'function totalCounter() view returns (uint256)',
-    params: []
+    address,
+    abi,
+    functionName: 'totalCounter',
+    enable
   });
 
   const {
@@ -52,9 +76,10 @@ function YourContractReads({
     isLoading: premiumLoading,
     error: premiumError
   } = useReadContract({
-    contract,
-    method: 'function premium() view returns (bool)',
-    params: []
+    address,
+    abi,
+    functionName: 'premium',
+    enable
   });
 
   const { mutate: sendTx, isPending: isUpdatingGreeting } =
@@ -64,11 +89,11 @@ function YourContractReads({
     const tx = prepareContractCall({
       contract,
       method: 'function setGreeting(string _newGreeting)',
-      params: ['Wadup']
+      params: ['Hi']
     });
     sendTx(tx, {
       onSuccess: () => {
-        refetchGreeting();
+        refetchGreeting?.();
       }
     });
   };
@@ -91,6 +116,20 @@ function YourContractReads({
         ) : (
           <Text className="text-base font-[Poppins]">
             {greeting != null ? String(greeting) : '—'}
+          </Text>
+        )}
+      </View>
+      <View>
+        <Text className="text-sm font-[Poppins] text-gray-600">
+          userGreetingCounter
+        </Text>
+        {userGreetingCounterError ? (
+          <Text className="text-base text-red-600">
+            {String(userGreetingCounterError)}
+          </Text>
+        ) : (
+          <Text className="text-base font-[Poppins]">
+            {userGreetingCounter != null ? String(userGreetingCounter) : '—'}
           </Text>
         )}
       </View>
@@ -232,7 +271,10 @@ export default function Home() {
                 chain 31337) to see live data.
               </Text>
             ) : (
-              <YourContractReads contract={contract} />
+              <YourContractReads
+                contract={contract}
+                abi={yourContract.abi as InterfaceAbi}
+              />
             )}
           </View>
         )}

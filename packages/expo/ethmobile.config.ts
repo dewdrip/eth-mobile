@@ -37,7 +37,7 @@ const config: Config = {
   networks: {
     hardhat: {
       name: 'Hardhat',
-      provider: 'http://0.0.0.0:8545',
+      provider: 'http://172.20.10.2:8545',
       id: 31337,
       token: {
         decimals: 18,

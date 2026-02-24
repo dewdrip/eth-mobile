@@ -1,17 +1,183 @@
+import deployedContracts from '@/contracts/deployedContracts';
+import { useDeployedContractInfo, useNetwork } from '@/hooks/eth-mobile';
+import { client } from '@/modules/providers/Thirdweb';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { useMemo } from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View
+} from 'react-native';
+import { getContract, prepareContractCall } from 'thirdweb';
+import { defineChain } from 'thirdweb/chains';
+import {
+  ConnectButton,
+  useReadContract,
+  useSendTransaction
+} from 'thirdweb/react';
 
-function HighlightedText({ children }: { children: string }) {
+function YourContractReads({
+  contract
+}: {
+  contract: ReturnType<typeof getContract>;
+}) {
+  const {
+    data: greeting,
+    isLoading: greetingLoading,
+    error: greetingError,
+    refetch: refetchGreeting
+  } = useReadContract({
+    contract,
+    method: 'function greeting() view returns (string)',
+    params: []
+  });
+
+  const {
+    data: totalCounter,
+    isLoading: counterLoading,
+    error: counterError
+  } = useReadContract({
+    contract,
+    method: 'function totalCounter() view returns (uint256)',
+    params: []
+  });
+
+  const {
+    data: premium,
+    isLoading: premiumLoading,
+    error: premiumError
+  } = useReadContract({
+    contract,
+    method: 'function premium() view returns (bool)',
+    params: []
+  });
+
+  const { mutate: sendTx, isPending: isUpdatingGreeting } =
+    useSendTransaction();
+
+  const updateGreetingToWadup = () => {
+    const tx = prepareContractCall({
+      contract,
+      method: 'function setGreeting(string _newGreeting)',
+      params: ['Wadup']
+    });
+    sendTx(tx, {
+      onSuccess: () => {
+        refetchGreeting();
+      }
+    });
+  };
+
+  const loading = greetingLoading || counterLoading || premiumLoading;
+  const hasError = greetingError || counterError || premiumError;
+
+  if (loading && greeting == null && totalCounter == null && premium == null) {
+    return <ActivityIndicator size="small" color="#555" />;
+  }
+
   return (
-    <View className="bg-green-100 py-1 rounded-full px-4">
-      <Text className="text-center text-lg font-[Poppins]">{children}</Text>
+    <View className="gap-2">
+      <View>
+        <Text className="text-sm font-[Poppins] text-gray-600">greeting</Text>
+        {greetingError ? (
+          <Text className="text-base text-red-600">
+            {String(greetingError)}
+          </Text>
+        ) : (
+          <Text className="text-base font-[Poppins]">
+            {greeting != null ? String(greeting) : '—'}
+          </Text>
+        )}
+      </View>
+      <Pressable
+        onPress={updateGreetingToWadup}
+        disabled={isUpdatingGreeting}
+        className="mt-2 py-2.5 px-4 bg-black rounded-xl active:opacity-80 disabled:opacity-50"
+      >
+        {isUpdatingGreeting ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text className="text-center text-white font-[Poppins]">
+            Set greeting to &quot;Wadup&quot;
+          </Text>
+        )}
+      </Pressable>
+      <View>
+        <Text className="text-sm font-[Poppins] text-gray-600">
+          totalCounter
+        </Text>
+        {counterError ? (
+          <Text className="text-base text-red-600">{String(counterError)}</Text>
+        ) : (
+          <Text className="text-base font-[Poppins]">
+            {totalCounter != null ? String(totalCounter) : '—'}
+          </Text>
+        )}
+      </View>
+      <View>
+        <Text className="text-sm font-[Poppins] text-gray-600">premium</Text>
+        {premiumError ? (
+          <Text className="text-base text-red-600">{String(premiumError)}</Text>
+        ) : (
+          <Text className="text-base font-[Poppins]">
+            {premium != null ? String(premium) : '—'}
+          </Text>
+        )}
+      </View>
+      {hasError && (
+        <Text className="text-sm text-amber-600">
+          One or more reads failed. Switch to the correct network and try again.
+        </Text>
+      )}
     </View>
   );
 }
 
 export default function Home() {
+  const network = useNetwork();
+  const { data: yourContract, isLoading: contractLoading } =
+    useDeployedContractInfo({ contractName: 'YourContract' });
+
+  const contractAddress = yourContract?.address;
+
+  const chain = useMemo(
+    () =>
+      network?.id != null && network?.provider
+        ? defineChain({
+            id: network.id,
+            rpc: network.provider,
+            nativeCurrency: {
+              name: network.token?.symbol ?? 'ETH',
+              symbol: network.token?.symbol ?? 'ETH',
+              decimals: network.token?.decimals ?? 18
+            }
+          })
+        : null,
+    [network?.id, network?.provider, network?.token]
+  );
+
+  const contract = useMemo(
+    () =>
+      contractAddress && chain
+        ? getContract({
+            client,
+            address: contractAddress as `0x${string}`,
+            chain
+          })
+        : null,
+    [contractAddress, chain]
+  );
+
+  const showContractSection = useMemo(() => {
+    const chainIds = Object.keys(deployedContracts).map(Number);
+    return chainIds.length > 0;
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -20,7 +186,8 @@ export default function Home() {
             ETH Mobile
           </Text>
 
-          <View className="flex flex-row items-center gap-x-5">
+          <View className="flex flex-row items-center gap-x-3">
+            <ConnectButton client={client} theme="light" />
             <Link href="/debugContracts" push asChild>
               <Ionicons
                 name="bug-outline"
@@ -47,53 +214,28 @@ export default function Home() {
           </View>
         </View>
 
-        <View className="items-center p-8 gap-y-2">
-          <Text className="text-3xl text-center mb-4 font-[Poppins]">
-            The Building Blocks of Mobile dApps
-          </Text>
-
-          <Text className="text-xl font-[Poppins]">Get started by editing</Text>
-          <HighlightedText>packages/expo/app</HighlightedText>
-
-          <View className="flex-row items-center gap-x-1 max-w-full mt-2">
-            <Text className="text-lg font-[Poppins]">
-              Edit your smart contract in
+        {showContractSection && (
+          <View className="mx-4 mb-4 p-4 border border-gray-200 rounded-2xl bg-gray-50">
+            <Text className="text-lg font-[Poppins-Bold] mb-3">
+              YourContract (packages/hardhat/contracts/YourContract.sol)
             </Text>
-          </View>
-          <View className="flex-row items-center gap-x-1 max-w-full">
-            <HighlightedText>packages/hardhat/contracts</HighlightedText>
-          </View>
-        </View>
-
-        <View className="flex-1 pb-4 justify-center items-center gap-4">
-          <Link href="/debugContracts" className="w-[90%]" push>
-            <View className="items-center py-8 border w-full border-gray-300 rounded-3xl bg-white gap-4">
-              <Ionicons
-                name="bug-outline"
-                color="grey"
-                size={Device.getDeviceWidth() * 0.09}
-              />
-
-              <Text className="text-center text-xl w-[60%] font-[Poppins]">
-                Tinker with your smart contracts
+            {contractLoading ? (
+              <ActivityIndicator size="small" color="#555" />
+            ) : !yourContract ? (
+              <Text className="text-base font-[Poppins] text-gray-500">
+                Switch to a network where YourContract is deployed (e.g. local
+                chain 31337) to see live data.
               </Text>
-            </View>
-          </Link>
-
-          <Link href="/wallet" className="w-[90%]" push>
-            <View className="items-center py-8 border w-full border-gray-300 rounded-3xl bg-white gap-4">
-              <Ionicons
-                name="wallet-outline"
-                color="grey"
-                size={Device.getDeviceWidth() * 0.09}
-              />
-
-              <Text className="text-center text-xl w-[60%] font-[Poppins]">
-                Manage your accounts, funds, and tokens
+            ) : !contract ? (
+              <Text className="text-base font-[Poppins] text-gray-500">
+                Switch to a network where YourContract is deployed (e.g. local
+                chain 31337) to see live data.
               </Text>
-            </View>
-          </Link>
-        </View>
+            ) : (
+              <YourContractReads contract={contract} />
+            )}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

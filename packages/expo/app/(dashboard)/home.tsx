@@ -2,38 +2,38 @@ import deployedContracts from '@/contracts/deployedContracts';
 import {
   useAccount,
   useDeployedContractInfo,
-  useNetwork,
   useReadContract,
-  useScaffoldReadContract
+  useScaffoldReadContract,
+  useScaffoldWriteContract
 } from '@/hooks/eth-mobile';
 import { client } from '@/modules/providers/Thirdweb';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
 import { InterfaceAbi } from 'ethers';
 import { Link } from 'expo-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
   SafeAreaView,
   ScrollView,
   Text,
+  TextInput,
   View
 } from 'react-native';
-import { getContract, prepareContractCall } from 'thirdweb';
-import { defineChain } from 'thirdweb/chains';
-import { ConnectButton, useSendTransaction } from 'thirdweb/react';
+import { ConnectButton } from 'thirdweb/react';
 
 function YourContractReads({
-  contract,
+  address,
   abi
 }: {
-  contract: ReturnType<typeof getContract>;
+  address: string;
   abi: InterfaceAbi;
 }) {
   const account = useAccount();
-  const address = contract.address as string;
   const enable = !!address && !!abi;
+
+  const [greetingInput, setGreetingInput] = useState('');
 
   const {
     data: greeting,
@@ -43,7 +43,7 @@ function YourContractReads({
   } = useScaffoldReadContract({
     contractName: 'YourContract',
     functionName: 'greeting',
-    args: [account?.address as `0x${string}`]
+    enable
   });
 
   const {
@@ -53,43 +53,44 @@ function YourContractReads({
   } = useScaffoldReadContract({
     contractName: 'YourContract',
     functionName: 'userGreetingCounter',
-    args: [account?.address as `0x${string}`]
+    args: account?.address ? [account.address as `0x${string}`] : undefined,
+    enable: enable && !!account?.address
   });
 
   const {
     data: totalCounter,
     isLoading: counterLoading,
     error: counterError
-  } = useScaffoldReadContract({
-    contractName: 'YourContract',
+  } = useReadContract({
+    address,
+    abi,
     functionName: 'totalCounter',
-    args: [account?.address as `0x${string}`]
+    enable
   });
 
   const {
     data: premium,
     isLoading: premiumLoading,
     error: premiumError
-  } = useScaffoldReadContract({
-    contractName: 'YourContract',
+  } = useReadContract({
+    address,
+    abi,
     functionName: 'premium',
-    args: [account?.address as `0x${string}`]
+    enable
   });
 
-  const { mutate: sendTx, isPending: isUpdatingGreeting } =
-    useSendTransaction();
+  const { writeContractAsync, isLoading: isUpdatingGreeting } =
+    useScaffoldWriteContract({
+      contractName: 'YourContract'
+    });
 
-  const updateGreetingToWadup = () => {
-    const tx = prepareContractCall({
-      contract,
-      method: 'function setGreeting(string _newGreeting)',
-      params: ['Hi']
+  const setGreeting = async () => {
+    await writeContractAsync({
+      functionName: 'setGreeting',
+      args: [greetingInput.trim() || 'Hello World!']
     });
-    sendTx(tx, {
-      onSuccess: () => {
-        refetchGreeting?.();
-      }
-    });
+    refetchGreeting?.();
+    setGreetingInput('');
   };
 
   const loading =
@@ -119,6 +120,32 @@ function YourContractReads({
         )}
       </View>
       <View>
+        <Text className="text-sm font-[Poppins] text-gray-600 mb-1">
+          New greeting
+        </Text>
+        <TextInput
+          value={greetingInput}
+          onChangeText={setGreetingInput}
+          placeholder="Enter greeting..."
+          placeholderTextColor="#999"
+          className="border border-gray-300 rounded-xl px-3 py-2.5 text-base font-[Poppins] bg-white"
+          editable={!isUpdatingGreeting}
+        />
+        <Pressable
+          onPress={setGreeting}
+          disabled={isUpdatingGreeting}
+          className="mt-2 py-2.5 px-4 bg-black rounded-xl active:opacity-80 disabled:opacity-50"
+        >
+          {isUpdatingGreeting ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text className="text-center text-white font-[Poppins]">
+              Set greeting
+            </Text>
+          )}
+        </Pressable>
+      </View>
+      <View>
         <Text className="text-sm font-[Poppins] text-gray-600">
           userGreetingCounter
         </Text>
@@ -132,19 +159,6 @@ function YourContractReads({
           </Text>
         )}
       </View>
-      <Pressable
-        onPress={updateGreetingToWadup}
-        disabled={isUpdatingGreeting}
-        className="mt-2 py-2.5 px-4 bg-black rounded-xl active:opacity-80 disabled:opacity-50"
-      >
-        {isUpdatingGreeting ? (
-          <ActivityIndicator size="small" color="#fff" />
-        ) : (
-          <Text className="text-center text-white font-[Poppins]">
-            Set greeting to &quot;Wadup&quot;
-          </Text>
-        )}
-      </Pressable>
       <View>
         <Text className="text-sm font-[Poppins] text-gray-600">
           totalCounter
@@ -177,39 +191,8 @@ function YourContractReads({
 }
 
 export default function Home() {
-  const network = useNetwork();
   const { data: yourContract, isLoading: contractLoading } =
     useDeployedContractInfo({ contractName: 'YourContract' });
-
-  const contractAddress = yourContract?.address;
-
-  const chain = useMemo(
-    () =>
-      network?.id != null && network?.provider
-        ? defineChain({
-            id: network.id,
-            rpc: network.provider,
-            nativeCurrency: {
-              name: network.token?.symbol ?? 'ETH',
-              symbol: network.token?.symbol ?? 'ETH',
-              decimals: network.token?.decimals ?? 18
-            }
-          })
-        : null,
-    [network?.id, network?.provider, network?.token]
-  );
-
-  const contract = useMemo(
-    () =>
-      contractAddress && chain
-        ? getContract({
-            client,
-            address: contractAddress as `0x${string}`,
-            chain
-          })
-        : null,
-    [contractAddress, chain]
-  );
 
   const showContractSection = useMemo(() => {
     const chainIds = Object.keys(deployedContracts).map(Number);
@@ -264,14 +247,9 @@ export default function Home() {
                 Switch to a network where YourContract is deployed (e.g. local
                 chain 31337) to see live data.
               </Text>
-            ) : !contract ? (
-              <Text className="text-base font-[Poppins] text-gray-500">
-                Switch to a network where YourContract is deployed (e.g. local
-                chain 31337) to see live data.
-              </Text>
             ) : (
               <YourContractReads
-                contract={contract}
+                address={yourContract.address}
                 abi={yourContract.abi as InterfaceAbi}
               />
             )}

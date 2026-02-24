@@ -38,7 +38,10 @@ type AbiFunctionFragment = {
  * Build Thirdweb method signature string from ABI and function name.
  * e.g. "function greeting() view returns (string)"
  */
-function getMethodSignature(abi: InterfaceAbi, functionName: string): string {
+export function getMethodSignature(
+  abi: InterfaceAbi,
+  functionName: string
+): string {
   const fragments = Array.isArray(abi) ? abi : [];
   const fragment = fragments.find(
     (item: AbiFunctionFragment) =>

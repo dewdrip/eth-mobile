@@ -1,16 +1,15 @@
-import { useTransactions } from '@/modules/wallet/transactions/hooks/useTransactions';
-import { Account } from '@/store/reducers/Wallet';
-import { getParsedError, parseFloat } from '@/utils/eth-mobile';
-import { useRoute } from '@react-navigation/native';
+import { client } from '@/modules/providers/Thirdweb';
+import { getParsedError } from '@/utils/eth-mobile';
 import { Abi } from 'abitype';
-import { Contract, InterfaceAbi, JsonRpcProvider, Wallet } from 'ethers';
-import { usePathname } from 'expo-router';
-import { useState } from 'react';
-import { useModal } from 'react-native-modalfy';
+import { InterfaceAbi } from 'ethers';
+import { useCallback, useMemo } from 'react';
 import { useToast } from 'react-native-toast-notifications';
-import { useSelector } from 'react-redux';
-import { Address, formatEther, TransactionReceipt } from 'viem';
+import { getContract, prepareContractCall } from 'thirdweb';
+import { defineChain } from 'thirdweb/chains';
+import { useSendTransaction } from 'thirdweb/react';
+import { TransactionReceipt } from 'viem';
 import { useAccount, useNetwork } from '.';
+import { getMethodSignature } from './useReadContract';
 
 interface UseWriteContractConfig {
   abi: Abi;
@@ -19,172 +18,128 @@ interface UseWriteContractConfig {
   gasLimit?: bigint;
 }
 
-interface WriteContractArgs {
+export interface WriteContractArgs {
   functionName: string;
   args?: any[];
   value?: bigint;
 }
 
 /**
- * Hook for writing to smart contracts
+ * Hook for writing to smart contracts using Thirdweb.
+ * Requires an active account (ConnectButton); no modal – the wallet handles signing.
+ *
  * @param config - The config settings
- * @param config.abi - contract abi
+ * @param config.abi - contract ABI
  * @param config.address - contract address
- * @param config.blockConfirmations - number of block confirmations to wait for (default: 1)
- * @param config.gasLimit - transaction gas limit
+ * @param config.blockConfirmations - reserved for compatibility (Thirdweb handles confirmation)
+ * @param config.gasLimit - optional gas limit for the transaction
  */
 export function useWriteContract({
   abi,
   address,
-  blockConfirmations,
+  blockConfirmations: _blockConfirmations,
   gasLimit
 }: UseWriteContractConfig) {
-  const _gasLimit = gasLimit || BigInt(1000000);
-
-  const { openModal } = useModal();
   const network = useNetwork();
   const toast = useToast();
-  const connectedAccount = useAccount();
-  const wallet = useSelector((state: any) => state.wallet);
-  const route = useRoute();
-  const pathname = usePathname();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isMining, setIsMining] = useState(false);
+  const account = useAccount();
 
-  const { addTx } = useTransactions();
+  const chain = useMemo(
+    () =>
+      network?.id != null && network?.provider
+        ? defineChain({
+            id: network.id,
+            rpc: network.provider,
+            nativeCurrency: {
+              name: network.token?.symbol ?? 'ETH',
+              symbol: network.token?.symbol ?? 'ETH',
+              decimals: network.token?.decimals ?? 18
+            }
+          })
+        : defineChain(1),
+    [network?.id, network?.provider, network?.token]
+  );
 
-  const executeTransaction = async ({
-    functionName,
-    args = [],
-    value = BigInt(0)
-  }: WriteContractArgs): Promise<TransactionReceipt> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const provider = new JsonRpcProvider(network.provider);
+  const contract = useMemo(
+    () =>
+      address && chain
+        ? getContract({
+            client,
+            address: address as `0x${string}`,
+            chain
+          })
+        : null,
+    [address, chain]
+  );
 
-        const activeAccount = wallet.accounts.find(
-          (account: Account) =>
-            account.address.toLowerCase() ===
-            connectedAccount?.address.toLowerCase()
-        );
+  const { mutate: sendTx, isPending } = useSendTransaction();
 
-        if (!activeAccount) {
-          openModal('PromptWalletCreationModal', {
-            sourceScreen: pathname,
-            sourceParams: route.params
-          });
-          reject(null);
+  const executeTransaction = useCallback(
+    ({
+      functionName,
+      args = [],
+      value = BigInt(0)
+    }: WriteContractArgs): Promise<TransactionReceipt> => {
+      return new Promise((resolve, reject) => {
+        if (!account?.address) {
+          toast.show('Connect a wallet to continue', { type: 'danger' });
+          reject(new Error('No wallet connected'));
+          return;
         }
-
-        const activeWallet = new Wallet(activeAccount.privateKey, provider);
-        const contract = new Contract(
-          address,
-          abi as InterfaceAbi,
-          activeWallet
-        );
-
-        openModal('SignTransactionModal', {
-          contract,
-          contractAddress: address,
-          functionName,
-          args,
-          value,
-          gasLimit: _gasLimit,
-          onConfirm,
-          onReject
-        });
-      } catch (error) {
-        reject(error);
-      }
-
-      function onReject() {
-        reject('Transaction Rejected!');
-      }
-
-      async function onConfirm() {
-        setIsLoading(true);
-        setIsMining(true);
+        if (!contract) {
+          reject(new Error('Contract not configured'));
+          return;
+        }
+        const method = getMethodSignature(abi as InterfaceAbi, functionName);
+        if (!method) {
+          reject(new Error(`Unknown function: ${functionName}`));
+          return;
+        }
         try {
-          const provider = new JsonRpcProvider(network.provider);
-
-          const activeAccount = wallet.accounts.find(
-            (account: Account) =>
-              account.address.toLowerCase() ===
-              connectedAccount?.address.toLowerCase()
-          );
-
-          const activeWallet = new Wallet(activeAccount.privateKey, provider);
-          const contract = new Contract(
-            address,
-            abi as InterfaceAbi,
-            activeWallet
-          );
-
-          const tx = await contract[functionName](...args, {
-            value,
-            gasLimit: _gasLimit
+          const transaction = prepareContractCall({
+            contract,
+            method,
+            params: args,
+            ...(value > 0n && { value })
+          } as any);
+          sendTx(transaction, {
+            onSuccess: (result: unknown) => {
+              toast.show('Transaction successful!', { type: 'success' });
+              resolve(result as TransactionReceipt);
+            },
+            onError: (error: unknown) => {
+              const parsed = getParsedError(error);
+              reject(parsed);
+            }
           });
-
-          const receipt = await tx.wait(blockConfirmations || 1);
-
-          // Add transaction to Redux store
-          const gasFee = receipt?.gasUsed
-            ? receipt.gasUsed * receipt.gasPrice
-            : 0n;
-          const transaction = {
-            type: 'contract',
-            title: `${functionName}`,
-            hash: tx.hash,
-            value: parseFloat(formatEther(tx.value), 8).toString(),
-            timestamp: Date.now(),
-            from: tx.from as Address,
-            to: tx.to as Address,
-            nonce: tx.nonce,
-            gasFee: parseFloat(formatEther(BigInt(gasFee)), 8).toString(),
-            total: parseFloat(formatEther(tx.value + gasFee), 8).toString()
-          };
-
-          // @ts-ignore
-          addTx(transaction);
-
-          toast.show('Transaction Successful!', {
-            type: 'success'
-          });
-          resolve(receipt);
         } catch (error) {
           reject(getParsedError(error));
-        } finally {
-          setIsLoading(false);
-          setIsMining(false);
         }
-      }
-    });
-  };
-
-  /**
-   * Write to contract without returning a promise
-   */
-  const writeContract = (args: WriteContractArgs) => {
-    executeTransaction(args).catch(error => {
-      console.error('Transaction failed: ', getParsedError(error));
-      toast.show(getParsedError(error), {
-        type: 'danger'
       });
-    });
-  };
+    },
+    [account?.address, contract, abi, sendTx, toast]
+  );
 
-  /**
-   * Write to contract and return a promise
-   */
-  const writeContractAsync = (
-    args: WriteContractArgs
-  ): Promise<TransactionReceipt> => {
-    return executeTransaction(args);
-  };
+  const writeContract = useCallback(
+    (args: WriteContractArgs) => {
+      executeTransaction(args).catch(error => {
+        console.error('Transaction failed:', getParsedError(error));
+        toast.show(getParsedError(error), { type: 'danger' });
+      });
+    },
+    [executeTransaction, toast]
+  );
+
+  const writeContractAsync = useCallback(
+    (args: WriteContractArgs): Promise<TransactionReceipt> => {
+      return executeTransaction(args);
+    },
+    [executeTransaction]
+  );
 
   return {
-    isLoading,
-    isMining,
+    isLoading: isPending,
+    isMining: isPending,
     writeContract,
     writeContractAsync
   };

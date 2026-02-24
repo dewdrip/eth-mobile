@@ -1,5 +1,6 @@
 import deployedContracts from '@/contracts/deployedContracts';
 import {
+  useAccount,
   useDeployedContractInfo,
   useNetwork,
   useReadContract,
@@ -21,11 +22,7 @@ import {
 } from 'react-native';
 import { getContract, prepareContractCall } from 'thirdweb';
 import { defineChain } from 'thirdweb/chains';
-import {
-  ConnectButton,
-  useActiveAccount,
-  useSendTransaction
-} from 'thirdweb/react';
+import { ConnectButton, useSendTransaction } from 'thirdweb/react';
 
 function YourContractReads({
   contract,
@@ -34,7 +31,7 @@ function YourContractReads({
   contract: ReturnType<typeof getContract>;
   abi: InterfaceAbi;
 }) {
-  const account = useActiveAccount();
+  const account = useAccount();
   const address = contract.address as string;
   const enable = !!address && !!abi;
 
@@ -56,30 +53,27 @@ function YourContractReads({
   } = useScaffoldReadContract({
     contractName: 'YourContract',
     functionName: 'userGreetingCounter',
-    args: [account?.address as `0x${string}`],
-    enable: !!account?.address
+    args: [account?.address as `0x${string}`]
   });
 
   const {
     data: totalCounter,
     isLoading: counterLoading,
     error: counterError
-  } = useReadContract({
-    address,
-    abi,
+  } = useScaffoldReadContract({
+    contractName: 'YourContract',
     functionName: 'totalCounter',
-    enable
+    args: [account?.address as `0x${string}`]
   });
 
   const {
     data: premium,
     isLoading: premiumLoading,
     error: premiumError
-  } = useReadContract({
-    address,
-    abi,
+  } = useScaffoldReadContract({
+    contractName: 'YourContract',
     functionName: 'premium',
-    enable
+    args: [account?.address as `0x${string}`]
   });
 
   const { mutate: sendTx, isPending: isUpdatingGreeting } =
@@ -98,8 +92,13 @@ function YourContractReads({
     });
   };
 
-  const loading = greetingLoading || counterLoading || premiumLoading;
-  const hasError = greetingError || counterError || premiumError;
+  const loading =
+    greetingLoading ||
+    counterLoading ||
+    premiumLoading ||
+    userGreetingCounterLoading;
+  const hasError =
+    greetingError || counterError || premiumError || userGreetingCounterError;
 
   if (loading && greeting == null && totalCounter == null && premium == null) {
     return <ActivityIndicator size="small" color="#555" />;

@@ -4,6 +4,7 @@ import { PaperProvider } from 'react-native-paper';
 import { MenuProvider } from 'react-native-popup-menu';
 import Modals from './modals';
 import Store from './store';
+import Thirdweb from './Thirdweb';
 import Toast from './Toast';
 
 const theme = {
@@ -19,15 +20,17 @@ const theme = {
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <Store>
-      <Toast>
-        <PaperProvider theme={theme}>
-          <MenuProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <Modals>{children}</Modals>
-            </GestureHandlerRootView>
-          </MenuProvider>
-        </PaperProvider>
-      </Toast>
+      <Thirdweb>
+        <Toast>
+          <PaperProvider theme={theme}>
+            <MenuProvider>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Modals>{children}</Modals>
+              </GestureHandlerRootView>
+            </MenuProvider>
+          </PaperProvider>
+        </Toast>
+      </Thirdweb>
     </Store>
   );
 }

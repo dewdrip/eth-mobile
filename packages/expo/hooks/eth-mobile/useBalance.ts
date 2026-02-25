@@ -1,75 +1,73 @@
-import { getParsedError } from '@/utils/eth-mobile';
-import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
+import { client } from '@/modules/providers/Thirdweb';
+import { useMemo } from 'react';
+import { defineChain } from 'thirdweb/chains';
+import { useWalletBalance } from 'thirdweb/react';
 import { useNetwork } from '.';
 
 interface UseBalanceConfig {
   address: string;
+  /** Optional: fetch a specific ERC20 token balance. Omit for native token. */
+  tokenAddress?: `0x${string}` | string;
   watch?: boolean;
 }
 
 /**
+ * Returns the balance of an address in native token (or optional ERC20) using Thirdweb.
  *
  * @param config - The config settings
  * @param config.address - account address
- * @param config.watch - watch for balance changes
+ * @param config.tokenAddress - optional token address for ERC20 balance
+ * @param config.watch - when true, refetch balance on an interval
  */
-export function useBalance({ address, watch = false }: UseBalanceConfig) {
+export function useBalance({
+  address,
+  tokenAddress,
+  watch = false
+}: UseBalanceConfig) {
   const network = useNetwork();
 
-  const [balance, setBalance] = useState<bigint | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRefetching, setIsRefetching] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const chain = useMemo(
+    () =>
+      network?.id != null && network?.provider
+        ? defineChain({
+            id: network.id,
+            rpc: network.provider,
+            nativeCurrency: {
+              name: network.token?.symbol ?? 'ETH',
+              symbol: network.token?.symbol ?? 'ETH',
+              decimals: network.token?.decimals ?? 18
+            }
+          })
+        : undefined,
+    [network?.id, network?.provider, network?.token]
+  );
 
-  async function getBalance() {
-    setIsLoading(true);
-
-    try {
-      const provider = new ethers.JsonRpcProvider(network.provider);
-      const balance = await provider.getBalance(address);
-
-      setBalance(balance);
-
-      if (error) {
-        setError(null);
-      }
-    } catch (error) {
-      setError(getParsedError(error));
-    } finally {
-      setIsLoading(false);
+  const result = useWalletBalance(
+    {
+      client,
+      chain,
+      address: address || undefined,
+      tokenAddress: tokenAddress as `0x${string}` | undefined
+    },
+    {
+      refetchInterval: watch ? 15_000 : undefined
     }
-  }
+  );
 
-  async function refetch() {
-    setIsRefetching(true);
-    await getBalance();
-    setIsRefetching(false);
-  }
-
-  useEffect(() => {
-    const provider = new ethers.JsonRpcProvider(network.provider);
-
-    provider.off('block');
-
-    getBalance();
-
-    if (watch) {
-      provider.on('block', blockNumber => {
-        getBalance();
-      });
-    }
-
-    return () => {
-      provider.off('block');
-    };
-  }, [address, network, watch]);
+  const balance =
+    result.data?.value != null ? (result.data.value as bigint) : null;
+  const error = result.error
+    ? String(result.error.message ?? result.error)
+    : null;
 
   return {
     balance,
-    refetch,
-    isLoading,
-    isRefetching,
-    error
+    refetch: result.refetch,
+    isLoading: result.isLoading,
+    isRefetching: result.isRefetching ?? false,
+    error,
+    /** Thirdweb result: formatted display value and symbol (e.g. "0.5", "ETH") */
+    displayValue: result.data?.displayValue,
+    symbol: result.data?.symbol
   };
 }

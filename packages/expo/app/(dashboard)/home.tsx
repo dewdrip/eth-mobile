@@ -1,6 +1,7 @@
 import deployedContracts from '@/contracts/deployedContracts';
 import {
   useAccount,
+  useBalance,
   useDeployedContractInfo,
   useReadContract,
   useScaffoldContractEvent,
@@ -302,8 +303,15 @@ function YourContractReads(props: { address: string; abi: InterfaceAbi }) {
 }
 
 export default function Home() {
+  const account = useAccount();
   const { data: yourContract, isLoading: contractLoading } =
     useDeployedContractInfo({ contractName: 'YourContract' });
+
+  const {
+    isLoading: balanceLoading,
+    displayValue,
+    symbol
+  } = useBalance({ address: account?.address ?? '' });
 
   const showContractSection = useMemo(() => {
     const chainIds = Object.keys(deployedContracts).map(Number);
@@ -314,9 +322,22 @@ export default function Home() {
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex flex-row items-center justify-between px-4 py-2">
-          <Text className="text-2xl font-bold font-[Poppins-Bold]">
-            ETH Mobile
-          </Text>
+          <View className="flex flex-col gap-0.5">
+            <Text className="text-2xl font-bold font-[Poppins-Bold]">
+              ETH Mobile
+            </Text>
+            {account?.address && (
+              <View className="flex flex-row items-center gap-1.5">
+                {balanceLoading ? (
+                  <ActivityIndicator size="small" color="#555" />
+                ) : displayValue != null && symbol ? (
+                  <Text className="text-sm font-[Poppins] text-gray-600">
+                    {Number(displayValue).toFixed(4)} {symbol}
+                  </Text>
+                ) : null}
+              </View>
+            )}
+          </View>
 
           <View className="flex flex-row items-center gap-x-3">
             <ConnectButton client={client} theme="light" />

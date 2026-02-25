@@ -6,7 +6,8 @@ import {
   useReadContract,
   useScaffoldContractEvent,
   useScaffoldReadContract,
-  useScaffoldWriteContract
+  useScaffoldWriteContract,
+  useSignMessage
 } from '@/hooks/eth-mobile';
 import { client } from '@/modules/providers/Thirdweb';
 import Device from '@/utils/device';
@@ -313,6 +314,9 @@ export default function Home() {
     symbol
   } = useBalance({ address: account?.address ?? '' });
 
+  const [signMessageInput, setSignMessageInput] = useState('');
+  const { sign, signature, error: signError, isSigning } = useSignMessage();
+
   const showContractSection = useMemo(() => {
     const chainIds = Object.keys(deployedContracts).map(Number);
     return chainIds.length > 0;
@@ -366,6 +370,54 @@ export default function Home() {
             </Link>
           </View>
         </View>
+
+        {account?.address && (
+          <View className="mx-4 mb-4 p-4 border border-gray-200 rounded-2xl bg-gray-50">
+            <Text className="text-lg font-[Poppins-Bold] mb-3">
+              Sign message (Thirdweb)
+            </Text>
+            <TextInput
+              className="mb-3 rounded-lg border border-gray-200 bg-white px-3 py-2 text-base font-[Poppins] text-gray-800"
+              placeholder="Enter message to sign..."
+              placeholderTextColor="#9ca3af"
+              value={signMessageInput}
+              onChangeText={setSignMessageInput}
+              editable={!isSigning}
+            />
+            <Pressable
+              onPress={() => sign(signMessageInput)}
+              disabled={isSigning || !signMessageInput.trim()}
+              className="mb-3 rounded-lg bg-gray-800 py-2.5 active:opacity-80 disabled:opacity-50"
+            >
+              {isSigning ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text className="text-center font-[Poppins-SemiBold] text-white">
+                  Sign message
+                </Text>
+              )}
+            </Pressable>
+            {signError && (
+              <Text className="mb-2 text-sm font-[Poppins] text-red-600">
+                {signError}
+              </Text>
+            )}
+            {signature && (
+              <View className="rounded-lg bg-gray-100 p-2">
+                <Text className="text-xs font-[Poppins] text-gray-500">
+                  Signature
+                </Text>
+                <Text
+                  className="text-sm font-[Poppins] text-gray-800"
+                  numberOfLines={3}
+                  ellipsizeMode="middle"
+                >
+                  {signature}
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
 
         {showContractSection && (
           <View className="mx-4 mb-4 p-4 border border-gray-200 rounded-2xl bg-gray-50">

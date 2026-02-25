@@ -17,10 +17,10 @@ export const useDeployedContractInfo = (
 ) => {
   const isMounted = useIsMounted();
   const network = useNetwork();
-  const { contractName, chainId } = config;
+  const { contractName, chainId } = config ?? {};
 
   // Use provided chainId or fall back to current network
-  const targetNetworkId = chainId ?? network.id;
+  const targetNetworkId = chainId ?? network?.id;
   const deployedContract = contracts?.[targetNetworkId]?.[contractName];
   const [status, setStatus] = useState<ContractCodeStatus>(
     ContractCodeStatus.LOADING

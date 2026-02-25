@@ -3,6 +3,7 @@ import {
   useAccount,
   useDeployedContractInfo,
   useReadContract,
+  useScaffoldContractEvent,
   useScaffoldReadContract,
   useScaffoldWriteContract
 } from '@/hooks/eth-mobile';
@@ -23,17 +24,24 @@ import {
 } from 'react-native';
 import { ConnectButton } from 'thirdweb/react';
 
-function YourContractReads({
-  address,
-  abi
-}: {
-  address: string;
-  abi: InterfaceAbi;
-}) {
+function YourContractReads(props: { address: string; abi: InterfaceAbi }) {
+  if (!props?.address) return null;
+  const { address, abi } = props;
   const account = useAccount();
-  const enable = !!address && !!abi;
+  const enabled = !!address && !!abi;
 
   const [greetingInput, setGreetingInput] = useState('');
+
+  const {
+    data: greetingChangeEvents,
+    isLoading: eventsLoading,
+    error: eventsError,
+    refetch: refetchEvents
+  } = useScaffoldContractEvent({
+    contractName: 'YourContract',
+    eventName: 'GreetingChange',
+    fromBlock: 0n
+  });
 
   const {
     data: greeting,
@@ -43,7 +51,7 @@ function YourContractReads({
   } = useScaffoldReadContract({
     contractName: 'YourContract',
     functionName: 'greeting',
-    enable
+    enabled
   });
 
   const {
@@ -54,7 +62,7 @@ function YourContractReads({
     contractName: 'YourContract',
     functionName: 'userGreetingCounter',
     args: account?.address ? [account.address as `0x${string}`] : undefined,
-    enable: enable && !!account?.address
+    enabled: enabled && !!account?.address
   });
 
   const {
@@ -65,7 +73,7 @@ function YourContractReads({
     address,
     abi,
     functionName: 'totalCounter',
-    enable
+    enabled
   });
 
   const {
@@ -76,7 +84,7 @@ function YourContractReads({
     address,
     abi,
     functionName: 'premium',
-    enable
+    enabled
   });
 
   const { writeContractAsync, isLoading: isUpdatingGreeting } =
@@ -90,6 +98,7 @@ function YourContractReads({
       args: [greetingInput.trim() || 'Hello World!']
     });
     refetchGreeting?.();
+    refetchEvents?.();
     setGreetingInput('');
   };
 
@@ -181,6 +190,108 @@ function YourContractReads({
           </Text>
         )}
       </View>
+
+      <View className="mt-3 pt-3 border-t border-gray-200">
+        <Text className="text-sm font-[Poppins-Bold] text-gray-700 mb-2">
+          GreetingChange events (Thirdweb)
+        </Text>
+        {(() => {
+          const eventsList = (greetingChangeEvents ?? []) as any[];
+          if (eventsLoading && eventsList.length === 0) {
+            return <ActivityIndicator size="small" color="#555" />;
+          }
+          if (eventsError) {
+            return (
+              <Text className="text-sm text-red-600">
+                {String(eventsError)}
+              </Text>
+            );
+          }
+          if (eventsList.length === 0) {
+            return (
+              <Text className="text-sm font-[Poppins] text-gray-500">
+                No GreetingChange events yet.
+              </Text>
+            );
+          }
+          return (
+            <View className="gap-3">
+              {[...eventsList].reverse().map((event: any, index: number) => {
+                const args = event.args ?? {};
+                const blockNumber = event.blockNumber ?? event.log?.blockNumber;
+                const txHash =
+                  event.transactionHash ?? event.log?.transactionHash;
+                const logIndex = event.logIndex ?? event.log?.logIndex ?? index;
+                const key = txHash ? `${txHash}-${logIndex}` : `event-${index}`;
+                const argEntries = Object.entries(args);
+                return (
+                  <View
+                    key={key}
+                    className="p-3 bg-white rounded-lg border border-gray-200"
+                  >
+                    {(blockNumber != null || txHash) && (
+                      <View className="mb-2 pb-2 border-b border-gray-100">
+                        {blockNumber != null && (
+                          <Text className="text-xs font-[Poppins] text-gray-500">
+                            Block: {String(blockNumber)}
+                          </Text>
+                        )}
+                        {txHash && (
+                          <Text
+                            className="text-xs font-[Poppins] text-gray-500 mt-0.5"
+                            numberOfLines={1}
+                            ellipsizeMode="middle"
+                          >
+                            Tx: {String(txHash)}
+                          </Text>
+                        )}
+                      </View>
+                    )}
+                    <Text className="text-xs font-[Poppins-Bold] text-gray-600 mb-1.5">
+                      Event params
+                    </Text>
+                    <View className="gap-1">
+                      {argEntries.length > 0 ? (
+                        argEntries.map(([paramName, paramValue]) => {
+                          const displayValue =
+                            paramValue != null && typeof paramValue === 'bigint'
+                              ? paramValue.toString()
+                              : String(paramValue ?? '—');
+                          const isAddress =
+                            typeof paramValue === 'string' &&
+                            paramValue.startsWith('0x') &&
+                            paramValue.length === 42;
+                          const shortValue = isAddress
+                            ? `${displayValue.slice(0, 6)}...${displayValue.slice(-4)}`
+                            : displayValue;
+                          return (
+                            <View
+                              key={paramName}
+                              className="flex-row flex-wrap gap-x-2"
+                            >
+                              <Text className="text-xs font-[Poppins] text-gray-500 min-w-[120px]">
+                                {paramName}:
+                              </Text>
+                              <Text className="text-xs font-[Poppins] text-gray-800 flex-1">
+                                {shortValue}
+                              </Text>
+                            </View>
+                          );
+                        })
+                      ) : (
+                        <Text className="text-xs font-[Poppins] text-gray-500">
+                          No params
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          );
+        })()}
+      </View>
+
       {hasError && (
         <Text className="text-sm text-amber-600">
           One or more reads failed. Switch to the correct network and try again.
@@ -247,11 +358,16 @@ export default function Home() {
                 Switch to a network where YourContract is deployed (e.g. local
                 chain 31337) to see live data.
               </Text>
-            ) : (
+            ) : yourContract?.address && yourContract?.abi ? (
               <YourContractReads
                 address={yourContract.address}
                 abi={yourContract.abi as InterfaceAbi}
               />
+            ) : (
+              <Text className="text-base font-[Poppins] text-gray-500">
+                Switch to a network where YourContract is deployed (e.g. local
+                chain 31337) to see live data.
+              </Text>
             )}
           </View>
         )}

@@ -6,7 +6,7 @@ type Props = {
   contractName: string;
   functionName: string;
   args?: any[];
-  enable?: boolean;
+  enabled?: boolean;
   watch?: boolean;
 };
 
@@ -25,7 +25,7 @@ type ReadContractResult = any | any[] | null;
  * @param config.contractName - deployed contract name
  * @param config.functionName - name of the function to be called
  * @param config.args - args to be passed to the function call (Optional)
- * @param config.enable - enable the contract read (Optional)
+ * @param config.enabled - enable the contract read (Optional)
  * @param config.watch - watch the contract read (Optional)
  */
 export function useScaffoldReadContract({
@@ -33,7 +33,7 @@ export function useScaffoldReadContract({
   functionName,
   args,
   watch,
-  enable = true
+  enabled = true
 }: Props) {
   const {
     data: deployedContractData,
@@ -53,7 +53,7 @@ export function useScaffoldReadContract({
     abi: deployedContractData?.abi as InterfaceAbi | undefined,
     functionName,
     args,
-    enable: enable && !!deployedContractData,
+    enabled: enabled && !!deployedContractData,
     watch
   });
 

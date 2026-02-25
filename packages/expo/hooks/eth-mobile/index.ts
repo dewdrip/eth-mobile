@@ -9,7 +9,7 @@ export * from './useDeployedContractInfo';
 export * from './useNetwork';
 export * from './useERC721Metadata';
 export * from './useScaffoldContract';
-export * from './useScaffoldEventHistory';
+export * from './useScaffoldContractEvent';
 export * from './useScaffoldReadContract';
 export * from './useScaffoldWriteContract';
 export * from './useSecureStorage';

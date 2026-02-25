@@ -11,13 +11,15 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDeployedContractInfo, useNetwork } from '.';
 
-interface UseScaffoldEventHistoryConfig<
+interface UseScaffoldContractEventConfig<
   TContractName extends ContractName,
   TEventName extends string
 > {
   contractName: TContractName;
   eventName: TEventName;
   fromBlock: bigint;
+  /** Optional end block (inclusive). If omitted, uses current block when fetching. */
+  toBlock?: bigint;
   filters?: Record<string, any>;
   blockData?: boolean;
   transactionData?: boolean;
@@ -26,7 +28,7 @@ interface UseScaffoldEventHistoryConfig<
   enabled?: boolean;
 }
 
-interface EventData {
+interface ContractEventData {
   log: Log;
   blockData?: Block | null;
   transactionData?: TransactionResponse | null;
@@ -35,14 +37,14 @@ interface EventData {
   eventName?: string;
 }
 
-interface EventHistoryState {
-  data: EventData[] | undefined;
+interface ContractEventState {
+  data: ContractEventData[] | undefined;
   status: 'idle' | 'pending' | 'error' | 'success';
   error: Error | null;
   isLoading: boolean;
 }
 
-const getEvents = async (
+const getContractEvents = async (
   provider: JsonRpcProvider,
   contractAddress: string,
   fromBlock: bigint,
@@ -53,7 +55,7 @@ const getEvents = async (
     transactionData?: boolean;
     receiptData?: boolean;
   }
-): Promise<EventData[]> => {
+): Promise<ContractEventData[]> => {
   try {
     // Convert filters to ethers format
     const ethersFilters: any = {};
@@ -77,7 +79,7 @@ const getEvents = async (
 
     const finalEvents = await Promise.all(
       logs.map(async log => {
-        const eventData: EventData = { log };
+        const eventData: ContractEventData = { log };
 
         if (options?.blockData && log.blockHash) {
           try {
@@ -127,7 +129,7 @@ const getEvents = async (
  * @example
  * ```tsx
  * // Basic usage with Staker contract Stake event
- * const { data: events, isLoading, error } = useScaffoldEventHistory({
+ * const { data: events, isLoading, error } = useScaffoldContractEvent({
  *   contractName: "Staker",
  *   eventName: "Stake",
  *   fromBlock: 0n,
@@ -143,7 +145,7 @@ const getEvents = async (
  * });
  *
  * // With filters
- * const { data: events } = useScaffoldEventHistory({
+ * const { data: events } = useScaffoldContractEvent({
  *   contractName: "Staker",
  *   eventName: "Stake",
  *   fromBlock: 1000n,
@@ -151,7 +153,7 @@ const getEvents = async (
  * });
  *
  * // With additional data
- * const { data: events } = useScaffoldEventHistory({
+ * const { data: events } = useScaffoldContractEvent({
  *   contractName: "Staker",
  *   eventName: "Stake",
  *   fromBlock: 0n,
@@ -161,7 +163,7 @@ const getEvents = async (
  * });
  *
  * // With watch enabled for real-time updates
- * const { data: events } = useScaffoldEventHistory({
+ * const { data: events } = useScaffoldContractEvent({
  *   contractName: "Staker",
  *   eventName: "Stake",
  *   fromBlock: 0n,
@@ -173,6 +175,7 @@ const getEvents = async (
  * @param config.contractName - deployed contract name from deployedContracts.ts
  * @param config.eventName - name of the event to listen for
  * @param config.fromBlock - the block number to start reading events from
+ * @param config.toBlock - optional block number to stop reading events at (inclusive). If omitted, uses current block.
  * @param config.filters - filters to be applied to the event (parameterName: value)
  * @param config.blockData - if set to true it will return the block data for each event (default: false)
  * @param config.transactionData - if set to true it will return the transaction data for each event (default: false)
@@ -188,22 +191,23 @@ const getEvents = async (
  * - isFetchingNewEvent: Boolean indicating if fetching new events
  * - refetch: Function to manually refetch the data
  */
-export const useScaffoldEventHistory = <
+export const useScaffoldContractEvent = <
   TContractName extends ContractName,
   TEventName extends string
 >({
   contractName,
   eventName,
   fromBlock,
+  toBlock: toBlockOverride,
   filters,
   blockData = false,
   transactionData = false,
   receiptData = false,
   watch = false,
   enabled = true
-}: UseScaffoldEventHistoryConfig<TContractName, TEventName>) => {
+}: UseScaffoldContractEventConfig<TContractName, TEventName>) => {
   const network = useNetwork();
-  const [state, setState] = useState<EventHistoryState>({
+  const [state, setState] = useState<ContractEventState>({
     data: undefined,
     status: 'idle',
     error: null,
@@ -230,15 +234,17 @@ export const useScaffoldEventHistory = <
 
     try {
       const currentBlockNumber = BigInt(await provider.getBlockNumber());
-
-      const toBlock = currentBlockNumber;
+      const toBlockToUse =
+        toBlockOverride != null && toBlockOverride >= 0n
+          ? toBlockOverride
+          : currentBlockNumber;
       const fromBlockToUse = lastFetchedBlock.current;
 
-      const data = await getEvents(
+      const data = await getContractEvents(
         provider,
         String(deployedContractData.address),
         fromBlockToUse,
-        toBlock,
+        toBlockToUse,
         filters,
         { blockData, transactionData, receiptData }
       );
@@ -289,6 +295,7 @@ export const useScaffoldEventHistory = <
     provider,
     eventName,
     fromBlock,
+    toBlockOverride,
     filters,
     blockData,
     transactionData,
@@ -337,7 +344,7 @@ export const useScaffoldEventHistory = <
  * @returns Event data with parsed arguments
  */
 export const addIndexedArgsToEvent = (
-  event: EventData,
+  event: ContractEventData,
   contractInterface?: Interface,
   eventName?: string
 ) => {

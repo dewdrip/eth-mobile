@@ -12,7 +12,7 @@ interface UseReadContractConfig {
   address?: string;
   functionName?: string;
   args?: any[];
-  enable?: boolean;
+  enabled?: boolean;
   watch?: boolean;
   onError?: (error: any) => void;
 }
@@ -65,7 +65,7 @@ export function useReadContract({
   address,
   functionName,
   args,
-  enable = true,
+  enabled = true,
   watch = false,
   onError
 }: Partial<UseReadContractConfig> = {}) {
@@ -104,7 +104,7 @@ export function useReadContract({
   );
 
   const queryEnabled =
-    enable &&
+    enabled &&
     !!address &&
     !!chain &&
     !!methodSignature &&

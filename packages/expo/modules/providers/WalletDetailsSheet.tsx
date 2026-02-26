@@ -1,5 +1,5 @@
 import { Address } from '@/components/eth-mobile';
-import { useBalance, useClipboard } from '@/hooks/eth-mobile';
+import { useBalance, useClipboard, useNetwork } from '@/hooks/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetView, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import React from 'react';
@@ -21,6 +21,7 @@ export default function WalletDetailsSheet() {
     symbol,
     isLoading: balanceLoading
   } = useBalance({ address: account?.address ?? '', watch: true });
+  const network = useNetwork();
 
   if (!account?.address) return null;
 
@@ -76,7 +77,7 @@ export default function WalletDetailsSheet() {
         <Pressable className="flex-row items-center py-3.5 gap-3 border-b border-gray-100">
           <Ionicons name="diamond-outline" size={20} color="#374151" />
           <Text className="flex-1 text-base font-[Poppins] text-gray-700">
-            Ethereum
+            {network.name}
           </Text>
           <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
         </Pressable>

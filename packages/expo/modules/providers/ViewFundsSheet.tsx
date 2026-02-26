@@ -143,7 +143,7 @@ export default function ViewFundsSheet() {
           <Pressable onPress={() => dismiss()} hitSlop={12}>
             <Ionicons name="arrow-back" size={24} color="#374151" />
           </Pressable>
-          <Text className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-gray-900 text-center">
+          <Text className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-gray-900 text-center ml-12">
             View Funds
           </Text>
           <Pressable onPress={() => openAddToken?.()} hitSlop={12}>

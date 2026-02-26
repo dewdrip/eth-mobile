@@ -76,13 +76,13 @@ export default function NetworkSelectSheet() {
     <BottomSheetScrollView className="flex-1 bg-white">
       <View className="pb-8">
         <View className="flex-row items-center px-4 pt-2 pb-4 border-b border-gray-100">
-          <Pressable onPress={() => dismiss()} hitSlop={12} className="p-2">
+          <Pressable onPress={() => dismiss()} hitSlop={12}>
             <Ionicons name="arrow-back" size={24} color="#374151" />
           </Pressable>
-          <Text className="flex-1 text-lg font-[Poppins-SemiBold] text-gray-900 text-center">
+          <Text className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-gray-900 text-center mr-6">
             Select Network
           </Text>
-          <View className="w-10" />
+          <View />
         </View>
 
         <View className="px-4 pt-2">

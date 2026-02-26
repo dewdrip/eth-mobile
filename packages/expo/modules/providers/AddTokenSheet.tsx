@@ -114,6 +114,11 @@ export default function AddTokenSheet() {
             autoCapitalize="none"
             autoCorrect={false}
           />
+          {addressInput.trim().length > 0 && !isAddress(addressInput.trim()) ? (
+            <Text className="mt-1.5 text-sm font-[Poppins] text-red-600">
+              Invalid address
+            </Text>
+          ) : null}
           <Pressable
             onPress={handleLookup}
             disabled={!canLookup || isLoading}

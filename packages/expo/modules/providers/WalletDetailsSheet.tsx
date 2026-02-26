@@ -25,7 +25,8 @@ export default function WalletDetailsSheet() {
   if (!account?.address) return null;
 
   const handleDisconnect = () => {
-    if (wallet) disconnect(wallet);
+    if (!wallet) return;
+    disconnect(wallet);
     dismiss();
   };
 
@@ -92,9 +93,8 @@ export default function WalletDetailsSheet() {
         >
           <Ionicons name="log-out-outline" size={20} color="#374151" />
           <Text className="flex-1 text-base font-[Poppins] text-gray-700">
-            Disconnect Wallet
+            Disconnect
           </Text>
-          <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
         </Pressable>
       </View>
     </BottomSheetView>

@@ -1,5 +1,6 @@
 import { Address } from '@/components/eth-mobile';
 import { useBalance, useClipboard, useNetwork } from '@/hooks/eth-mobile';
+import { useWalletContext } from '@/modules/providers/WalletProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetView, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import React from 'react';
@@ -13,6 +14,7 @@ import {
 
 export default function WalletDetailsSheet() {
   const { dismiss } = useBottomSheetModal();
+  const { openViewFunds } = useWalletContext() ?? {};
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
@@ -81,7 +83,10 @@ export default function WalletDetailsSheet() {
           </Text>
           <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
         </Pressable>
-        <Pressable className="flex-row items-center py-3.5 gap-3 border-b border-gray-100">
+        <Pressable
+          className="flex-row items-center py-3.5 gap-3 border-b border-gray-100"
+          onPress={() => openViewFunds?.()}
+        >
           <Ionicons name="wallet-outline" size={20} color="#374151" />
           <Text className="flex-1 text-base font-[Poppins] text-gray-700">
             View Funds

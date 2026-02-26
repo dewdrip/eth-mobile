@@ -3,14 +3,19 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider
 } from '@gorhom/bottom-sheet';
-import React, { createContext, useCallback, useRef } from 'react';
+import React, { createContext, useCallback, useMemo, useRef } from 'react';
 import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Blobbie, ConnectButton, useActiveAccount } from 'thirdweb/react';
 import { client } from './Thirdweb';
+import ViewFundsSheet from './ViewFundsSheet';
 import WalletDetailsSheet from './WalletDetailsSheet';
 
-const WalletContext = createContext<Record<string, never> | null>(null);
+type WalletContextValue = {
+  openViewFunds: () => void;
+};
+
+const WalletContext = createContext<WalletContextValue | null>(null);
 
 export function useWalletContext() {
   const ctx = React.useContext(WalletContext);
@@ -64,11 +69,21 @@ export default function WalletProvider({
   children: React.ReactNode;
 }) {
   const walletSheetRef = useRef<BottomSheetModal>(null);
+  const viewFundsSheetRef = useRef<BottomSheetModal>(null);
   const snapPoints = ['60%'];
 
   const handleOpenWalletDetails = useCallback(() => {
     walletSheetRef.current?.present();
   }, []);
+
+  const openViewFunds = useCallback(() => {
+    viewFundsSheetRef.current?.present();
+  }, []);
+
+  const contextValue = useMemo<WalletContextValue>(
+    () => ({ openViewFunds }),
+    [openViewFunds]
+  );
 
   const renderBackdrop = useCallback(
     (props: React.ComponentProps<typeof BottomSheetBackdrop>) => (
@@ -85,7 +100,7 @@ export default function WalletProvider({
   );
 
   return (
-    <WalletContext.Provider value={{}}>
+    <WalletContext.Provider value={contextValue}>
       <BottomSheetModalProvider>
         <SafeAreaView style={{ flex: 1 }}>
           <WalletTrigger onOpenWalletDetails={handleOpenWalletDetails} />
@@ -98,6 +113,14 @@ export default function WalletProvider({
           backdropComponent={renderBackdrop}
         >
           <WalletDetailsSheet />
+        </BottomSheetModal>
+        <BottomSheetModal
+          ref={viewFundsSheetRef}
+          snapPoints={['70%']}
+          enableDynamicSizing={false}
+          backdropComponent={renderBackdrop}
+        >
+          <ViewFundsSheet />
         </BottomSheetModal>
       </BottomSheetModalProvider>
     </WalletContext.Provider>

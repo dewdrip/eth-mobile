@@ -6,6 +6,7 @@ import Modals from './modals';
 import Store from './store';
 import Thirdweb from './Thirdweb';
 import Toast from './Toast';
+import WalletProvider from './WalletProvider';
 
 const theme = {
   colors: {
@@ -25,7 +26,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           <PaperProvider theme={theme}>
             <MenuProvider>
               <GestureHandlerRootView style={{ flex: 1 }}>
-                <Modals>{children}</Modals>
+                <WalletProvider>{children}</WalletProvider>
               </GestureHandlerRootView>
             </MenuProvider>
           </PaperProvider>

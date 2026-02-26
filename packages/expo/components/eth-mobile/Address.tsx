@@ -11,6 +11,7 @@ type Props = {
   textStyle?: TextStyle;
   iconStyle?: TextStyle;
   copyable?: boolean;
+  showBlockie?: boolean;
 };
 
 export function Address({
@@ -18,13 +19,14 @@ export function Address({
   containerStyle,
   textStyle,
   iconStyle,
-  copyable = true
+  copyable = true,
+  showBlockie = true
 }: Props) {
   const { copy, isCopied } = useClipboard();
 
   return (
     <View className="flex-row items-center gap-x-2" style={containerStyle}>
-      <Blockie address={address} size={1.3 * 24} />
+      {showBlockie && <Blockie address={address} size={1.3 * 24} />}
       <Text className="text-lg font-[Poppins]" style={textStyle}>
         {truncateAddress(address)}
       </Text>

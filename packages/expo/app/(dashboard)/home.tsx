@@ -344,7 +344,6 @@ export default function Home() {
           </View>
 
           <View className="flex flex-row items-center gap-x-3">
-            <ConnectButton client={client} theme="light" />
             <Link href="/debugContracts" push asChild>
               <Ionicons
                 name="bug-outline"
@@ -418,6 +417,16 @@ export default function Home() {
             )}
           </View>
         )}
+
+        <View className="mx-4 mb-4 p-4 border border-gray-200 rounded-2xl bg-gray-50">
+          <ConnectButton
+            client={client}
+            theme="light"
+            connectButton={{
+              label: 'Connect'
+            }}
+          />
+        </View>
 
         {showContractSection && (
           <View className="mx-4 mb-4 p-4 border border-gray-200 rounded-2xl bg-gray-50">

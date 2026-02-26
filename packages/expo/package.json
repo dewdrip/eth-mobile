@@ -31,6 +31,7 @@
   "dependencies": {
     "@coinbase/wallet-mobile-sdk": "^1.1.2",
     "@expo/vector-icons": "^14.1.0",
+    "@gorhom/bottom-sheet": "^5",
     "@react-native-async-storage/async-storage": "^3.0.1",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/blur": "^4.4.1",

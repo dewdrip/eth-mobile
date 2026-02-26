@@ -46,6 +46,18 @@ export function parseBalance(value: bigint, decimals: number = 18): string {
 }
 
 /**
+ * Formats a balance for display: "0" when zero, otherwise up to 4 decimals with trailing zeros removed.
+ */
+export function formatBalanceDisplay(
+  value: string | number | null | undefined
+): string {
+  if (value == null) return '0';
+  const n = Number(value);
+  if (!Number.isFinite(n) || n === 0) return '0';
+  return n.toFixed(4).replace(/\.?0+$/, '') || '0';
+}
+
+/**
  * Converts a blockchain timestamp (BigInt) to a human-readable relative time format.
  *
  * @param timestamp - The UNIX timestamp in milliseconds (BigInt or number).

@@ -1,4 +1,5 @@
 import { useAccount, useBalance } from '@/hooks/eth-mobile';
+import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
   BottomSheetScrollView,
@@ -81,8 +82,7 @@ function TokenRow({
           <View className="h-4 w-20 rounded bg-gray-200 mt-0.5" />
         ) : (
           <Text className="text-sm font-[Poppins] text-gray-500">
-            {displayValue != null ? Number(displayValue).toFixed(4) : '0'}{' '}
-            {resolvedSymbol ?? symbol}
+            {formatBalanceDisplay(displayValue)} {resolvedSymbol ?? symbol}
           </Text>
         )}
       </View>

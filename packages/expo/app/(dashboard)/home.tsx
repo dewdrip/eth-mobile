@@ -11,6 +11,7 @@ import {
 } from '@/hooks/eth-mobile';
 import { client } from '@/modules/providers/Thirdweb';
 import Device from '@/utils/device';
+import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import { InterfaceAbi } from 'ethers';
 import { Link } from 'expo-router';
@@ -336,7 +337,7 @@ export default function Home() {
                   <ActivityIndicator size="small" color="#555" />
                 ) : displayValue != null && symbol ? (
                   <Text className="text-sm font-[Poppins] text-gray-600">
-                    {Number(displayValue).toFixed(4)} {symbol}
+                    {formatBalanceDisplay(displayValue)} {symbol}
                   </Text>
                 ) : null}
               </View>

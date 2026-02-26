@@ -1,6 +1,7 @@
 import { Address } from '@/components/eth-mobile';
 import { useBalance, useClipboard, useNetwork } from '@/hooks/eth-mobile';
 import { useWalletContext } from '@/modules/providers/WalletProvider';
+import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetView, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import React from 'react';
@@ -54,8 +55,7 @@ export default function WalletDetailsSheet() {
           <ActivityIndicator size="small" color="#374151" />
         ) : (
           <Text className="text-base font-[Poppins-SemiBold] text-gray-900">
-            {displayValue != null ? Number(displayValue).toFixed(4) : '0'}{' '}
-            {symbol ?? 'ETH'}
+            {formatBalanceDisplay(displayValue)} {symbol ?? 'ETH'}
           </Text>
         )}
       </View>

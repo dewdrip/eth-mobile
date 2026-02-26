@@ -52,7 +52,7 @@ const config: Config = {
       name: 'Ethereum',
       provider: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`,
       id: 1,
-      icon: 'https://icons.llama.fi/ethereum.png',
+      icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
       token: {
         decimals: 18,
         symbol: 'ETH'
@@ -64,6 +64,7 @@ const config: Config = {
       name: 'Sepolia',
       provider: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 11155111,
+      icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
       token: {
         decimals: 18,
         symbol: 'ETH'
@@ -75,7 +76,7 @@ const config: Config = {
       name: 'Arbitrum',
       provider: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 42161,
-      icon: 'https://icons.llama.fi/arbitrum.png',
+      icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png',
       token: {
         decimals: 18,
         symbol: 'ETH'
@@ -87,6 +88,7 @@ const config: Config = {
       name: 'Arbitrum Goerli',
       provider: `https://arb-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 421613,
+      icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png',
       token: {
         decimals: 18,
         symbol: 'ETH'
@@ -98,7 +100,7 @@ const config: Config = {
       name: 'Optimism',
       provider: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 10,
-      icon: 'https://icons.llama.fi/optimism.png',
+      icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png',
       token: {
         decimals: 18,
         symbol: 'ETH'
@@ -110,6 +112,7 @@ const config: Config = {
       name: 'Optimism Goerli',
       provider: `https://opt-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 420,
+      icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png',
       token: {
         decimals: 18,
         symbol: 'ETH'
@@ -121,7 +124,7 @@ const config: Config = {
       name: 'Polygon',
       provider: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 137,
-      icon: 'https://icons.llama.fi/polygon.png',
+      icon: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
       token: {
         decimals: 18,
         symbol: 'MATIC'
@@ -133,6 +136,7 @@ const config: Config = {
       name: 'Polygon Mumbai',
       provider: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 80001,
+      icon: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
       token: {
         decimals: 18,
         symbol: 'MATIC'

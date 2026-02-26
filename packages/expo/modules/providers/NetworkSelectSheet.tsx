@@ -31,20 +31,20 @@ function NetworkRow({
       className="flex-row items-center py-4 border-b border-gray-100"
       onPress={onSelect}
     >
-      <View className="w-10 h-10 rounded-full bg-gray-200 items-center justify-center overflow-hidden">
-        {showIcon ? (
-          <Image
-            source={{ uri: network.icon }}
-            className="w-10 h-10"
-            resizeMode="cover"
-            onError={() => setIconError(true)}
-          />
-        ) : (
+      {showIcon ? (
+        <Image
+          source={{ uri: network.icon }}
+          className="w-10 h-10"
+          resizeMode="cover"
+          onError={() => setIconError(true)}
+        />
+      ) : (
+        <View className="w-10 h-10 rounded-full bg-gray-200 items-center justify-center overflow-hidden">
           <Text className="text-sm font-[Poppins-SemiBold] text-gray-600">
             {networkInitials(network.name)}
           </Text>
-        )}
-      </View>
+        </View>
+      )}
       <View className="flex-1 ml-3">
         <Text className="text-base font-[Poppins-SemiBold] text-gray-900">
           {network.name}

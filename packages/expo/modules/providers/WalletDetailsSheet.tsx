@@ -87,19 +87,19 @@ export default function WalletDetailsSheet() {
           className="flex-row items-center py-3.5 gap-3 border-b border-gray-100"
           onPress={() => openNetworkSelect?.()}
         >
-          <View className="w-8 h-8 rounded-full bg-gray-200 items-center justify-center overflow-hidden">
-            {network.icon ? (
-              <Image
-                source={{ uri: network.icon }}
-                className="w-10 h-10"
-                resizeMode="cover"
-              />
-            ) : (
+          {network.icon ? (
+            <Image
+              source={{ uri: network.icon }}
+              className="w-8 h-8"
+              resizeMode="cover"
+            />
+          ) : (
+            <View className="w-8 h-8 rounded-full bg-gray-200 items-center justify-center overflow-hidden">
               <Text className="text-xs font-[Poppins-SemiBold] text-gray-600">
                 {networkInitials(network.name)}
               </Text>
-            )}
-          </View>
+            </View>
+          )}
           <Text className="flex-1 text-base font-[Poppins] text-gray-700">
             {network.name}
           </Text>

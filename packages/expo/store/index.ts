@@ -10,35 +10,18 @@ import {
   REGISTER,
   REHYDRATE
 } from 'redux-persist';
-import Accounts from './reducers/Accounts';
-import Auth from './reducers/Auth';
 import ConnectedNetwork from './reducers/ConnectedNetwork';
-import Navigation from './reducers/Navigation';
-import NFTs from './reducers/NFTs';
-import Recipients from './reducers/Recipients';
-import Settings from './reducers/Settings';
 import Tokens from './reducers/Tokens';
-import Transactions from './reducers/Transactions';
-import Wallet from './reducers/Wallet';
 
 const persistConfig = {
   key: 'root',
   version: 1,
-  storage: AsyncStorage,
-  blacklist: ['wallet', 'navigation']
+  storage: AsyncStorage
 };
 
 const reducers = combineReducers({
-  auth: Auth,
   connectedNetwork: ConnectedNetwork,
-  accounts: Accounts,
-  transactions: Transactions,
-  recipients: Recipients,
-  tokens: Tokens,
-  nfts: NFTs,
-  wallet: Wallet,
-  settings: Settings,
-  navigation: Navigation
+  tokens: Tokens
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

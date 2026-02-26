@@ -234,6 +234,7 @@ export default function SendFundsSheet() {
             onChange={setRecipient}
             placeholder="0x... / ENS name"
             containerClassName="mb-0"
+            scan
           />
         </View>
 

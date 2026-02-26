@@ -111,7 +111,7 @@ export function AddressInput({
             <MaterialIcons
               name="qr-code-scanner"
               size={Device.getDeviceWidth() * 0.075}
-              color="black"
+              color="#555"
             />
           </Pressable>
         )}

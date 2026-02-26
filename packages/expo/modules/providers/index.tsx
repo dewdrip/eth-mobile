@@ -26,7 +26,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           <PaperProvider theme={theme}>
             <MenuProvider>
               <GestureHandlerRootView style={{ flex: 1 }}>
-                <WalletProvider>{children}</WalletProvider>
+                <Modals>
+                  <WalletProvider>{children}</WalletProvider>
+                </Modals>
               </GestureHandlerRootView>
             </MenuProvider>
           </PaperProvider>

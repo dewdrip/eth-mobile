@@ -15,7 +15,8 @@ import {
 
 export default function WalletDetailsSheet() {
   const { dismiss } = useBottomSheetModal();
-  const { openViewFunds, openReceive } = useWalletContext() ?? {};
+  const { openViewFunds, openReceive, openSendFunds } =
+    useWalletContext() ?? {};
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
@@ -61,7 +62,10 @@ export default function WalletDetailsSheet() {
       </View>
 
       <View className="flex-row gap-3 mb-6">
-        <Pressable className="flex-1 flex-row items-center justify-center gap-2 py-3.5 rounded-xl border border-gray-200 bg-white">
+        <Pressable
+          className="flex-1 flex-row items-center justify-center gap-2 py-3.5 rounded-xl border border-gray-200 bg-white"
+          onPress={() => openSendFunds?.()}
+        >
           <Ionicons name="paper-plane-outline" size={18} color="#374151" />
           <Text className="text-[15px] font-[Poppins-SemiBold] text-gray-700">
             Send

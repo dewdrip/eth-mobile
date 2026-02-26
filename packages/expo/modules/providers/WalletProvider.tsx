@@ -8,13 +8,21 @@ import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Blobbie, ConnectButton, useActiveAccount } from 'thirdweb/react';
 import ReceiveSheet from './ReceiveSheet';
+import SendFundsSheet from './SendFundsSheet';
 import { client } from './Thirdweb';
+import TokenPickerSheet from './TokenPickerSheet';
+import type { SendToken } from './tokens';
 import ViewFundsSheet from './ViewFundsSheet';
 import WalletDetailsSheet from './WalletDetailsSheet';
 
 type WalletContextValue = {
   openViewFunds: () => void;
   openReceive: () => void;
+  openSendFunds: () => void;
+  openTokenPicker: (onSelect: (token: SendToken) => void) => void;
+  tokenPickerOnSelectRef: React.MutableRefObject<
+    ((token: SendToken) => void) | null
+  >;
 };
 
 const WalletContext = createContext<WalletContextValue | null>(null);
@@ -73,6 +81,11 @@ export default function WalletProvider({
   const walletSheetRef = useRef<BottomSheetModal>(null);
   const viewFundsSheetRef = useRef<BottomSheetModal>(null);
   const receiveSheetRef = useRef<BottomSheetModal>(null);
+  const sendFundsSheetRef = useRef<BottomSheetModal>(null);
+  const tokenPickerSheetRef = useRef<BottomSheetModal>(null);
+  const tokenPickerOnSelectRef = useRef<((token: SendToken) => void) | null>(
+    null
+  );
   const snapPoints = ['60%'];
 
   const handleOpenWalletDetails = useCallback(() => {
@@ -87,9 +100,27 @@ export default function WalletProvider({
     receiveSheetRef.current?.present();
   }, []);
 
+  const openSendFunds = useCallback(() => {
+    sendFundsSheetRef.current?.present();
+  }, []);
+
+  const openTokenPicker = useCallback(
+    (onSelect: (token: SendToken) => void) => {
+      tokenPickerOnSelectRef.current = onSelect;
+      tokenPickerSheetRef.current?.present();
+    },
+    []
+  );
+
   const contextValue = useMemo<WalletContextValue>(
-    () => ({ openViewFunds, openReceive }),
-    [openViewFunds, openReceive]
+    () => ({
+      openViewFunds,
+      openReceive,
+      openSendFunds,
+      openTokenPicker,
+      tokenPickerOnSelectRef
+    }),
+    [openViewFunds, openReceive, openSendFunds, openTokenPicker]
   );
 
   const renderBackdrop = useCallback(
@@ -136,6 +167,22 @@ export default function WalletProvider({
           backdropComponent={renderBackdrop}
         >
           <ReceiveSheet />
+        </BottomSheetModal>
+        <BottomSheetModal
+          ref={sendFundsSheetRef}
+          snapPoints={['75%']}
+          enableDynamicSizing={false}
+          backdropComponent={renderBackdrop}
+        >
+          <SendFundsSheet />
+        </BottomSheetModal>
+        <BottomSheetModal
+          ref={tokenPickerSheetRef}
+          snapPoints={['70%']}
+          enableDynamicSizing={false}
+          backdropComponent={renderBackdrop}
+        >
+          <TokenPickerSheet />
         </BottomSheetModal>
       </BottomSheetModalProvider>
     </WalletContext.Provider>

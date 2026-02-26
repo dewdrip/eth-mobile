@@ -64,7 +64,7 @@ export function AddressInput({
         setIsLoading(true);
 
         const provider = new JsonRpcProvider(
-          'https://eth-mainnet.alchemyapi.io/v2/K18rs5rCTi1A-RDyPUw92tvL7I2cGVUB'
+          'https://eth-mainnet.g.alchemy.com/v2/_yem4FCVzmN6wbB44mPtF'
         );
 
         const address = await provider.resolveName(value);

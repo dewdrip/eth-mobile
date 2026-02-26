@@ -1,4 +1,5 @@
 import { useAccount, useBalance } from '@/hooks/eth-mobile';
+import { useWalletContext } from '@/modules/providers/WalletProvider';
 import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -7,16 +8,14 @@ import {
 } from '@gorhom/bottom-sheet';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { DEFAULT_TOKENS } from './tokens';
+import { DEFAULT_TOKENS, type SendToken } from './tokens';
 
 function TokenRow({
-  name,
-  symbol,
-  tokenAddress
+  token,
+  onSelect
 }: {
-  name: string;
-  symbol: string;
-  tokenAddress?: `0x${string}`;
+  token: SendToken;
+  onSelect: () => void;
 }) {
   const account = useAccount();
   const {
@@ -25,34 +24,45 @@ function TokenRow({
     isLoading
   } = useBalance({
     address: account?.address ?? '',
-    tokenAddress
+    tokenAddress: token.tokenAddress
   });
 
   return (
-    <View className="flex-row items-center py-4 border-b border-gray-100">
+    <Pressable
+      className="flex-row items-center py-4 border-b border-gray-100"
+      onPress={onSelect}
+    >
       <View className="w-10 h-10 rounded-full bg-gray-200 items-center justify-center">
         <Text className="text-sm font-[Poppins-SemiBold] text-gray-600">
-          {symbol.slice(0, 2)}
+          {token.symbol.slice(0, 2)}
         </Text>
       </View>
       <View className="flex-1 ml-3">
         <Text className="text-base font-[Poppins-SemiBold] text-gray-900">
-          {name}
+          {token.name}
         </Text>
         {isLoading ? (
           <View className="h-4 w-20 rounded bg-gray-200 mt-0.5" />
         ) : (
           <Text className="text-sm font-[Poppins] text-gray-500">
-            {formatBalanceDisplay(displayValue)} {resolvedSymbol ?? symbol}
+            {formatBalanceDisplay(displayValue)}{' '}
+            {resolvedSymbol ?? token.symbol}
           </Text>
         )}
       </View>
-    </View>
+      <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+    </Pressable>
   );
 }
 
-export default function ViewFundsSheet() {
+export default function TokenPickerSheet() {
   const { dismiss } = useBottomSheetModal();
+  const { tokenPickerOnSelectRef } = useWalletContext() ?? {};
+
+  const handleSelect = (token: SendToken) => {
+    tokenPickerOnSelectRef?.current?.(token);
+    dismiss();
+  };
 
   return (
     <BottomSheetScrollView className="flex-1 bg-white">
@@ -62,7 +72,7 @@ export default function ViewFundsSheet() {
             <Ionicons name="arrow-back" size={24} color="#374151" />
           </Pressable>
           <Text className="flex-1 text-lg font-[Poppins-SemiBold] text-gray-900 text-center">
-            View Funds
+            Token to Send
           </Text>
           <View className="w-10" />
         </View>
@@ -71,9 +81,8 @@ export default function ViewFundsSheet() {
           {DEFAULT_TOKENS.map(token => (
             <TokenRow
               key={token.id}
-              name={token.name}
-              symbol={token.symbol}
-              tokenAddress={token.tokenAddress}
+              token={token}
+              onSelect={() => handleSelect(token)}
             />
           ))}
         </View>

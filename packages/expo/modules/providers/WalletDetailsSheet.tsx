@@ -14,7 +14,7 @@ import {
 
 export default function WalletDetailsSheet() {
   const { dismiss } = useBottomSheetModal();
-  const { openViewFunds } = useWalletContext() ?? {};
+  const { openViewFunds, openReceive } = useWalletContext() ?? {};
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
@@ -67,7 +67,10 @@ export default function WalletDetailsSheet() {
             Send
           </Text>
         </Pressable>
-        <Pressable className="flex-1 flex-row items-center justify-center gap-2 py-3.5 rounded-xl border border-gray-200 bg-white">
+        <Pressable
+          className="flex-1 flex-row items-center justify-center gap-2 py-3.5 rounded-xl border border-gray-200 bg-white"
+          onPress={() => openReceive?.()}
+        >
           <Ionicons name="download-outline" size={18} color="#374151" />
           <Text className="text-[15px] font-[Poppins-SemiBold] text-gray-700">
             Receive

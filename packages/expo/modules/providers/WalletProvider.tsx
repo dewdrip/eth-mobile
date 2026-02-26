@@ -7,12 +7,14 @@ import React, { createContext, useCallback, useMemo, useRef } from 'react';
 import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Blobbie, ConnectButton, useActiveAccount } from 'thirdweb/react';
+import ReceiveSheet from './ReceiveSheet';
 import { client } from './Thirdweb';
 import ViewFundsSheet from './ViewFundsSheet';
 import WalletDetailsSheet from './WalletDetailsSheet';
 
 type WalletContextValue = {
   openViewFunds: () => void;
+  openReceive: () => void;
 };
 
 const WalletContext = createContext<WalletContextValue | null>(null);
@@ -70,6 +72,7 @@ export default function WalletProvider({
 }) {
   const walletSheetRef = useRef<BottomSheetModal>(null);
   const viewFundsSheetRef = useRef<BottomSheetModal>(null);
+  const receiveSheetRef = useRef<BottomSheetModal>(null);
   const snapPoints = ['60%'];
 
   const handleOpenWalletDetails = useCallback(() => {
@@ -80,9 +83,13 @@ export default function WalletProvider({
     viewFundsSheetRef.current?.present();
   }, []);
 
+  const openReceive = useCallback(() => {
+    receiveSheetRef.current?.present();
+  }, []);
+
   const contextValue = useMemo<WalletContextValue>(
-    () => ({ openViewFunds }),
-    [openViewFunds]
+    () => ({ openViewFunds, openReceive }),
+    [openViewFunds, openReceive]
   );
 
   const renderBackdrop = useCallback(
@@ -121,6 +128,14 @@ export default function WalletProvider({
           backdropComponent={renderBackdrop}
         >
           <ViewFundsSheet />
+        </BottomSheetModal>
+        <BottomSheetModal
+          ref={receiveSheetRef}
+          snapPoints={['75%']}
+          enableDynamicSizing={false}
+          backdropComponent={renderBackdrop}
+        >
+          <ReceiveSheet />
         </BottomSheetModal>
       </BottomSheetModalProvider>
     </WalletContext.Provider>

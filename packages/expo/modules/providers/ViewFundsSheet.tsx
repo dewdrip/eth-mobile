@@ -96,16 +96,14 @@ export default function ViewFundsSheet() {
   return (
     <BottomSheetScrollView className="flex-1 bg-white">
       <View className="pb-8">
-        <View className="flex-row items-center justify-between px-4 pt-2 pb-4 border-b border-gray-100">
+        <View className="flex-row items-center px-4 pt-2 pb-4 border-b border-gray-100">
           <Pressable onPress={() => dismiss()} hitSlop={12} className="p-2">
             <Ionicons name="arrow-back" size={24} color="#374151" />
           </Pressable>
-          <Text className="text-lg font-[Poppins-SemiBold] text-gray-900">
+          <Text className="flex-1 text-lg font-[Poppins-SemiBold] text-gray-900 text-center">
             View Funds
           </Text>
-          <Pressable onPress={() => dismiss()} hitSlop={12} className="p-2">
-            <Ionicons name="close" size={24} color="#374151" />
-          </Pressable>
+          <View className="w-10" />
         </View>
 
         <View className="px-4 pt-2">

@@ -1,25 +1,27 @@
 import { useAccount, useBalance } from '@/hooks/eth-mobile';
-import { getStorageKey } from '@/store/reducers/Tokens';
+import { getStorageKey, removeToken } from '@/store/reducers/Tokens';
 import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
   BottomSheetScrollView,
   useBottomSheetModal
 } from '@gorhom/bottom-sheet';
-import React, { useMemo } from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useMemo } from 'react';
+import { Alert, Pressable, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { DEFAULT_TOKENS, type SendToken } from './tokens';
 import { useWalletContext } from './WalletProvider';
 
 function TokenRow({
   name,
   symbol,
-  tokenAddress
+  tokenAddress,
+  onRemove
 }: {
   name: string;
   symbol: string;
   tokenAddress?: `0x${string}`;
+  onRemove?: () => void;
 }) {
   const account = useAccount();
   const {
@@ -30,6 +32,14 @@ function TokenRow({
     address: account?.address ?? '',
     tokenAddress
   });
+
+  const handleRemovePress = useCallback(() => {
+    if (!onRemove) return;
+    Alert.alert('Remove token', `Remove ${name} (${symbol}) from your list?`, [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Remove', style: 'destructive', onPress: onRemove }
+    ]);
+  }, [name, symbol, onRemove]);
 
   return (
     <View className="flex-row items-center py-4 border-b border-gray-100">
@@ -50,12 +60,22 @@ function TokenRow({
           </Text>
         )}
       </View>
+      {onRemove ? (
+        <Pressable
+          onPress={handleRemovePress}
+          hitSlop={12}
+          className="p-2 -mr-2"
+        >
+          <Ionicons name="trash-outline" size={22} color="#fc5403" />
+        </Pressable>
+      ) : null}
     </View>
   );
 }
 
 export default function ViewFundsSheet() {
   const { dismiss } = useBottomSheetModal();
+  const dispatch = useDispatch();
   const { openAddToken } = useWalletContext() ?? {};
   const account = useAccount();
   const network = useSelector(
@@ -97,6 +117,25 @@ export default function ViewFundsSheet() {
     return [...DEFAULT_TOKENS, ...custom];
   }, [userTokens]);
 
+  const removableAddresses = useMemo(
+    () => new Set(userTokens.map(t => t.address.toLowerCase())),
+    [userTokens]
+  );
+
+  const handleRemoveToken = useCallback(
+    (tokenAddress: `0x${string}`) => {
+      if (!account?.address || network?.id == null) return;
+      dispatch(
+        removeToken({
+          networkId: String(network.id),
+          accountAddress: account.address,
+          tokenAddress
+        })
+      );
+    },
+    [account?.address, network?.id, dispatch]
+  );
+
   return (
     <BottomSheetScrollView className="flex-1 bg-white">
       <View className="pb-8">
@@ -121,6 +160,12 @@ export default function ViewFundsSheet() {
               name={token.name}
               symbol={token.symbol}
               tokenAddress={token.tokenAddress}
+              onRemove={
+                token.tokenAddress &&
+                removableAddresses.has(token.tokenAddress.toLowerCase())
+                  ? () => handleRemoveToken(token.tokenAddress!)
+                  : undefined
+              }
             />
           ))}
         </View>

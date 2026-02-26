@@ -2763,7 +2763,8 @@ __metadata:
     "@expo/vector-icons": ^14.1.0
     "@gorhom/bottom-sheet": ^5
     "@ianvs/prettier-plugin-sort-imports": 4.3.1
-    "@react-native-async-storage/async-storage": ^3.0.1
+    "@react-native-async-storage/async-storage": 2.1.2
+    "@react-native-async-storage/expo-with-async-storage": ^1.0.0
     "@react-native-clipboard/clipboard": ^1.16.3
     "@react-native-community/blur": ^4.4.1
     "@react-native-community/netinfo": ^12.0.1
@@ -5108,15 +5109,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-async-storage/async-storage@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "@react-native-async-storage/async-storage@npm:3.0.1"
+"@react-native-async-storage/async-storage@npm:2.1.2":
+  version: 2.1.2
+  resolution: "@react-native-async-storage/async-storage@npm:2.1.2"
   dependencies:
-    idb: 8.0.3
+    merge-options: ^3.0.4
   peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: e8a9f1cf48da0e90eb914586d59cc715523160d720354b34c0756ca84a81ce389b14169e7158b93d214c8c17235a89b360a97c327e2b8ca9ed441cacc97aad0a
+    react-native: ^0.0.0-0 || >=0.65 <1.0
+  checksum: a5c4d486e7e64067ab523b980b76cc2de5bf4b86ed410de09f2a95c3410e0c5b5be46c638a74cf5b7ed6dce10031ebac54350b498a2cb17f1a1c59347e671a73
+  languageName: node
+  linkType: hard
+
+"@react-native-async-storage/expo-with-async-storage@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@react-native-async-storage/expo-with-async-storage@npm:1.0.0"
+  peerDependencies:
+    expo: ">=53.0.0"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  checksum: c522d7294347b9bb732f3bd2af15ff1c841a8784fce95168878586c14c80041600d9f33480d4e4231c7ef2f4f4a52dcd125277b330d4cb7002e364beb08f8095
   languageName: node
   linkType: hard
 
@@ -14482,13 +14494,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idb@npm:8.0.3":
-  version: 8.0.3
-  resolution: "idb@npm:8.0.3"
-  checksum: e0f160be2b9a3b031db25a3bd134b5187f1b51d7e2cdc85a0e5ec62b0f635a7e37847d4888c9d919e7de1e9d8646a9390ce42d249b6a0b30d538c651ab1c3852
-  languageName: node
-  linkType: hard
-
 "ieee754@npm:^1.1.13, ieee754@npm:^1.1.4, ieee754@npm:^1.2.1":
   version: 1.2.1
   resolution: "ieee754@npm:1.2.1"
@@ -16586,6 +16591,15 @@ __metadata:
   version: 1.0.3
   resolution: "merge-descriptors@npm:1.0.3"
   checksum: 52117adbe0313d5defa771c9993fe081e2d2df9b840597e966aadafde04ae8d0e3da46bac7ca4efc37d4d2b839436582659cd49c6a43eacb3fe3050896a105d1
+  languageName: node
+  linkType: hard
+
+"merge-options@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "merge-options@npm:3.0.4"
+  dependencies:
+    is-plain-obj: ^2.1.0
+  checksum: d86ddb3dd6e85d558dbf25dc944f3527b6bacb944db3fdda6e84a3f59c4e4b85231095f58b835758b9a57708342dee0f8de0dffa352974a48221487fe9f4584f
   languageName: node
   linkType: hard
 

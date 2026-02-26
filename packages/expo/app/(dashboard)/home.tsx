@@ -9,7 +9,6 @@ import {
   useScaffoldWriteContract,
   useSignMessage
 } from '@/hooks/eth-mobile';
-import { client } from '@/modules/providers/Thirdweb';
 import Device from '@/utils/device';
 import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,7 +24,6 @@ import {
   TextInput,
   View
 } from 'react-native';
-import { ConnectButton } from 'thirdweb/react';
 
 function YourContractReads(props: { address: string; abi: InterfaceAbi }) {
   if (!props?.address) return null;
@@ -418,16 +416,6 @@ export default function Home() {
             )}
           </View>
         )}
-
-        <View className="mx-4 mb-4 p-4 border border-gray-200 rounded-2xl bg-gray-50">
-          <ConnectButton
-            client={client}
-            theme="light"
-            connectButton={{
-              label: 'Connect'
-            }}
-          />
-        </View>
 
         {showContractSection && (
           <View className="mx-4 mb-4 p-4 border border-gray-200 rounded-2xl bg-gray-50">

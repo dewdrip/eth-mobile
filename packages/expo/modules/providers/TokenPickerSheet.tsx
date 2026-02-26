@@ -1,13 +1,15 @@
 import { useAccount, useBalance } from '@/hooks/eth-mobile';
 import { useWalletContext } from '@/modules/providers/WalletProvider';
+import { getStorageKey } from '@/store/reducers/Tokens';
 import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
   BottomSheetScrollView,
   useBottomSheetModal
 } from '@gorhom/bottom-sheet';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import { DEFAULT_TOKENS, type SendToken } from './tokens';
 
 function TokenRow({
@@ -58,6 +60,45 @@ function TokenRow({
 export default function TokenPickerSheet() {
   const { dismiss } = useBottomSheetModal();
   const { tokenPickerOnSelectRef } = useWalletContext() ?? {};
+  const account = useAccount();
+  const network = useSelector(
+    (state: { connectedNetwork?: { id?: number } }) => state.connectedNetwork
+  );
+  const userTokens = useSelector(
+    (state: {
+      tokens: Record<
+        string,
+        Array<{
+          address: string;
+          name: string;
+          symbol: string;
+          decimals?: number;
+        }>
+      >;
+    }) => {
+      const key =
+        account?.address && network?.id != null
+          ? getStorageKey(String(network.id), account.address)
+          : null;
+      return key ? (state.tokens[key] ?? []) : [];
+    }
+  );
+
+  const tokensList: SendToken[] = useMemo(() => {
+    const defaultAddresses = new Set(
+      DEFAULT_TOKENS.map(t => t.tokenAddress?.toLowerCase()).filter(Boolean)
+    );
+    const custom = userTokens
+      .filter(t => !defaultAddresses.has(t.address.toLowerCase()))
+      .map(t => ({
+        id: t.address,
+        name: t.name,
+        symbol: t.symbol,
+        decimals: t.decimals ?? 18,
+        tokenAddress: t.address as `0x${string}`
+      }));
+    return [...DEFAULT_TOKENS, ...custom];
+  }, [userTokens]);
 
   const handleSelect = (token: SendToken) => {
     tokenPickerOnSelectRef?.current?.(token);
@@ -78,7 +119,7 @@ export default function TokenPickerSheet() {
         </View>
 
         <View className="px-4 pt-2">
-          {DEFAULT_TOKENS.map(token => (
+          {tokensList.map(token => (
             <TokenRow
               key={token.id}
               token={token}

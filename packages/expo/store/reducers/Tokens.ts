@@ -6,6 +6,7 @@ export interface Token {
   address: Address;
   name: string;
   symbol: string;
+  decimals?: number;
 }
 
 interface TokenStore {
@@ -26,8 +27,8 @@ interface RemoveTokenPayload {
 
 const initialState: TokenStore = {};
 
-// Utility function to generate a unique storage key
-const getStorageKey = (networkId: string, accountAddress: string) =>
+// Utility function to generate a unique storage key (export for selectors)
+export const getStorageKey = (networkId: string, accountAddress: string) =>
   keccak256(toUtf8Bytes(`${networkId}${accountAddress.toLowerCase()}`));
 
 const tokenSlice = createSlice({

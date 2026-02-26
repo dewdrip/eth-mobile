@@ -15,6 +15,8 @@ export type Network = {
   token: Token;
   coingeckoPriceId: string;
   blockExplorer: string | null;
+  /** Optional icon URL for the network (e.g. chain logo). Shown in network picker when set. */
+  icon?: string;
 };
 
 export type NetworkConfig = {
@@ -50,6 +52,7 @@ const config: Config = {
       name: 'Ethereum',
       provider: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`,
       id: 1,
+      icon: 'https://icons.llama.fi/ethereum.png',
       token: {
         decimals: 18,
         symbol: 'ETH'
@@ -72,6 +75,7 @@ const config: Config = {
       name: 'Arbitrum',
       provider: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 42161,
+      icon: 'https://icons.llama.fi/arbitrum.png',
       token: {
         decimals: 18,
         symbol: 'ETH'
@@ -94,6 +98,7 @@ const config: Config = {
       name: 'Optimism',
       provider: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 10,
+      icon: 'https://icons.llama.fi/optimism.png',
       token: {
         decimals: 18,
         symbol: 'ETH'
@@ -116,6 +121,7 @@ const config: Config = {
       name: 'Polygon',
       provider: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
       id: 137,
+      icon: 'https://icons.llama.fi/polygon.png',
       token: {
         decimals: 18,
         symbol: 'MATIC'

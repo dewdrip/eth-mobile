@@ -91,3 +91,12 @@ export function getTokenPrice(
   const ethAmount = amount / rate;
   return multiplyTo1e18(ethAmount);
 }
+
+// Utility function to get the initials of a network name
+export function networkInitials(name: string): string {
+  const words = name.split(/\s+/);
+  if (words.length >= 2) {
+    return (words[0][0] ?? '') + (words[1][0] ?? '');
+  }
+  return name.slice(0, 2).toUpperCase();
+}

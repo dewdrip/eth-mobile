@@ -7,6 +7,7 @@ import React, { createContext, useCallback, useMemo, useRef } from 'react';
 import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Blobbie, ConnectButton, useActiveAccount } from 'thirdweb/react';
+import NetworkSelectSheet from './NetworkSelectSheet';
 import ReceiveSheet from './ReceiveSheet';
 import SendFundsSheet from './SendFundsSheet';
 import { client } from './Thirdweb';
@@ -19,6 +20,7 @@ type WalletContextValue = {
   openViewFunds: () => void;
   openReceive: () => void;
   openSendFunds: () => void;
+  openNetworkSelect: () => void;
   openTokenPicker: (onSelect: (token: SendToken) => void) => void;
   tokenPickerOnSelectRef: React.MutableRefObject<
     ((token: SendToken) => void) | null
@@ -83,6 +85,7 @@ export default function WalletProvider({
   const receiveSheetRef = useRef<BottomSheetModal>(null);
   const sendFundsSheetRef = useRef<BottomSheetModal>(null);
   const tokenPickerSheetRef = useRef<BottomSheetModal>(null);
+  const networkSelectSheetRef = useRef<BottomSheetModal>(null);
   const tokenPickerOnSelectRef = useRef<((token: SendToken) => void) | null>(
     null
   );
@@ -104,6 +107,10 @@ export default function WalletProvider({
     sendFundsSheetRef.current?.present();
   }, []);
 
+  const openNetworkSelect = useCallback(() => {
+    networkSelectSheetRef.current?.present();
+  }, []);
+
   const openTokenPicker = useCallback(
     (onSelect: (token: SendToken) => void) => {
       tokenPickerOnSelectRef.current = onSelect;
@@ -117,10 +124,17 @@ export default function WalletProvider({
       openViewFunds,
       openReceive,
       openSendFunds,
+      openNetworkSelect,
       openTokenPicker,
       tokenPickerOnSelectRef
     }),
-    [openViewFunds, openReceive, openSendFunds, openTokenPicker]
+    [
+      openViewFunds,
+      openReceive,
+      openSendFunds,
+      openNetworkSelect,
+      openTokenPicker
+    ]
   );
 
   const renderBackdrop = useCallback(
@@ -183,6 +197,14 @@ export default function WalletProvider({
           backdropComponent={renderBackdrop}
         >
           <TokenPickerSheet />
+        </BottomSheetModal>
+        <BottomSheetModal
+          ref={networkSelectSheetRef}
+          snapPoints={['70%']}
+          enableDynamicSizing={false}
+          backdropComponent={renderBackdrop}
+        >
+          <NetworkSelectSheet />
         </BottomSheetModal>
       </BottomSheetModalProvider>
     </WalletContext.Provider>

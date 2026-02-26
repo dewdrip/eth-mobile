@@ -1,11 +1,11 @@
 import { Address } from '@/components/eth-mobile';
-import { useBalance, useClipboard, useNetwork } from '@/hooks/eth-mobile';
+import { useBalance, useNetwork } from '@/hooks/eth-mobile';
 import { useWalletContext } from '@/modules/providers/WalletProvider';
-import { formatBalanceDisplay } from '@/utils/eth-mobile';
+import { formatBalanceDisplay, networkInitials } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetView, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import React from 'react';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, Text, View } from 'react-native';
 import {
   Blobbie,
   useActiveAccount,
@@ -15,7 +15,7 @@ import {
 
 export default function WalletDetailsSheet() {
   const { dismiss } = useBottomSheetModal();
-  const { openViewFunds, openReceive, openSendFunds } =
+  const { openViewFunds, openReceive, openSendFunds, openNetworkSelect } =
     useWalletContext() ?? {};
   const account = useActiveAccount();
   const wallet = useActiveWallet();
@@ -83,8 +83,23 @@ export default function WalletDetailsSheet() {
       </View>
 
       <View className="border-t border-gray-100">
-        <Pressable className="flex-row items-center py-3.5 gap-3 border-b border-gray-100">
-          <Ionicons name="diamond-outline" size={20} color="#374151" />
+        <Pressable
+          className="flex-row items-center py-3.5 gap-3 border-b border-gray-100"
+          onPress={() => openNetworkSelect?.()}
+        >
+          <View className="w-8 h-8 rounded-full bg-gray-200 items-center justify-center overflow-hidden">
+            {network.icon ? (
+              <Image
+                source={{ uri: network.icon }}
+                className="w-10 h-10"
+                resizeMode="cover"
+              />
+            ) : (
+              <Text className="text-xs font-[Poppins-SemiBold] text-gray-600">
+                {networkInitials(network.name)}
+              </Text>
+            )}
+          </View>
           <Text className="flex-1 text-base font-[Poppins] text-gray-700">
             {network.name}
           </Text>
@@ -94,7 +109,7 @@ export default function WalletDetailsSheet() {
           className="flex-row items-center py-3.5 gap-3 border-b border-gray-100"
           onPress={() => openViewFunds?.()}
         >
-          <Ionicons name="wallet-outline" size={20} color="#374151" />
+          <Ionicons name="cash-outline" size={30} color="#374151" />
           <Text className="flex-1 text-base font-[Poppins] text-gray-700">
             View Funds
           </Text>
@@ -104,7 +119,7 @@ export default function WalletDetailsSheet() {
           className="flex-row items-center py-3.5 gap-3 border-b border-gray-100"
           onPress={handleDisconnect}
         >
-          <Ionicons name="log-out-outline" size={20} color="#374151" />
+          <Ionicons name="log-out-outline" size={30} color="#374151" />
           <Text className="flex-1 text-base font-[Poppins] text-gray-700">
             Disconnect
           </Text>

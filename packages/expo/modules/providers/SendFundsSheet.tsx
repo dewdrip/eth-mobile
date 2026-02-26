@@ -1,5 +1,5 @@
 import { AddressInput, EtherInput } from '@/components/eth-mobile';
-import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { useBalance, useNetwork } from '@/hooks/eth-mobile';
 import { client } from '@/modules/providers/Thirdweb';
 import { useWalletContext } from '@/modules/providers/WalletProvider';
 import { formatBalanceDisplay, getParsedError } from '@/utils/eth-mobile';
@@ -192,7 +192,7 @@ export default function SendFundsSheet() {
         <Pressable onPress={() => dismiss()} hitSlop={12} className="p-2">
           <Ionicons name="arrow-back" size={24} color="#374151" />
         </Pressable>
-        <Text className="flex-1 text-lg font-[Poppins-SemiBold] text-gray-900 text-center">
+        <Text className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-gray-900 text-center">
           Send Funds
         </Text>
         <View className="w-10" />

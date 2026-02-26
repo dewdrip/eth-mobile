@@ -39,7 +39,7 @@ export default function ReceiveSheet() {
           <Pressable onPress={() => dismiss()} hitSlop={12} className="p-2">
             <Ionicons name="arrow-back" size={24} color="#374151" />
           </Pressable>
-          <Text className="flex-1 text-lg font-[Poppins-SemiBold] text-gray-900 text-center">
+          <Text className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-gray-900 text-center">
             Receive {tokenSymbol}
           </Text>
           <View className="w-10" />

@@ -42,18 +42,12 @@ const WALLETS = [
   { id: 'me.rainbow', name: 'Rainbow', logo: LOGOS.rainbow }
 ] as const;
 
-const inApp = inAppWallet({
-  auth: {
-    options: ['google', 'apple', 'facebook'],
-    redirectUrl: 'ethmobile://'
-  }
-});
-
 function WalletRow({
   name,
   sublabel,
   logo,
   onPress,
+  onCancel,
   isLoading,
   disabled = false
 }: {
@@ -61,6 +55,7 @@ function WalletRow({
   sublabel?: string;
   logo: ImageSourcePropType;
   onPress: () => void;
+  onCancel?: () => void;
   isLoading: boolean;
   disabled?: boolean;
 }) {
@@ -86,7 +81,16 @@ function WalletRow({
         ) : null}
       </View>
       {isLoading ? (
-        <ActivityIndicator size="small" color="#374151" />
+        <View className="flex-row items-center gap-2">
+          {onCancel ? (
+            <Pressable onPress={onCancel} hitSlop={8} className="py-1 px-0">
+              <Text className="text-sm font-[Poppins-SemiBold] text-red-600">
+                Cancel
+              </Text>
+            </Pressable>
+          ) : null}
+          <ActivityIndicator size="small" color="#374151" />
+        </View>
       ) : (
         <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
       )}
@@ -98,13 +102,25 @@ type ConnectingId = 'google' | 'facebook' | 'apple' | string | null;
 
 export default function ConnectSheet() {
   const { dismiss } = useBottomSheetModal();
-  const { connect } = useConnect({ client });
+  const { connect, cancelConnection } = useConnect({ client });
   const [connectingId, setConnectingId] = useState<ConnectingId>(null);
+
+  const handleCancelWalletConnect = useCallback(() => {
+    cancelConnection();
+    setConnectingId(null);
+  }, [cancelConnection]);
 
   const handleSocialConnect = useCallback(
     async (strategy: 'google' | 'apple' | 'facebook') => {
       setConnectingId(strategy);
       try {
+        const inApp = inAppWallet({
+          auth: {
+            options: ['google', 'apple', 'facebook'],
+            redirectUrl: 'ethmobile://'
+          }
+        });
+
         const wallet = await connect(async () => {
           await inApp.connect({ client, strategy });
           return inApp;
@@ -196,6 +212,7 @@ export default function ConnectSheet() {
               sublabel={'sublabel' in w ? w.sublabel : undefined}
               logo={w.logo}
               onPress={() => handleConnect(w.id)}
+              onCancel={handleCancelWalletConnect}
               isLoading={connectingId === w.id}
               disabled={!!connectingId && connectingId !== w.id}
             />

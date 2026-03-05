@@ -1,8 +1,8 @@
 import {
   useAccount,
-  useERC20Balance,
-  useERC20Metadata,
-  useNetwork
+  useBalance,
+  useNetwork,
+  useReadContract
 } from '@/hooks/eth-mobile';
 import { addToken } from '@/store/reducers/Tokens';
 import { formatBalanceDisplay, parseBalance } from '@/utils/eth-mobile';
@@ -22,28 +22,56 @@ import {
 import { useDispatch } from 'react-redux';
 import { isAddress } from 'viem';
 
+const ERC20_ABI = [
+  {
+    type: 'function',
+    name: 'name',
+    inputs: [],
+    outputs: [{ type: 'string' }],
+    stateMutability: 'view'
+  },
+  {
+    type: 'function',
+    name: 'symbol',
+    inputs: [],
+    outputs: [{ type: 'string' }],
+    stateMutability: 'view'
+  },
+  {
+    type: 'function',
+    name: 'decimals',
+    inputs: [],
+    outputs: [{ type: 'uint8' }],
+    stateMutability: 'view'
+  }
+] as const;
+
 export default function AddTokenSheet() {
   const { dismiss } = useBottomSheetModal();
   const dispatch = useDispatch();
   const account = useAccount();
   const network = useNetwork();
+  const { readContract } = useReadContract({});
   const [addressInput, setAddressInput] = useState('');
   const [lookedUpAddress, setLookedUpAddress] = useState<`0x${string}` | null>(
     null
   );
+  const [metadata, setMetadata] = useState<{
+    name: string;
+    symbol: string;
+    decimals: number;
+  } | null>(null);
+  const [metaError, setMetaError] = useState<string | null>(null);
+  const [metaLoading, setMetaLoading] = useState(false);
 
   const {
-    getERC20Metadata,
-    data: metadata,
-    isLoading: metaLoading,
-    error: metaError
-  } = useERC20Metadata({});
-  const {
-    getBalance,
     balance,
     isLoading: balanceLoading,
     error: balanceError
-  } = useERC20Balance({});
+  } = useBalance({
+    address: account?.address ?? '',
+    tokenAddress: lookedUpAddress ?? undefined
+  });
 
   const isLoading = metaLoading || balanceLoading;
   const error = metaError ?? balanceError;
@@ -53,11 +81,42 @@ export default function AddTokenSheet() {
     if (!isAddress(trimmed) || !account?.address) return;
     const addr = trimmed as `0x${string}`;
     setLookedUpAddress(addr);
-    await Promise.all([
-      getERC20Metadata(addr),
-      getBalance(addr, account.address as `0x${string}`)
-    ]);
-  }, [addressInput, account?.address, getERC20Metadata, getBalance]);
+    setMetaError(null);
+    setMetaLoading(true);
+    setMetadata(null);
+    try {
+      const [name, symbol, decimals] = await Promise.all([
+        readContract({
+          abi: ERC20_ABI as any,
+          address: addr,
+          functionName: 'name'
+        }),
+        readContract({
+          abi: ERC20_ABI as any,
+          address: addr,
+          functionName: 'symbol'
+        }),
+        readContract({
+          abi: ERC20_ABI as any,
+          address: addr,
+          functionName: 'decimals'
+        })
+      ]);
+      if (name != null && symbol != null && decimals != null) {
+        setMetadata({
+          name: String(name),
+          symbol: String(symbol),
+          decimals: Number(decimals)
+        });
+      } else {
+        setMetaError('Could not read token metadata');
+      }
+    } catch (e: any) {
+      setMetaError(e?.message ?? 'Failed to fetch token');
+    } finally {
+      setMetaLoading(false);
+    }
+  }, [addressInput, account?.address, readContract]);
 
   const handleAddToken = useCallback(() => {
     if (!metadata || !lookedUpAddress || !account?.address || !network?.id)
@@ -76,6 +135,8 @@ export default function AddTokenSheet() {
     );
     setAddressInput('');
     setLookedUpAddress(null);
+    setMetadata(null);
+    setMetaError(null);
     dismiss();
   }, [
     metadata,
@@ -128,7 +189,7 @@ export default function AddTokenSheet() {
               <ActivityIndicator size="small" color="#fff" />
             ) : (
               <Text className="text-base font-[Poppins-SemiBold] text-white">
-                Look up token
+                Look up
               </Text>
             )}
           </Pressable>
@@ -168,7 +229,7 @@ export default function AddTokenSheet() {
                 className="mt-4 py-3 rounded-xl bg-gray-900 items-center"
               >
                 <Text className="text-base font-[Poppins-SemiBold] text-white">
-                  Add token
+                  Add
                 </Text>
               </Pressable>
             </View>

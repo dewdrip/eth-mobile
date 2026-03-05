@@ -4,7 +4,7 @@ import {
   BottomSheetModalProvider
 } from '@gorhom/bottom-sheet';
 import React, { createContext, useCallback, useMemo, useRef } from 'react';
-import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -14,13 +14,12 @@ import Animated, {
   withSpring
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Blobbie, ConnectButton, useActiveAccount } from 'thirdweb/react';
-import { createWallet, inAppWallet } from 'thirdweb/wallets';
+import { useActiveAccount } from 'thirdweb/react';
 import AddTokenSheet from './AddTokenSheet';
+import ConnectSheet from './ConnectSheet';
 import NetworkSelectSheet from './NetworkSelectSheet';
 import ReceiveSheet from './ReceiveSheet';
 import SendFundsSheet from './SendFundsSheet';
-import { client } from './Thirdweb';
 import TokenPickerSheet from './TokenPickerSheet';
 import type { SendToken } from './tokens';
 import ViewFundsSheet from './ViewFundsSheet';
@@ -44,18 +43,6 @@ export function useWalletContext() {
   const ctx = React.useContext(WalletContext);
   return ctx;
 }
-
-const size = 36;
-const containerStyle = {
-  position: 'absolute' as const,
-  top: 48,
-  right: 16,
-  width: size,
-  height: size,
-  borderRadius: size / 2,
-  zIndex: 999,
-  overflow: 'hidden' as const
-};
 
 const { height } = Dimensions.get('window');
 const PILL_HEIGHT = 80;
@@ -204,55 +191,14 @@ function WalletEdgePill({
   );
 }
 
-function WalletTrigger({
-  onOpenWalletDetails
-}: {
-  onOpenWalletDetails?: () => void;
-}) {
-  const account = useActiveAccount();
-
-  const wallets = [
-    inAppWallet(),
-    createWallet('io.metamask'),
-    createWallet('com.coinbase.wallet', {
-      appMetadata: {
-        name: 'Treegens'
-      },
-      mobileConfig: {
-        callbackURL: 'ethmobile://'
-      }
-    }),
-    createWallet('me.rainbow')
-  ];
-
-  if (account?.address) {
-    return (
-      <Pressable
-        style={[containerStyle, { backgroundColor: 'transparent' }]}
-        onPress={onOpenWalletDetails}
-      >
-        <Blobbie
-          address={account.address}
-          size={size}
-          style={{ width: size, height: size, borderRadius: size / 2 }}
-        />
-      </Pressable>
-    );
-  }
-
-  return (
-    <View style={[containerStyle, { backgroundColor: '#9ca3af' }]}>
-      <ConnectButton client={client} wallets={wallets} theme="light" />
-    </View>
-  );
-}
-
 export default function WalletProvider({
   children
 }: {
   children: React.ReactNode;
 }) {
+  const account = useActiveAccount();
   const walletSheetRef = useRef<BottomSheetModal>(null);
+  const connectSheetRef = useRef<BottomSheetModal>(null);
   const viewFundsSheetRef = useRef<BottomSheetModal>(null);
   const receiveSheetRef = useRef<BottomSheetModal>(null);
   const sendFundsSheetRef = useRef<BottomSheetModal>(null);
@@ -264,9 +210,13 @@ export default function WalletProvider({
   );
   const snapPoints = ['60%'];
 
-  const handleOpenWalletDetails = useCallback(() => {
-    walletSheetRef.current?.present();
-  }, []);
+  const handleOpenPrimarySheet = useCallback(() => {
+    if (account?.address) {
+      walletSheetRef.current?.present();
+    } else {
+      connectSheetRef.current?.present();
+    }
+  }, [account?.address]);
 
   const openViewFunds = useCallback(() => {
     viewFundsSheetRef.current?.present();
@@ -334,10 +284,17 @@ export default function WalletProvider({
     <WalletContext.Provider value={contextValue}>
       <BottomSheetModalProvider>
         <SafeAreaView style={{ flex: 1 }}>
-          <WalletTrigger onOpenWalletDetails={handleOpenWalletDetails} />
           {children}
-          <WalletEdgePill onOpenWalletDetails={handleOpenWalletDetails} />
+          <WalletEdgePill onOpenWalletDetails={handleOpenPrimarySheet} />
         </SafeAreaView>
+        <BottomSheetModal
+          ref={connectSheetRef}
+          snapPoints={['55%']}
+          enableDynamicSizing={false}
+          backdropComponent={renderBackdrop}
+        >
+          <ConnectSheet />
+        </BottomSheetModal>
         <BottomSheetModal
           ref={walletSheetRef}
           snapPoints={snapPoints}

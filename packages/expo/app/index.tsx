@@ -314,7 +314,7 @@ export default function Home() {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex flex-row items-center justify-between px-4 py-2">
           <Text className="text-2xl font-bold font-[Poppins-Bold]">
@@ -404,6 +404,6 @@ export default function Home() {
           </View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

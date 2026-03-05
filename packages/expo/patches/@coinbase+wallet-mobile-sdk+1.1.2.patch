@@ -1,0 +1,59 @@
+diff --git a/node_modules/@coinbase/wallet-mobile-sdk/build/CoinbaseWalletSDK.js b/node_modules/@coinbase/wallet-mobile-sdk/build/CoinbaseWalletSDK.js
+index 0000000..1111111 100644
+--- a/node_modules/@coinbase/wallet-mobile-sdk/build/CoinbaseWalletSDK.js
++++ b/node_modules/@coinbase/wallet-mobile-sdk/build/CoinbaseWalletSDK.js
+@@ -1,5 +1,5 @@
+ import CoinbaseWalletSDK from "./CoinbaseWalletSDKModule";
+-export { WalletMobileSDKEVMProvider } from "./WalletMobileSDKEVMProvider";
++export { WalletMobileSDKEVMProvider, hydrateCoinbaseStorage } from "./WalletMobileSDKEVMProvider";
+ export function configure({ callbackURL, hostURL, hostPackageName, }) {
+     CoinbaseWalletSDK.configure({
+         callbackURL: callbackURL.toString(),
+diff --git a/node_modules/@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider.js b/node_modules/@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider.js
+index 0000000..1111111 100644
+--- a/node_modules/@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider.js
++++ b/node_modules/@coinbase/wallet-mobile-sdk/build/WalletMobileSDKEVMProvider.js
+@@ -2,9 +2,24 @@
+ import { initiateHandshake, isConnected, makeRequest, resetSession, } from "./CoinbaseWalletSDK";
+ import { bigIntStringFromBN, ensureAddressString, ensureBN, ensureBuffer, ensureIntNumber, ensureParsedJSONObject, hexStringFromBuffer, hexStringFromIntNumber, prepend0x, } from "./types/core/util";
+ import BN from "bn.js";
+-import { MMKV } from "react-native-mmkv";
++import AsyncStorage from "@react-native-async-storage/async-storage";
+ import SafeEventEmitter from "@metamask/safe-event-emitter";
+ global.Buffer = global.Buffer || require("buffer").Buffer;
+ const CACHED_ADDRESSES_KEY = "mobile_sdk.addresses";
+ const CHAIN_ID_KEY = "mobile_sdk.chain_id";
++const COINBASE_STORAGE_KEYS = [CACHED_ADDRESSES_KEY, CHAIN_ID_KEY];
++const _coinbaseStorageCache = {};
++async function _hydrateCoinbaseStorage() {
++    try {
++        const pairs = await AsyncStorage.multiGet(COINBASE_STORAGE_KEYS);
++        pairs.forEach(([k, v]) => { if (v != null) _coinbaseStorageCache[k] = v; });
++    }
++    catch (_) { }
++}
++const coinbaseStorageAdapter = {
++    getString(key) { return _coinbaseStorageCache[key] ?? null; },
++    set(key, value) { _coinbaseStorageCache[key] = value; AsyncStorage.setItem(key, value); },
++    remove(key) { delete _coinbaseStorageCache[key]; AsyncStorage.removeItem(key); },
++};
++export function hydrateCoinbaseStorage() { return _hydrateCoinbaseStorage(); }
+ export class WalletMobileSDKEVMProvider extends SafeEventEmitter {
+@@ -19,7 +37,7 @@ export class WalletMobileSDKEVMProvider extends SafeEventEmitter {
+         this._updateChainId = this._updateChainId.bind(this);
+         this._setAddresses = this._setAddresses.bind(this);
+         this._getChainId = this._getChainId.bind(this);
+-        this._storage = opts?.storage ?? new MMKV({ id: "mobile_sdk.store" });
++        this._storage = opts?.storage ?? coinbaseStorageAdapter;
+         this._chainId = opts?.chainId;
+         this._jsonRpcUrl = opts?.jsonRpcUrl;
+         const chainId = this._chainId ?? this._getChainId();
+@@ -58,7 +76,7 @@ export class WalletMobileSDKEVMProvider extends SafeEventEmitter {
+     disconnect() {
+         resetSession();
+         this._addresses = [];
+-        this._storage.delete(CACHED_ADDRESSES_KEY);
++        this._storage.remove(CACHED_ADDRESSES_KEY);
+         this.emit("disconnect");
+         return true;
+     }

@@ -15,6 +15,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Blobbie, ConnectButton, useActiveAccount } from 'thirdweb/react';
+import { createWallet, inAppWallet } from 'thirdweb/wallets';
 import AddTokenSheet from './AddTokenSheet';
 import NetworkSelectSheet from './NetworkSelectSheet';
 import ReceiveSheet from './ReceiveSheet';
@@ -210,6 +211,20 @@ function WalletTrigger({
 }) {
   const account = useActiveAccount();
 
+  const wallets = [
+    inAppWallet(),
+    createWallet('io.metamask'),
+    createWallet('com.coinbase.wallet', {
+      appMetadata: {
+        name: 'Treegens'
+      },
+      mobileConfig: {
+        callbackURL: 'ethmobile://'
+      }
+    }),
+    createWallet('me.rainbow')
+  ];
+
   if (account?.address) {
     return (
       <Pressable
@@ -227,7 +242,7 @@ function WalletTrigger({
 
   return (
     <View style={[containerStyle, { backgroundColor: '#9ca3af' }]}>
-      <ConnectButton client={client} theme="light" />
+      <ConnectButton client={client} wallets={wallets} theme="light" />
     </View>
   );
 }

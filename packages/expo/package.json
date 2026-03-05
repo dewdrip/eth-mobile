@@ -19,6 +19,7 @@
     "ios": "expo run:ios",
     "lint": "expo lint",
     "list-routes": "npx expo-router-sitemap",
+    "postinstall": "npx patch-package",
     "prebuild": "expo prebuild --clean",
     "start": "expo start --clear",
     "submit:android": "npx eas-cli@latest submit --platform android",

@@ -3,7 +3,7 @@ import {
   BottomSheetScrollView,
   useBottomSheetModal
 } from '@gorhom/bottom-sheet';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -54,19 +54,21 @@ function WalletRow({
   sublabel,
   logo,
   onPress,
-  isLoading
+  isLoading,
+  disabled = false
 }: {
   name: string;
   sublabel?: string;
   logo: ImageSourcePropType;
   onPress: () => void;
   isLoading: boolean;
+  disabled?: boolean;
 }) {
   return (
     <Pressable
       onPress={onPress}
-      disabled={isLoading}
-      className="flex-row items-center py-4 border-b border-gray-100 active:opacity-80"
+      disabled={isLoading || disabled}
+      className="flex-row items-center py-4 border-b border-gray-100 active:opacity-80 disabled:opacity-60"
     >
       <Image
         source={logo}
@@ -92,20 +94,26 @@ function WalletRow({
   );
 }
 
+type ConnectingId = 'google' | 'facebook' | 'apple' | string | null;
+
 export default function ConnectSheet() {
   const { dismiss } = useBottomSheetModal();
-  const { connect, isConnecting } = useConnect({ client });
+  const { connect } = useConnect({ client });
+  const [connectingId, setConnectingId] = useState<ConnectingId>(null);
 
   const handleSocialConnect = useCallback(
     async (strategy: 'google' | 'apple' | 'facebook') => {
+      setConnectingId(strategy);
       try {
-        await connect(async () => {
+        const wallet = await connect(async () => {
           await inApp.connect({ client, strategy });
           return inApp;
         });
-        dismiss();
+        if (wallet) dismiss();
       } catch (_) {
         // User cancelled or error – keep sheet open
+      } finally {
+        setConnectingId(null);
       }
     },
     [connect, dismiss]
@@ -113,6 +121,7 @@ export default function ConnectSheet() {
 
   const handleConnect = useCallback(
     async (walletId: string) => {
+      setConnectingId(walletId);
       try {
         const wallet =
           walletId === 'com.coinbase.wallet'
@@ -125,13 +134,15 @@ export default function ConnectSheet() {
                 }
               })
             : createWallet(walletId as 'io.metamask' | 'me.rainbow');
-        await connect(async () => {
+        const walletResult = await connect(async () => {
           await wallet.connect({ client });
           return wallet;
         });
-        dismiss();
+        if (walletResult) dismiss();
       } catch (_) {
         // User cancelled or error – keep sheet open
+      } finally {
+        setConnectingId(null);
       }
     },
     [connect, dismiss]
@@ -146,20 +157,27 @@ export default function ConnectSheet() {
 
         <View className="px-4 py-6">
           <View className="flex-row gap-3 mb-6">
-            {SOCIAL_OPTIONS.map(({ strategy, logo }) => (
-              <Pressable
-                key={strategy}
-                onPress={() => handleSocialConnect(strategy)}
-                disabled={isConnecting}
-                className="flex-1 aspect-square max-h-14 items-center justify-center rounded-xl border border-gray-200 bg-white active:opacity-80"
-              >
-                <Image
-                  source={logo}
-                  style={{ width: 28, height: 28 }}
-                  resizeMode="contain"
-                />
-              </Pressable>
-            ))}
+            {SOCIAL_OPTIONS.map(({ strategy, logo }) => {
+              const isThisConnecting = connectingId === strategy;
+              return (
+                <Pressable
+                  key={strategy}
+                  onPress={() => handleSocialConnect(strategy)}
+                  disabled={!!connectingId}
+                  className="flex-1 aspect-square max-h-14 items-center justify-center rounded-xl border border-gray-200 bg-white active:opacity-80"
+                >
+                  {isThisConnecting ? (
+                    <ActivityIndicator size="small" color="#374151" />
+                  ) : (
+                    <Image
+                      source={logo}
+                      style={{ width: 28, height: 28 }}
+                      resizeMode="contain"
+                    />
+                  )}
+                </Pressable>
+              );
+            })}
           </View>
 
           <View className="flex-row items-center gap-3 mb-4">
@@ -178,7 +196,8 @@ export default function ConnectSheet() {
               sublabel={'sublabel' in w ? w.sublabel : undefined}
               logo={w.logo}
               onPress={() => handleConnect(w.id)}
-              isLoading={isConnecting}
+              isLoading={connectingId === w.id}
+              disabled={!!connectingId && connectingId !== w.id}
             />
           ))}
         </View>

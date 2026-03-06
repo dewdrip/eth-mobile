@@ -6,8 +6,8 @@ import { GenericContractsDeclaration } from '../src/utils/eth-mobile/contract';
 
 const deployedContracts = {
   31337: {
-    GuessTheNumber: {
-      address: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
+    LuckyGuess: {
+      address: '0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE',
       abi: [
         {
           inputs: [],

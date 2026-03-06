@@ -2,10 +2,10 @@
 pragma solidity 0.8.28;
 
 /**
- * Guess the number (1-6). Bet up to 0.1 ETH. Win 2x on correct guess.
- * House is funded on deployment (e.g. 50 ETH) to pay winners.
+ * Lucky Guess: pick 1-6. Bet up to 0.1 ETH. Win 2x on correct guess.
+ * House is funded on deployment (e.g. 10 ETH) to pay winners.
  */
-contract GuessTheNumber {
+contract LuckyGuess {
     uint256 public constant MAX_BET = 0.1 ether;
     uint256 public constant MAX_NUMBER = 6; // 1..6 inclusive
 

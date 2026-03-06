@@ -41,9 +41,9 @@ export default function Home() {
   const account = useAccount();
   const network = useNetwork();
   const { data: guessContract, isLoading: contractLoading } =
-    useDeployedContractInfo({ contractName: 'GuessTheNumber' });
+    useDeployedContractInfo({ contractName: 'LuckyGuess' });
   const { writeContractAsync: playAsync, isMining: isPlaying } =
-    useScaffoldWriteContract({ contractName: 'GuessTheNumber' });
+    useScaffoldWriteContract({ contractName: 'LuckyGuess' });
 
   const [guess, setGuess] = useState<number>(1);
   const [betEth, setBetEth] = useState('');
@@ -57,7 +57,7 @@ export default function Home() {
   const hasGuessContract = useMemo(() => {
     const chainIds = Object.keys(deployedContracts).map(Number);
     return chainIds.some(
-      id => (deployedContracts as any)[id]?.GuessTheNumber != null
+      id => (deployedContracts as any)[id]?.LuckyGuess != null
     );
   }, []);
 
@@ -315,7 +315,14 @@ export default function Home() {
                 className="text-center text-sm font-[Poppins]"
                 style={{ color: colors.textMutedAlt }}
               >
-                Pick 1–6. Bet up to 0.1 ETH. Double your bet if you win.
+                Pick 1–6. Bet up to 0.1 ETH.{' '}
+                <Text
+                  className="font-[Poppins-SemiBold]"
+                  style={{ color: colors.primary }}
+                >
+                  Double your bet
+                </Text>{' '}
+                if you win.
               </Text>
             </View>
 

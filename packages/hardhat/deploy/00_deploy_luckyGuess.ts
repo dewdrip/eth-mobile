@@ -2,33 +2,33 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { ethers } from 'hardhat';
 
-const FUND_AMOUNT = ethers.parseEther('50');
+const FUND_AMOUNT = ethers.parseEther('10');
 
 /**
- * Deploys GuessTheNumber and funds it with 50 ETH so the house can pay winners.
+ * Deploys LuckyGuess and funds it with 10 ETH so the house can pay winners.
  */
-const deployGuessTheNumber: DeployFunction = async function (
+const deployLuckyGuess: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy('GuessTheNumber', {
+  await deploy('LuckyGuess', {
     from: deployer,
     args: [],
     log: true,
     autoMine: true
   });
 
-  const guessTheNumber = await hre.deployments.get('GuessTheNumber');
+  const luckyGuess = await hre.deployments.get('LuckyGuess');
   const signer = await hre.ethers.getSigner(deployer);
   const tx = await signer.sendTransaction({
-    to: guessTheNumber.address,
+    to: luckyGuess.address,
     value: FUND_AMOUNT
   });
   await tx.wait();
-  console.log(`Funded GuessTheNumber at ${guessTheNumber.address} with 50 ETH`);
+  console.log(`Funded LuckyGuess at ${luckyGuess.address} with 10 ETH`);
 };
 
-export default deployGuessTheNumber;
-deployGuessTheNumber.tags = ['GuessTheNumber'];
+export default deployLuckyGuess;
+deployLuckyGuess.tags = ['LuckyGuess'];

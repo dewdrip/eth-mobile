@@ -2,7 +2,7 @@ import { useCryptoPrice, useNetwork } from '@/hooks/eth-mobile';
 import { COLORS, FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
 import { formatEther } from 'viem';
@@ -13,6 +13,10 @@ type Props = {
   disabled?: boolean;
   onChange: (value: string) => void;
   onSubmit: () => void;
+  /** Token symbol shown in placeholder (e.g. ETH, MATIC). Defaults to current network token symbol. */
+  symbol?: string;
+  /** Optional URI for token/network icon shown on the left. When omitted, a diamond placeholder is used. */
+  iconUri?: string | null;
 };
 
 /**
@@ -29,7 +33,9 @@ export function EtherInput({
   disabled,
   onChange,
   onSubmit,
-  balance
+  balance,
+  symbol: symbolProp,
+  iconUri
 }: Props) {
   const [error, setError] = useState('');
   const [dollarValue, setDollarValue] = useState('');
@@ -37,6 +43,7 @@ export function EtherInput({
 
   const toast = useToast();
   const network = useNetwork();
+  const symbol = symbolProp ?? network?.token?.symbol ?? 'ETH';
 
   const {
     price: dollarRate,
@@ -142,7 +149,7 @@ export function EtherInput({
         value={displayValue}
         mode="outlined"
         style={{ backgroundColor: '#f5f5f5' }}
-        placeholder={`How much ${isDollar ? 'USD' : 'ETH'}?`}
+        placeholder={`How much ${isDollar ? 'USD' : symbol}?`}
         placeholderTextColor="#a3a3a3"
         textColor="black"
         onChangeText={handleInputChange}
@@ -160,6 +167,12 @@ export function EtherInput({
             icon={() =>
               isDollar ? (
                 <Text className="text-2xl font-[Poppins] text-black">$</Text>
+              ) : iconUri ? (
+                <Image
+                  source={{ uri: iconUri }}
+                  style={{ width: 24, height: 24, borderRadius: 12 }}
+                  resizeMode="cover"
+                />
               ) : (
                 <Text className="text-3xl font-[Poppins] text-black">♢</Text>
               )

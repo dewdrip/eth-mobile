@@ -248,6 +248,8 @@ export default function SendFundsSheet() {
               onChange={setAmount}
               balance={balanceLoading ? undefined : balance}
               onSubmit={() => {}}
+              symbol={symbol}
+              iconUri={network?.icon ?? undefined}
             />
           </View>
         ) : (
@@ -268,7 +270,8 @@ export default function SendFundsSheet() {
         )}
 
         <Pressable
-          className="bg-blue-500 py-4 rounded-xl active:opacity-90 disabled:opacity-50 flex-row items-center justify-center"
+          className="py-4 rounded-xl active:opacity-90 disabled:opacity-50 flex-row items-center justify-center"
+          style={{ backgroundColor: '#27B858' }}
           onPress={handleSend}
           disabled={isSending || !canSend}
         >

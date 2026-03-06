@@ -1,7 +1,5 @@
 import { AddressInput, EtherInput } from '@/components/eth-mobile';
 import { useBalance, useNetwork } from '@/hooks/eth-mobile';
-import { client } from '@/modules/providers/Thirdweb';
-import { useWalletContext } from '@/modules/providers/WalletProvider';
 import { formatBalanceDisplay, getParsedError } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -21,7 +19,9 @@ import { getContract, prepareContractCall, prepareTransaction } from 'thirdweb';
 import { defineChain } from 'thirdweb/chains';
 import { useActiveAccount, useSendTransaction } from 'thirdweb/react';
 import { isAddress, parseUnits } from 'viem';
-import { getDefaultTokensForNetwork, type SendToken } from './tokens';
+import { client } from '../../Thirdweb';
+import { getDefaultTokensForNetwork, type SendToken } from '../../tokens';
+import { useWalletContext } from '../context';
 
 const ERC20_TRANSFER_ABI = [
   {

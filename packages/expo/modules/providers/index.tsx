@@ -5,7 +5,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import Modals from './modals';
 import Thirdweb from './Thirdweb';
 import Toast from './Toast';
-import WalletProvider from './WalletProvider';
+import { WalletProvider } from './wallet';
 
 const theme = {
   colors: {

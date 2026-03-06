@@ -14,15 +14,15 @@ import {
 } from 'react-native';
 import { useConnect } from 'thirdweb/react';
 import { createWallet, inAppWallet } from 'thirdweb/wallets';
-import { client } from './Thirdweb';
+import { client } from '../../Thirdweb';
 
 const LOGOS = {
-  google: require('../../assets/images/logos/google.png'),
-  facebook: require('../../assets/images/logos/facebook.png'),
-  apple: require('../../assets/images/logos/apple.png'),
-  metamask: require('../../assets/images/logos/metamask.png'),
-  base: require('../../assets/images/logos/base.png'),
-  rainbow: require('../../assets/images/logos/rainbow.png')
+  google: require('../../../../assets/images/logos/google.png'),
+  facebook: require('../../../../assets/images/logos/facebook.png'),
+  apple: require('../../../../assets/images/logos/apple.png'),
+  metamask: require('../../../../assets/images/logos/metamask.png'),
+  base: require('../../../../assets/images/logos/base.png'),
+  rainbow: require('../../../../assets/images/logos/rainbow.png')
 };
 
 const SOCIAL_OPTIONS = [

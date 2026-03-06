@@ -1,6 +1,5 @@
 import { Address } from '@/components/eth-mobile';
 import { useBalance, useNetwork } from '@/hooks/eth-mobile';
-import { useWalletContext } from '@/modules/providers/WalletProvider';
 import { formatBalanceDisplay, networkInitials } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetView, useBottomSheetModal } from '@gorhom/bottom-sheet';
@@ -12,6 +11,7 @@ import {
   useActiveWallet,
   useDisconnect
 } from 'thirdweb/react';
+import { useWalletContext } from '../context';
 
 export default function WalletDetailsSheet() {
   const { dismiss } = useBottomSheetModal();

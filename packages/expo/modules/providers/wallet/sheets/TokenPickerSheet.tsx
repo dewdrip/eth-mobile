@@ -1,5 +1,4 @@
 import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
-import { useWalletContext } from '@/modules/providers/WalletProvider';
 import { getStorageKey, useTokensStore } from '@/store';
 import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,7 +8,8 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, { useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { getDefaultTokensForNetwork, type SendToken } from './tokens';
+import { getDefaultTokensForNetwork, type SendToken } from '../../tokens';
+import { useWalletContext } from '../context';
 
 function TokenRow({
   token,

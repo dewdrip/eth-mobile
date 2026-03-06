@@ -8,8 +8,8 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, { useCallback, useMemo } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
-import { getDefaultTokensForNetwork, type SendToken } from './tokens';
-import { useWalletContext } from './WalletProvider';
+import { getDefaultTokensForNetwork, type SendToken } from '../../tokens';
+import { useWalletContext } from '../context';
 
 function TokenRow({
   name,

@@ -266,6 +266,17 @@ export default function WalletProvider({
     ]
   );
 
+  const closeAllSheets = useCallback(() => {
+    connectSheetRef.current?.dismiss();
+    walletSheetRef.current?.dismiss();
+    viewFundsSheetRef.current?.dismiss();
+    receiveSheetRef.current?.dismiss();
+    sendFundsSheetRef.current?.dismiss();
+    tokenPickerSheetRef.current?.dismiss();
+    networkSelectSheetRef.current?.dismiss();
+    addTokenSheetRef.current?.dismiss();
+  }, []);
+
   const renderBackdrop = useCallback(
     (props: React.ComponentProps<typeof BottomSheetBackdrop>) => (
       <BottomSheetBackdrop
@@ -275,9 +286,13 @@ export default function WalletProvider({
         disappearsOnIndex={-1}
         enableTouchThrough={false}
         pressBehavior="close"
+        onPress={() => {
+          props.onPress?.();
+          closeAllSheets();
+        }}
       />
     ),
-    []
+    [closeAllSheets]
   );
 
   return (

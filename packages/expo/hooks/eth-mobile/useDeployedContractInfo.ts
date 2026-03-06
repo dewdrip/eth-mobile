@@ -10,7 +10,7 @@ interface UseDeployedContractInfoConfig {
 
 /**
  * Gets the matching contract info for the provided contract name from the contracts present in deployedContracts.ts
- * and externalContracts.ts corresponding to networks configured in ethmobile.config.ts
+ * corresponding to networks configured in ethmobile.config.ts
  */
 export const useDeployedContractInfo = (
   config: UseDeployedContractInfoConfig

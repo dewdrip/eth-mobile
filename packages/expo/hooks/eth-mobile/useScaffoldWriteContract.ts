@@ -10,7 +10,7 @@ interface UseScaffoldWriteContractConfig {
 
 /**
  * Hook for writing to deployed scaffold contracts (by name).
- * Resolves contract address and ABI from deployedContracts/externalContracts,
+ * Resolves contract address and ABI from deployedContracts,
  * then delegates to useWriteContract (Thirdweb). Requires an active wallet (ConnectButton).
  *
  * @param config - The config settings

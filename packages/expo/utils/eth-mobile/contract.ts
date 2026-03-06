@@ -1,5 +1,4 @@
 import deployedContractsData from '@/contracts/deployedContracts';
-import externalContractsData from '@/contracts/externalContracts';
 import { Abi } from 'abitype';
 import { Address } from 'viem';
 
@@ -15,7 +14,6 @@ export type GenericContract = {
   address: Address;
   abi: Abi;
   inheritedFunctions?: InheritedFunctions;
-  external?: true;
 };
 
 export type GenericContractsDeclaration = {
@@ -39,31 +37,7 @@ type ContractsDeclaration = IsContractDeclarationMissing<
 
 type Contracts = ContractsDeclaration[number];
 
-const deepMergeContracts = (local: any, external: any) => {
-  const result: any = {} as any;
-  const allKeys = Array.from(
-    new Set([...Object.keys(external), ...Object.keys(local)])
-  );
-  for (const key of allKeys) {
-    if (!external[key]) {
-      result[key] = local[key];
-      continue;
-    }
-    const amendedExternal = Object.fromEntries(
-      Object.entries(external[key]).map(([contractName, declaration]) => [
-        contractName,
-        { ...declaration, external: true }
-      ])
-    );
-    result[key] = { ...local[key], ...amendedExternal };
-  }
-  return result;
-};
-
-const contractsData = deepMergeContracts(
-  deployedContractsData,
-  externalContractsData
-);
+const contractsData = deployedContractsData;
 
 export const contracts = contractsData as GenericContractsDeclaration | null;
 

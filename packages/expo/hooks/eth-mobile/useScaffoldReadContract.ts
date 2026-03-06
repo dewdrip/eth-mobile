@@ -18,7 +18,7 @@ type ReadContractResult = any | any[] | null;
 
 /**
  * This automatically loads (by name) the contract ABI and address from
- * the contracts present in deployedContracts.ts & externalContracts.ts corresponding to networks configured in ethmobile.config.ts.
+ * the contracts present in deployedContracts.ts corresponding to networks configured in ethmobile.config.ts.
  * Reads are performed via Thirdweb under the hood.
  *
  * @param config - The config settings

@@ -6,28 +6,27 @@ import { GenericContractsDeclaration } from '../src/utils/eth-mobile/contract';
 
 const deployedContracts = {
   31337: {
-    YourContract: {
-      address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+    GuessTheNumber: {
+      address: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
       abi: [
         {
-          inputs: [
-            {
-              internalType: 'address',
-              name: '_owner',
-              type: 'address'
-            }
-          ],
-          stateMutability: 'nonpayable',
-          type: 'constructor'
-        },
-        {
           inputs: [],
-          name: 'YourContract__NotOwner',
+          name: 'InsufficientContractBalance',
           type: 'error'
         },
         {
           inputs: [],
-          name: 'YourContract__TransferFailed',
+          name: 'InvalidBet',
+          type: 'error'
+        },
+        {
+          inputs: [],
+          name: 'InvalidGuess',
+          type: 'error'
+        },
+        {
+          inputs: [],
+          name: 'TransferFailed',
           type: 'error'
         },
         {
@@ -36,39 +35,45 @@ const deployedContracts = {
             {
               indexed: true,
               internalType: 'address',
-              name: 'greetingSetter',
+              name: 'player',
               type: 'address'
             },
             {
               indexed: false,
-              internalType: 'string',
-              name: 'newGreeting',
-              type: 'string'
+              internalType: 'uint8',
+              name: 'guess',
+              type: 'uint8'
             },
             {
               indexed: false,
-              internalType: 'bool',
-              name: 'premium',
-              type: 'bool'
+              internalType: 'uint8',
+              name: 'result',
+              type: 'uint8'
             },
             {
               indexed: false,
               internalType: 'uint256',
-              name: 'value',
+              name: 'bet',
               type: 'uint256'
+            },
+            {
+              indexed: false,
+              internalType: 'bool',
+              name: 'won',
+              type: 'bool'
             }
           ],
-          name: 'GreetingChange',
+          name: 'Played',
           type: 'event'
         },
         {
           inputs: [],
-          name: 'greeting',
+          name: 'MAX_BET',
           outputs: [
             {
-              internalType: 'string',
+              internalType: 'uint256',
               name: '',
-              type: 'string'
+              type: 'uint256'
             }
           ],
           stateMutability: 'view',
@@ -76,25 +81,12 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: 'owner',
+          name: 'MAX_NUMBER',
           outputs: [
             {
-              internalType: 'address',
+              internalType: 'uint256',
               name: '',
-              type: 'address'
-            }
-          ],
-          stateMutability: 'view',
-          type: 'function'
-        },
-        {
-          inputs: [],
-          name: 'premium',
-          outputs: [
-            {
-              internalType: 'bool',
-              name: '',
-              type: 'bool'
+              type: 'uint256'
             }
           ],
           stateMutability: 'view',
@@ -103,53 +95,14 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: 'string',
-              name: '_newGreeting',
-              type: 'string'
+              internalType: 'uint8',
+              name: 'guess',
+              type: 'uint8'
             }
           ],
-          name: 'setGreeting',
+          name: 'play',
           outputs: [],
           stateMutability: 'payable',
-          type: 'function'
-        },
-        {
-          inputs: [],
-          name: 'totalCounter',
-          outputs: [
-            {
-              internalType: 'uint256',
-              name: '',
-              type: 'uint256'
-            }
-          ],
-          stateMutability: 'view',
-          type: 'function'
-        },
-        {
-          inputs: [
-            {
-              internalType: 'address',
-              name: '',
-              type: 'address'
-            }
-          ],
-          name: 'userGreetingCounter',
-          outputs: [
-            {
-              internalType: 'uint256',
-              name: '',
-              type: 'uint256'
-            }
-          ],
-          stateMutability: 'view',
-          type: 'function'
-        },
-        {
-          inputs: [],
-          name: 'withdraw',
-          outputs: [],
-          stateMutability: 'nonpayable',
           type: 'function'
         },
         {

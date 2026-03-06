@@ -2,406 +2,358 @@ import deployedContracts from '@/contracts/deployedContracts';
 import {
   useAccount,
   useDeployedContractInfo,
-  useReadContract,
-  useScaffoldContractEvent,
-  useScaffoldReadContract,
-  useScaffoldWriteContract,
-  useSignMessage
+  useNetwork,
+  useScaffoldWriteContract
 } from '@/hooks/eth-mobile';
-import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
-import { InterfaceAbi } from 'ethers';
 import { Link } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
   View
 } from 'react-native';
+import { createPublicClient, decodeEventLog, http, parseEther } from 'viem';
 
-function YourContractReads(props: { address: string; abi: InterfaceAbi }) {
-  if (!props?.address) return null;
-  const { address, abi } = props;
-  const account = useAccount();
-  const enabled = !!address && !!abi;
+const MAX_BET_ETH = '0.1';
+const NUMBERS = [0, 1, 2, 3, 4, 5] as const;
+const LOCAL_CHAIN_ID = 31337;
 
-  const [greetingInput, setGreetingInput] = useState('');
-
-  const {
-    data: greetingChangeEvents,
-    isLoading: eventsLoading,
-    error: eventsError,
-    refetch: refetchEvents
-  } = useScaffoldContractEvent({
-    contractName: 'YourContract',
-    eventName: 'GreetingChange',
-    fromBlock: 0n
-  });
-
-  const {
-    data: greeting,
-    isLoading: greetingLoading,
-    error: greetingError,
-    refetch: refetchGreeting
-  } = useScaffoldReadContract({
-    contractName: 'YourContract',
-    functionName: 'greeting',
-    enabled
-  });
-
-  const {
-    data: userGreetingCounter,
-    isLoading: userGreetingCounterLoading,
-    error: userGreetingCounterError
-  } = useScaffoldReadContract({
-    contractName: 'YourContract',
-    functionName: 'userGreetingCounter',
-    args: account?.address ? [account.address as `0x${string}`] : undefined,
-    enabled: enabled && !!account?.address
-  });
-
-  const {
-    data: totalCounter,
-    isLoading: counterLoading,
-    error: counterError
-  } = useReadContract({
-    address,
-    abi,
-    functionName: 'totalCounter',
-    enabled
-  });
-
-  const {
-    data: premium,
-    isLoading: premiumLoading,
-    error: premiumError
-  } = useReadContract({
-    address,
-    abi,
-    functionName: 'premium',
-    enabled
-  });
-
-  const { writeContractAsync, isLoading: isUpdatingGreeting } =
-    useScaffoldWriteContract({
-      contractName: 'YourContract'
-    });
-
-  const setGreeting = async () => {
-    await writeContractAsync({
-      functionName: 'setGreeting',
-      args: [greetingInput.trim() || 'Hello World!']
-    });
-    refetchGreeting?.();
-    refetchEvents?.();
-    setGreetingInput('');
-  };
-
-  const loading =
-    greetingLoading ||
-    counterLoading ||
-    premiumLoading ||
-    userGreetingCounterLoading;
-  const hasError =
-    greetingError || counterError || premiumError || userGreetingCounterError;
-
-  if (loading && greeting == null && totalCounter == null && premium == null) {
-    return <ActivityIndicator size="small" color="#555" />;
-  }
-
-  return (
-    <View className="gap-2">
-      <View>
-        <Text className="text-sm font-[Poppins] text-gray-600">greeting</Text>
-        {greetingError ? (
-          <Text className="text-base text-red-600">
-            {String(greetingError)}
-          </Text>
-        ) : (
-          <Text className="text-base font-[Poppins]">
-            {greeting != null ? String(greeting) : '—'}
-          </Text>
-        )}
-      </View>
-      <View>
-        <Text className="text-sm font-[Poppins] text-gray-600 mb-1">
-          New greeting
-        </Text>
-        <TextInput
-          value={greetingInput}
-          onChangeText={setGreetingInput}
-          placeholder="Enter greeting..."
-          placeholderTextColor="#999"
-          className="border border-gray-300 rounded-xl px-3 py-2.5 text-base font-[Poppins] bg-white"
-          editable={!isUpdatingGreeting}
-        />
-        <Pressable
-          onPress={setGreeting}
-          disabled={isUpdatingGreeting}
-          className="mt-2 py-2.5 px-4 bg-black rounded-xl active:opacity-80 disabled:opacity-50"
-        >
-          {isUpdatingGreeting ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <Text className="text-center text-white font-[Poppins]">
-              Set greeting
-            </Text>
-          )}
-        </Pressable>
-      </View>
-      <View>
-        <Text className="text-sm font-[Poppins] text-gray-600">
-          userGreetingCounter
-        </Text>
-        {userGreetingCounterError ? (
-          <Text className="text-base text-red-600">
-            {String(userGreetingCounterError)}
-          </Text>
-        ) : (
-          <Text className="text-base font-[Poppins]">
-            {userGreetingCounter != null ? String(userGreetingCounter) : '—'}
-          </Text>
-        )}
-      </View>
-      <View>
-        <Text className="text-sm font-[Poppins] text-gray-600">
-          totalCounter
-        </Text>
-        {counterError ? (
-          <Text className="text-base text-red-600">{String(counterError)}</Text>
-        ) : (
-          <Text className="text-base font-[Poppins]">
-            {totalCounter != null ? String(totalCounter) : '—'}
-          </Text>
-        )}
-      </View>
-      <View>
-        <Text className="text-sm font-[Poppins] text-gray-600">premium</Text>
-        {premiumError ? (
-          <Text className="text-base text-red-600">{String(premiumError)}</Text>
-        ) : (
-          <Text className="text-base font-[Poppins]">
-            {premium != null ? String(premium) : '—'}
-          </Text>
-        )}
-      </View>
-
-      <View className="mt-3 pt-3 border-t border-gray-200">
-        <Text className="text-sm font-[Poppins-Bold] text-gray-700 mb-2">
-          GreetingChange events (Thirdweb)
-        </Text>
-        {(() => {
-          const eventsList = (greetingChangeEvents ?? []) as any[];
-          if (eventsLoading && eventsList.length === 0) {
-            return <ActivityIndicator size="small" color="#555" />;
-          }
-          if (eventsError) {
-            return (
-              <Text className="text-sm text-red-600">
-                {String(eventsError)}
-              </Text>
-            );
-          }
-          if (eventsList.length === 0) {
-            return (
-              <Text className="text-sm font-[Poppins] text-gray-500">
-                No GreetingChange events yet.
-              </Text>
-            );
-          }
-          return (
-            <View className="gap-3">
-              {[...eventsList].reverse().map((event: any, index: number) => {
-                const args = event.args ?? {};
-                const blockNumber = event.blockNumber ?? event.log?.blockNumber;
-                const txHash =
-                  event.transactionHash ?? event.log?.transactionHash;
-                const logIndex = event.logIndex ?? event.log?.logIndex ?? index;
-                const key = txHash ? `${txHash}-${logIndex}` : `event-${index}`;
-                const argEntries = Object.entries(args);
-                return (
-                  <View
-                    key={key}
-                    className="p-3 bg-white rounded-lg border border-gray-200"
-                  >
-                    {(blockNumber != null || txHash) && (
-                      <View className="mb-2 pb-2 border-b border-gray-100">
-                        {blockNumber != null && (
-                          <Text className="text-xs font-[Poppins] text-gray-500">
-                            Block: {String(blockNumber)}
-                          </Text>
-                        )}
-                        {txHash && (
-                          <Text
-                            className="text-xs font-[Poppins] text-gray-500 mt-0.5"
-                            numberOfLines={1}
-                            ellipsizeMode="middle"
-                          >
-                            Tx: {String(txHash)}
-                          </Text>
-                        )}
-                      </View>
-                    )}
-                    <Text className="text-xs font-[Poppins-Bold] text-gray-600 mb-1.5">
-                      Event params
-                    </Text>
-                    <View className="gap-1">
-                      {argEntries.length > 0 ? (
-                        argEntries.map(([paramName, paramValue]) => {
-                          const displayValue =
-                            paramValue != null && typeof paramValue === 'bigint'
-                              ? paramValue.toString()
-                              : String(paramValue ?? '—');
-                          const isAddress =
-                            typeof paramValue === 'string' &&
-                            paramValue.startsWith('0x') &&
-                            paramValue.length === 42;
-                          const shortValue = isAddress
-                            ? `${displayValue.slice(0, 6)}...${displayValue.slice(-4)}`
-                            : displayValue;
-                          return (
-                            <View
-                              key={paramName}
-                              className="flex-row flex-wrap gap-x-2"
-                            >
-                              <Text className="text-xs font-[Poppins] text-gray-500 min-w-[120px]">
-                                {paramName}:
-                              </Text>
-                              <Text className="text-xs font-[Poppins] text-gray-800 flex-1">
-                                {shortValue}
-                              </Text>
-                            </View>
-                          );
-                        })
-                      ) : (
-                        <Text className="text-xs font-[Poppins] text-gray-500">
-                          No params
-                        </Text>
-                      )}
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-          );
-        })()}
-      </View>
-
-      {hasError && (
-        <Text className="text-sm text-amber-600">
-          One or more reads failed. Switch to the correct network and try again.
-        </Text>
-      )}
-    </View>
-  );
+function getPlayErrorMessage(raw: string): string {
+  const s = raw.toLowerCase();
+  if (s.includes('invalidguess')) return 'Guess must be between 0 and 5.';
+  if (s.includes('invalidbet'))
+    return 'Bet must be greater than 0 and at most 0.1 ETH.';
+  if (s.includes('insufficientcontractbalance'))
+    return "Contract doesn't have enough to pay winners right now.";
+  if (s.includes('transferfailed')) return 'Payout transfer failed.';
+  if (s.includes('reject') || s.includes('denied') || s.includes('cancel'))
+    return 'Transaction cancelled.';
+  return raw || 'Transaction failed.';
 }
 
 export default function Home() {
   const account = useAccount();
-  const { data: yourContract, isLoading: contractLoading } =
-    useDeployedContractInfo({ contractName: 'YourContract' });
+  const network = useNetwork();
+  const { data: guessContract, isLoading: contractLoading } =
+    useDeployedContractInfo({ contractName: 'GuessTheNumber' });
+  const { writeContractAsync: playAsync, isMining: isPlaying } =
+    useScaffoldWriteContract({ contractName: 'GuessTheNumber' });
 
-  const [signMessageInput, setSignMessageInput] = useState('');
-  const { sign, signature, error: signError, isSigning } = useSignMessage();
+  const [guess, setGuess] = useState<number>(0);
+  const [betEth, setBetEth] = useState('');
+  const [lastResult, setLastResult] = useState<{
+    won: boolean;
+    result: number;
+    bet: string;
+  } | null>(null);
+  const [error, setError] = useState('');
 
-  const showContractSection = useMemo(() => {
+  const hasGuessContract = useMemo(() => {
     const chainIds = Object.keys(deployedContracts).map(Number);
-    return chainIds.length > 0;
+    return chainIds.some(
+      id => (deployedContracts as any)[id]?.GuessTheNumber != null
+    );
   }, []);
 
+  const isLocalNetwork = network?.id === LOCAL_CHAIN_ID;
+  const canPlay =
+    account?.address &&
+    guessContract?.address &&
+    isLocalNetwork &&
+    hasGuessContract;
+
+  const betWei = useMemo(() => {
+    const v = betEth.trim();
+    if (!v) return 0n;
+    const n = parseFloat(v);
+    if (isNaN(n) || n <= 0) return 0n;
+    if (n > parseFloat(MAX_BET_ETH)) return -1n;
+    try {
+      return parseEther(v);
+    } catch {
+      return 0n;
+    }
+  }, [betEth]);
+
+  const betValid = betWei > 0n && betWei <= parseEther(MAX_BET_ETH);
+
+  const play = useCallback(async () => {
+    if (!canPlay || !betValid || isPlaying) return;
+    setError('');
+    setLastResult(null);
+    try {
+      const result = (await playAsync({
+        functionName: 'play',
+        args: [guess],
+        value: betWei
+      })) as any;
+      // Support both viem receipt and Thirdweb-style result (logs may be in different places)
+      let logs =
+        result?.logs ??
+        result?.transaction?.logs ??
+        result?.receipt?.logs ??
+        [];
+      // If no logs, try fetching receipt by hash (e.g. Thirdweb returns only hash)
+      const txHash =
+        result?.transactionHash ??
+        result?.hash ??
+        result?.receipt?.transactionHash;
+      if (
+        logs.length === 0 &&
+        txHash &&
+        network?.provider &&
+        network?.id != null
+      ) {
+        try {
+          const publicClient = createPublicClient({
+            chain: {
+              id: network.id,
+              name: 'Local',
+              nativeCurrency: { decimals: 18, name: 'ETH', symbol: 'ETH' },
+              rpcUrls: { default: { http: [network.provider] } }
+            },
+            transport: http(network.provider)
+          });
+          const receipt = await publicClient.getTransactionReceipt({
+            hash: txHash as `0x${string}`
+          });
+          logs = receipt?.logs ?? [];
+        } catch {
+          // ignore
+        }
+      }
+      for (const log of logs) {
+        try {
+          const decoded = decodeEventLog({
+            abi: guessContract!.abi as any,
+            data: log.data,
+            topics: log.topics
+          });
+          if ((decoded as any).eventName === 'Played') {
+            const args = (decoded as any).args;
+            if (args) {
+              setLastResult({
+                won: args.won,
+                result: Number(args.result),
+                bet: betEth
+              });
+            }
+            break;
+          }
+        } catch {
+          // skip non-Played logs
+        }
+      }
+    } catch (e: any) {
+      const raw =
+        typeof e === 'string'
+          ? e
+          : (e?.message ?? e?.details ?? 'Transaction failed.');
+      setError(getPlayErrorMessage(raw));
+    }
+  }, [
+    canPlay,
+    betValid,
+    isPlaying,
+    playAsync,
+    guess,
+    betWei,
+    betEth,
+    guessContract,
+    network?.provider,
+    network?.id
+  ]);
+
+  if (contractLoading && !guessContract) {
+    return (
+      <View className="flex-1 items-center justify-center bg-[#0f0f12]">
+        <ActivityIndicator size="large" color="#27B858" />
+      </View>
+    );
+  }
+
   return (
-    <View className="flex-1 bg-white">
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="flex flex-row items-center justify-between px-4 py-2">
-          <Text className="text-2xl font-bold font-[Poppins-Bold]">
-            ETH Mobile
-          </Text>
+    <View className="flex-1 bg-[#0f0f12]">
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 48 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <Link href="/debugContracts" push asChild>
+          <Pressable hitSlop={8} className="self-end m-4">
+            <Ionicons name="bug-outline" size={24} color="#666" />
+          </Pressable>
+        </Link>
 
-          <Link href="/debugContracts" push asChild>
-            <Ionicons
-              name="bug-outline"
-              size={Device.getDeviceWidth() * 0.07}
-              color="#555"
-            />
-          </Link>
-        </View>
-
-        {account?.address && (
-          <View className="mx-4 mb-4 p-4 border border-gray-200 rounded-2xl bg-gray-50">
-            <Text className="text-lg font-[Poppins-Bold] mb-3">
-              Sign message (Thirdweb)
-            </Text>
-            <TextInput
-              className="mb-3 rounded-lg border border-gray-200 bg-white px-3 py-2 text-base font-[Poppins] text-gray-800"
-              placeholder="Enter message to sign..."
-              placeholderTextColor="#9ca3af"
-              value={signMessageInput}
-              onChangeText={setSignMessageInput}
-              editable={!isSigning}
-            />
-            <Pressable
-              onPress={() => sign(signMessageInput)}
-              disabled={isSigning || !signMessageInput.trim()}
-              className="mb-3 rounded-lg bg-gray-800 py-2.5 active:opacity-80 disabled:opacity-50"
-            >
-              {isSigning ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <Text className="text-center font-[Poppins-SemiBold] text-white">
-                  Sign message
-                </Text>
-              )}
-            </Pressable>
-            {signError && (
-              <Text className="mb-2 text-sm font-[Poppins] text-red-600">
-                {signError}
+        {!account?.address ? (
+          <View className="mx-4 mt-6 flex-1 px-1">
+            <View className="p-10">
+              <Text className="text-center text-xl font-bold font-[Poppins-Bold] tracking-tight text-white">
+                Welcome to
               </Text>
-            )}
-            {signature && (
-              <View className="rounded-lg bg-gray-100 p-2">
-                <Text className="text-xs font-[Poppins] text-gray-500">
-                  Signature
+              <Text className="text-center text-3xl font-bold font-[Poppins-Bold] tracking-tight text-white">
+                ETH Mobile
+              </Text>
+              <Text className="mt-4 text-center text-lg font-[Poppins-SemiBold] text-[#27B858]">
+                Let's play a game.
+              </Text>
+              <View className="mt-6 rounded-2xl bg-[#1a1a1f] p-5">
+                <Text className="text-center text-base leading-6 font-[Poppins] text-gray-300">
+                  Guess the right number from{' '}
+                  <Text className="font-[Poppins-SemiBold] text-white">
+                    0–5
+                  </Text>
+                  , and I'll{' '}
+                  <Text className="font-[Poppins-SemiBold] text-[#27B858]">
+                    double your bet
+                  </Text>
+                  .
                 </Text>
-                <Text
-                  className="text-sm font-[Poppins] text-gray-800"
-                  numberOfLines={3}
-                  ellipsizeMode="middle"
-                >
-                  {signature}
+                <Text className="mt-3 text-center text-sm font-[Poppins] text-gray-500">
+                  0 · 1 · 2 · 3 · 4 · 5
                 </Text>
               </View>
-            )}
+              <Text className="mt-8 text-center text-2xl font-bold font-[Poppins-Bold] text-white">
+                You in?
+              </Text>
+              <Text className="mt-3 text-center text-base font-[Poppins] text-gray-400">
+                Connect your wallet to play —{' '}
+                <Text className="font-[Poppins-SemiBold] text-[#27B858]">
+                  Swipe the pill
+                </Text>{' '}
+                on the right →
+              </Text>
+              <View className="mt-8 flex-row justify-center">
+                <View className="h-14 w-14 items-center justify-center rounded-full bg-[#27B858]/25">
+                  <Ionicons name="wallet-outline" size={32} color="#27B858" />
+                </View>
+              </View>
+            </View>
           </View>
-        )}
-
-        {showContractSection && (
-          <View className="mx-4 mb-4 p-4 border border-gray-200 rounded-2xl bg-gray-50">
-            <Text className="text-lg font-[Poppins-Bold] mb-3">
-              YourContract (packages/hardhat/contracts/YourContract.sol)
+        ) : !isLocalNetwork ? (
+          <View className="mx-4 mt-8 rounded-2xl bg-[#1a1a1f] p-6">
+            <Text className="text-center text-base font-[Poppins] text-gray-400">
+              Switch to Local Network (Hardhat) in your wallet to play this
+              game.
             </Text>
-            {contractLoading ? (
-              <ActivityIndicator size="small" color="#555" />
-            ) : !yourContract ? (
-              <Text className="text-base font-[Poppins] text-gray-500">
-                Switch to a network where YourContract is deployed (e.g. local
-                chain 31337) to see live data.
-              </Text>
-            ) : yourContract?.address && yourContract?.abi ? (
-              <YourContractReads
-                address={yourContract.address}
-                abi={yourContract.abi as InterfaceAbi}
-              />
-            ) : (
-              <Text className="text-base font-[Poppins] text-gray-500">
-                Switch to a network where YourContract is deployed (e.g. local
-                chain 31337) to see live data.
-              </Text>
-            )}
           </View>
+        ) : !guessContract?.address ? (
+          <View className="mx-4 mt-8 rounded-2xl bg-[#1a1a1f] p-6">
+            <Text className="text-center text-base font-[Poppins] text-gray-400">
+              Game contract not deployed on this network. Run deploy on local
+              chain.
+            </Text>
+          </View>
+        ) : (
+          <>
+            <View className="mx-4 mt-6 rounded-2xl bg-[#1a1a1f] p-5">
+              <Text className="text-center text-sm font-[Poppins] text-gray-500">
+                Pick 0–5. Bet up to 0.1 ETH. Double your bet if you win.
+              </Text>
+            </View>
+
+            <View className="mx-4 mt-4 rounded-2xl bg-[#1a1a1f] p-5">
+              <Text className="mb-3 text-sm font-[Poppins-SemiBold] text-gray-400">
+                Your guess
+              </Text>
+              <View className="flex-row flex-wrap gap-2">
+                {NUMBERS.map(n => (
+                  <Pressable
+                    key={n}
+                    onPress={() => setGuess(n)}
+                    className="h-12 w-12 items-center justify-center rounded-xl border-2 border-[#2a2a30] bg-[#25252b]"
+                    style={{
+                      borderColor: guess === n ? '#27B858' : '#2a2a30',
+                      backgroundColor:
+                        guess === n ? 'rgba(39,184,88,0.12)' : '#25252b'
+                    }}
+                  >
+                    <Text
+                      className="text-lg font-bold font-[Poppins-Bold] text-white"
+                      style={{ color: guess === n ? '#27B858' : '#fff' }}
+                    >
+                      {n}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
+
+            <View className="mx-4 mt-4 rounded-2xl bg-[#1a1a1f] p-5">
+              <Text className="mb-2 text-sm font-[Poppins-SemiBold] text-gray-400">
+                Bet (ETH)
+              </Text>
+              <TextInput
+                value={betEth}
+                onChangeText={t => {
+                  setBetEth(t);
+                  setError('');
+                }}
+                placeholder="0.01"
+                placeholderTextColor="#555"
+                keyboardType="decimal-pad"
+                className="rounded-xl border border-[#2a2a30] bg-[#25252b] px-4 py-3.5 text-lg font-[Poppins] text-white"
+                maxLength={10}
+              />
+              <Text className="mt-1.5 text-xs font-[Poppins] text-gray-500">
+                Max {MAX_BET_ETH} ETH
+              </Text>
+            </View>
+
+            {error ? (
+              <View className="mx-4 mt-3 rounded-xl bg-red-500/15 px-4 py-2">
+                <Text className="text-sm font-[Poppins] text-red-400">
+                  {error}
+                </Text>
+              </View>
+            ) : null}
+
+            <View className="mx-4 mt-5">
+              <Pressable
+                onPress={play}
+                disabled={!betValid || isPlaying}
+                className="rounded-2xl py-4 active:opacity-90 disabled:opacity-50"
+                style={{ backgroundColor: '#27B858' }}
+              >
+                {isPlaying ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Text className="text-center text-lg font-bold font-[Poppins-Bold] text-white">
+                    Play
+                  </Text>
+                )}
+              </Pressable>
+            </View>
+
+            {lastResult ? (
+              <View
+                className="mx-4 mt-6 rounded-2xl p-5"
+                style={{
+                  backgroundColor: lastResult.won
+                    ? 'rgba(39,184,88,0.15)'
+                    : 'rgba(239,68,68,0.12)'
+                }}
+              >
+                <Text
+                  className="text-center text-base font-[Poppins-SemiBold]"
+                  style={{
+                    color: lastResult.won ? '#27B858' : '#ef4444'
+                  }}
+                >
+                  {lastResult.won
+                    ? `You won! The number was ${lastResult.result}.`
+                    : `You lost. The number was ${lastResult.result}.`}
+                </Text>
+                <Text className="mt-1 text-center text-sm font-[Poppins] text-gray-400">
+                  Bet: {lastResult.bet} ETH
+                </Text>
+              </View>
+            ) : null}
+          </>
         )}
       </ScrollView>
     </View>

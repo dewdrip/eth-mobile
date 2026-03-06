@@ -1,14 +1,29 @@
-import React, { useMemo, useRef } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
+  cancelAnimation,
   runOnJS,
   runOnUI,
   useAnimatedStyle,
   useSharedValue,
-  withSpring
+  withRepeat,
+  withSequence,
+  withSpring,
+  withTiming
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const HINT_SEEN_KEY = '@ethmobile/walletTriggerHintSeen';
+const HINT_DELAY_MS = 3000;
+const HINT_PEEK_DURATION_MS = 400;
 
 const { height, width } = Dimensions.get('window');
 const PILL_HEIGHT = 53;
@@ -49,10 +64,51 @@ export default function WalletTrigger({
   const dragEnabled = useSharedValue(0);
   const gestureStartY = useSharedValue(0);
   const gestureStartX = useSharedValue(0);
+  const hintPullX = useSharedValue(0);
   const longPressTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
   const movedBeyondHoldThresholdRef = useRef(false);
+  const [hintSeen, setHintSeen] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    AsyncStorage.getItem(HINT_SEEN_KEY)
+      .then(value => {
+        if (!cancelled) setHintSeen(value === 'true');
+      })
+      .catch(() => {
+        if (!cancelled) setHintSeen(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (hintSeen !== false) return;
+    const t = setTimeout(() => {
+      hintPullX.value = withRepeat(
+        withSequence(
+          withTiming(-PEEK_MAX, { duration: HINT_PEEK_DURATION_MS }),
+          withTiming(0, { duration: HINT_PEEK_DURATION_MS })
+        ),
+        -1
+      );
+    }, HINT_DELAY_MS);
+    return () => {
+      clearTimeout(t);
+      cancelAnimation(hintPullX);
+      hintPullX.value = 0;
+    };
+  }, [hintSeen, hintPullX]);
+
+  const persistHintSeenAndStopHint = useCallback(() => {
+    setHintSeen(true);
+    cancelAnimation(hintPullX);
+    hintPullX.value = 0;
+    AsyncStorage.setItem(HINT_SEEN_KEY, 'true').catch(() => {});
+  }, [hintPullX]);
 
   const minY = insets.top - pillBaseTop + PILL_DRAG_PADDING;
   const maxY =
@@ -95,6 +151,7 @@ export default function WalletTrigger({
     () =>
       Gesture.Pan()
         .onBegin(() => {
+          runOnJS(persistHintSeenAndStopHint)();
           runOnJS(startLongPressTimer)();
         })
         .onStart(() => {
@@ -134,6 +191,7 @@ export default function WalletTrigger({
             (pillOnRight && e.translationX <= -PULL_OPEN_THRESHOLD) ||
             (!pillOnRight && e.translationX >= PULL_OPEN_THRESHOLD);
           if (!dragEnabled.value && openedBySwipe) {
+            runOnJS(persistHintSeenAndStopHint)();
             runOnJS(onOpenWalletDetails)();
           }
           runOnJS(cancelLongPressTimer)();
@@ -166,12 +224,15 @@ export default function WalletTrigger({
           });
           dragEnabled.value = 0;
         }),
-    [onOpenWalletDetails, minY, maxY, minPositionX]
+    [onOpenWalletDetails, minY, maxY, minPositionX, persistHintSeenAndStopHint]
   );
 
   const pillStyle = useAnimatedStyle(() => ({
     transform: [
-      { translateX: positionX.value + pullX.value + active.value * -2 },
+      {
+        translateX:
+          positionX.value + pullX.value + hintPullX.value + active.value * -2
+      },
       { translateY: translateY.value },
       { scale: 1 + active.value * 0.06 }
     ],
@@ -183,7 +244,7 @@ export default function WalletTrigger({
       <GestureDetector gesture={panGesture}>
         <Animated.View
           style={[pillStyles.pillContainer, pillStyle]}
-          hitSlop={{ left: 10, right: 16, top: 10, bottom: 10 }}
+          hitSlop={{ left: 25, right: 16, top: 25, bottom: 25 }}
           collapsable={false}
         />
       </GestureDetector>

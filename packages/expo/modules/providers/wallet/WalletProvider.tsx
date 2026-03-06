@@ -162,7 +162,7 @@ export default function WalletProvider({
         </BottomSheetModal>
         <BottomSheetModal
           ref={sendFundsSheetRef}
-          snapPoints={['65%']}
+          snapPoints={['65%', '95%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
         >

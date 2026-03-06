@@ -183,7 +183,7 @@ export default function WalletTrigger({
       <GestureDetector gesture={panGesture}>
         <Animated.View
           style={[pillStyles.pillContainer, pillStyle]}
-          hitSlop={{ left: 48, right: 16, top: 48, bottom: 48 }}
+          hitSlop={{ left: 10, right: 16, top: 10, bottom: 10 }}
           collapsable={false}
         />
       </GestureDetector>

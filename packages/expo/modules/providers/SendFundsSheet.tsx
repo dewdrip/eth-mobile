@@ -21,7 +21,7 @@ import { getContract, prepareContractCall, prepareTransaction } from 'thirdweb';
 import { defineChain } from 'thirdweb/chains';
 import { useActiveAccount, useSendTransaction } from 'thirdweb/react';
 import { isAddress, parseUnits } from 'viem';
-import { DEFAULT_TOKENS, type SendToken } from './tokens';
+import { getDefaultTokensForNetwork, type SendToken } from './tokens';
 
 const ERC20_TRANSFER_ABI = [
   {
@@ -42,7 +42,7 @@ export default function SendFundsSheet() {
   const network = useNetwork();
   const toast = useToast();
   const [selectedToken, setSelectedToken] = useState<SendToken>(
-    DEFAULT_TOKENS[0]
+    () => getDefaultTokensForNetwork(network)[0]
   );
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');

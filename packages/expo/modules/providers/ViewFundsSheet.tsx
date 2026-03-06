@@ -8,7 +8,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, { useCallback, useMemo } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
-import { DEFAULT_TOKENS, type SendToken } from './tokens';
+import { getDefaultTokensForNetwork, type SendToken } from './tokens';
 import { useWalletContext } from './WalletProvider';
 
 function TokenRow({
@@ -80,25 +80,21 @@ export default function ViewFundsSheet() {
   const tokensState = useTokensStore(state => state.tokens);
 
   const tokensList: SendToken[] = useMemo(() => {
-    const defaultAddresses = new Set(
-      DEFAULT_TOKENS.map(t => t.tokenAddress?.toLowerCase()).filter(Boolean)
-    );
+    const defaults = getDefaultTokensForNetwork(network);
     const key =
       account?.address && network?.id != null
         ? getStorageKey(String(network.id), account.address)
         : null;
     const userTokens = key ? (tokensState[key] ?? []) : [];
-    const custom = userTokens
-      .filter(t => !defaultAddresses.has(t.address.toLowerCase()))
-      .map(t => ({
-        id: t.address,
-        name: t.name,
-        symbol: t.symbol,
-        decimals: t.decimals ?? 18,
-        tokenAddress: t.address as `0x${string}`
-      }));
-    return [...DEFAULT_TOKENS, ...custom];
-  }, [account?.address, network?.id, tokensState]);
+    const custom = userTokens.map(t => ({
+      id: t.address,
+      name: t.name,
+      symbol: t.symbol,
+      decimals: t.decimals ?? 18,
+      tokenAddress: t.address as `0x${string}`
+    }));
+    return [...defaults, ...custom];
+  }, [account?.address, network, tokensState]);
 
   const removableAddresses = useMemo(
     () =>

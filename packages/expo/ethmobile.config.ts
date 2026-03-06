@@ -4,8 +4,12 @@ export type Config = {
 };
 
 export type Token = {
-  decimals: number;
+  /** Human-readable token name, e.g. Ether, Matic */
+  name: string;
+  /** Token symbol, e.g. ETH, MATIC */
   symbol: string;
+  /** Number of decimals for the token */
+  decimals: number;
 };
 
 export type Network = {
@@ -42,8 +46,9 @@ const config: Config = {
       provider: 'http://192.168.0.52:8545',
       id: 31337,
       token: {
-        decimals: 18,
-        symbol: 'ETH'
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
       },
       coingeckoPriceId: 'ethereum',
       blockExplorer: null
@@ -54,8 +59,9 @@ const config: Config = {
       id: 1,
       icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
       token: {
-        decimals: 18,
-        symbol: 'ETH'
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
       },
       coingeckoPriceId: 'ethereum',
       blockExplorer: 'https://etherscan.io'
@@ -66,8 +72,9 @@ const config: Config = {
       id: 11155111,
       icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
       token: {
-        decimals: 18,
-        symbol: 'ETH'
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
       },
       coingeckoPriceId: 'ethereum',
       blockExplorer: 'https://sepolia.etherscan.io'
@@ -78,8 +85,9 @@ const config: Config = {
       id: 42161,
       icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png',
       token: {
-        decimals: 18,
-        symbol: 'ETH'
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
       },
       coingeckoPriceId: 'ethereum',
       blockExplorer: 'https://arbiscan.io'
@@ -90,8 +98,9 @@ const config: Config = {
       id: 421614,
       icon: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png',
       token: {
-        decimals: 18,
-        symbol: 'ETH'
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
       },
       coingeckoPriceId: 'arbitrum',
       blockExplorer: 'https://sepolia.arbiscan.io'
@@ -102,8 +111,9 @@ const config: Config = {
       id: 10,
       icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png',
       token: {
-        decimals: 18,
-        symbol: 'ETH'
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
       },
       coingeckoPriceId: 'optimism',
       blockExplorer: 'https://optimistic.etherscan.io'
@@ -114,8 +124,9 @@ const config: Config = {
       id: 11155420,
       icon: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png',
       token: {
-        decimals: 18,
-        symbol: 'ETH'
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
       },
       coingeckoPriceId: 'optimism',
       blockExplorer: 'https://sepolia-optimism.etherscan.io'
@@ -126,8 +137,9 @@ const config: Config = {
       id: 8453,
       icon: 'https://cdn.brandfetch.io/id6XsSOVVS/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B',
       token: {
-        decimals: 18,
-        symbol: 'ETH'
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
       },
       coingeckoPriceId: 'base',
       blockExplorer: 'https://basescan.org'
@@ -138,8 +150,9 @@ const config: Config = {
       id: 84532,
       icon: 'https://cdn.brandfetch.io/id6XsSOVVS/w/400/h/400/theme/dark/icon.jpeg?c=1dxbfHSJFAPEGdCLU4o5B',
       token: {
-        decimals: 18,
-        symbol: 'ETH'
+        name: 'Ether',
+        symbol: 'ETH',
+        decimals: 18
       },
       coingeckoPriceId: 'base',
       blockExplorer: 'https://sepolia.basescan.org'
@@ -150,8 +163,9 @@ const config: Config = {
       id: 137,
       icon: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
       token: {
-        decimals: 18,
-        symbol: 'MATIC'
+        name: 'Matic',
+        symbol: 'MATIC',
+        decimals: 18
       },
       coingeckoPriceId: 'polygon-ecosystem-token',
       blockExplorer: 'https://polygonscan.com'
@@ -162,8 +176,9 @@ const config: Config = {
       id: 80002,
       icon: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
       token: {
-        decimals: 18,
-        symbol: 'MATIC'
+        name: 'Matic',
+        symbol: 'MATIC',
+        decimals: 18
       },
       coingeckoPriceId: 'polygon-ecosystem-token',
       blockExplorer: 'https://mumbai.polygonscan.com'

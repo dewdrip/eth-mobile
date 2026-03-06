@@ -9,7 +9,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, { useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { DEFAULT_TOKENS, type SendToken } from './tokens';
+import { getDefaultTokensForNetwork, type SendToken } from './tokens';
 
 function TokenRow({
   token,
@@ -71,20 +71,16 @@ export default function TokenPickerSheet() {
   }, [account?.address, network?.id, tokensState]);
 
   const tokensList: SendToken[] = useMemo(() => {
-    const defaultAddresses = new Set(
-      DEFAULT_TOKENS.map(t => t.tokenAddress?.toLowerCase()).filter(Boolean)
-    );
-    const custom = userTokens
-      .filter(t => !defaultAddresses.has(t.address.toLowerCase()))
-      .map(t => ({
-        id: t.address,
-        name: t.name,
-        symbol: t.symbol,
-        decimals: t.decimals ?? 18,
-        tokenAddress: t.address as `0x${string}`
-      }));
-    return [...DEFAULT_TOKENS, ...custom];
-  }, [userTokens]);
+    const defaults = getDefaultTokensForNetwork(network);
+    const custom = userTokens.map(t => ({
+      id: t.address,
+      name: t.name,
+      symbol: t.symbol,
+      decimals: t.decimals ?? 18,
+      tokenAddress: t.address as `0x${string}`
+    }));
+    return [...defaults, ...custom];
+  }, [userTokens, network]);
 
   const handleSelect = (token: SendToken) => {
     tokenPickerOnSelectRef?.current?.(token);

@@ -12,6 +12,7 @@ import {
   useDisconnect
 } from 'thirdweb/react';
 import { useWalletContext } from '../context';
+import FaucetButton from './FaucetButton';
 
 export default function WalletDetailsSheet() {
   const { dismiss } = useBottomSheetModal();
@@ -125,6 +126,8 @@ export default function WalletDetailsSheet() {
           </Text>
         </Pressable>
       </View>
+
+      <FaucetButton />
     </BottomSheetView>
   );
 }

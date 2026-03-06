@@ -1,4 +1,4 @@
-import { COLORS } from '@/utils/constants';
+import { useTheme } from '@/theme';
 import Device from '@/utils/device';
 import { isENS } from '@/utils/eth-mobile';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -40,6 +40,7 @@ export function AddressInput({
   errorClassName,
   scan
 }: Props) {
+  const { colors } = useTheme();
   const { openModal } = useModal();
 
   const [error, setError] = useState(errorProp || '');
@@ -86,12 +87,17 @@ export function AddressInput({
   return (
     <View className={`gap-y-2 ${containerClassName}`}>
       <View
-        className={`bg-gray-100 border border-gray-200 flex-row items-center gap-x-1 px-3 py-2 rounded-lg ${inputContainerClassName}`}
+        className={`flex-row items-center gap-x-1 px-3 py-2 rounded-lg ${inputContainerClassName}`}
+        style={{
+          backgroundColor: colors.surfaceVariant,
+          borderColor: colors.border,
+          borderWidth: 1
+        }}
       >
         {isLoading ? (
           <ActivityIndicator
             size={Device.getDeviceWidth() * 0.09}
-            color={COLORS.primary}
+            color={colors.primary}
           />
         ) : (
           isAddress(value) && (
@@ -102,7 +108,8 @@ export function AddressInput({
           placeholder={placeholder || 'Enter address or ENS name'}
           value={value}
           className={`flex-1 text-lg font-[Poppins] ${inputClassName}`}
-          placeholderTextColor="#a3a3a3"
+          style={{ color: colors.text }}
+          placeholderTextColor={colors.textMuted}
           onChangeText={handleInputChange}
           onSubmitEditing={onSubmit}
         />
@@ -111,7 +118,7 @@ export function AddressInput({
             <MaterialIcons
               name="qr-code-scanner"
               size={Device.getDeviceWidth() * 0.075}
-              color="#555"
+              color={colors.textMuted}
             />
           </Pressable>
         )}
@@ -119,7 +126,8 @@ export function AddressInput({
 
       {error && (
         <Text
-          className={`text-sm text-red-500 font-[Poppins] ${errorClassName}`}
+          className={`text-sm font-[Poppins] ${errorClassName}`}
+          style={{ color: colors.error }}
         >
           {error}
         </Text>

@@ -1,5 +1,5 @@
 import { useReadContract } from '@/hooks/eth-mobile';
-import { COLORS } from '@/utils/constants';
+import { useTheme } from '@/theme';
 import globalStyles from '@/utils/globalStyles';
 import { AbiFunction, Address } from 'abitype';
 import { InterfaceAbi } from 'ethers';
@@ -24,6 +24,7 @@ export default function ReadOnlyFunctionForm({
   abiFunction,
   abi
 }: Props) {
+  const { colors } = useTheme();
   const [form, setForm] = useState<Record<string, any>>(() =>
     getInitialFormState(abiFunction)
   );
@@ -62,19 +63,26 @@ export default function ReadOnlyFunctionForm({
 
   return (
     <View>
-      <Text className="text-lg font-[Poppins]">{abiFunction.name}</Text>
+      <Text className="text-lg font-[Poppins]" style={{ color: colors.text }}>
+        {abiFunction.name}
+      </Text>
 
       <View className="gap-4 mt-4">{inputElements}</View>
 
       {result !== null && result !== undefined && (
         <View
           className="mt-2 p-4 rounded-lg"
-          style={{
-            backgroundColor: COLORS.primaryLight,
-            ...globalStyles.shadow
-          }}
+          style={[
+            globalStyles.shadow,
+            { backgroundColor: colors.primaryMuted }
+          ]}
         >
-          <Text className="text-lg font-[Poppins]">Result:</Text>
+          <Text
+            className="text-lg font-[Poppins]"
+            style={{ color: colors.text }}
+          >
+            Result:
+          </Text>
           {result.map((data: any) => {
             const replacer = (_key: string, value: any) =>
               typeof value === 'bigint' ? value.toString() : value;
@@ -82,6 +90,7 @@ export default function ReadOnlyFunctionForm({
               <Text
                 key={Math.random().toString()}
                 className="text-lg font-[Poppins]"
+                style={{ color: colors.text }}
               >
                 {typeof data == 'object' && isNaN(data)
                   ? JSON.stringify(data, replacer)
@@ -95,7 +104,7 @@ export default function ReadOnlyFunctionForm({
       <Pressable
         className="mt-4 gap-x-2 flex-row items-center self-end px-4 py-1 rounded-full"
         style={{
-          backgroundColor: isFetching ? COLORS.primary : COLORS.primaryLight
+          backgroundColor: isFetching ? colors.primary : colors.primaryMuted
         }}
         disabled={isFetching}
         onPress={async () => {
@@ -107,12 +116,12 @@ export default function ReadOnlyFunctionForm({
         {isFetching && (
           <ActivityIndicator
             size="small"
-            color={isFetching ? 'white' : COLORS.primary}
+            color={isFetching ? colors.primaryContrast : colors.primary}
           />
         )}
         <Text
           className="text-base font-[Poppins]"
-          style={{ color: isFetching ? 'white' : 'black' }}
+          style={{ color: isFetching ? colors.primaryContrast : colors.text }}
         >
           Read
         </Text>

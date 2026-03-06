@@ -1,4 +1,4 @@
-import { COLORS } from '@/utils/constants';
+import { useTheme } from '@/theme';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, Text } from 'react-native';
 import { InputBase } from '.';
@@ -18,6 +18,7 @@ export function IntegerInput({
   variant = IntegerVariant.UINT256,
   disableMultiplyBy1e18 = false
 }: IntegerInputProps) {
+  const { colors } = useTheme();
   const [inputError, setInputError] = useState(false);
   const multiplyBy1e18 = useCallback(() => {
     if (!value) {
@@ -53,11 +54,21 @@ export function IntegerInput({
             disabled={disabled}
             className="px-4 flex-row items-start rounded-2xl mr-2"
             style={{
-              backgroundColor: COLORS.primary
+              backgroundColor: colors.primary
             }}
           >
-            <Text className="text-lg text-white font-[Poppins]">10</Text>
-            <Text className="text-xs text-white font-[Poppins]">18</Text>
+            <Text
+              className="text-lg font-[Poppins]"
+              style={{ color: colors.primaryContrast }}
+            >
+              10
+            </Text>
+            <Text
+              className="text-xs font-[Poppins]"
+              style={{ color: colors.primaryContrast }}
+            >
+              18
+            </Text>
           </Pressable>
         )
       }

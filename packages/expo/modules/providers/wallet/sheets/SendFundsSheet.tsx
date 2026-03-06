@@ -1,5 +1,6 @@
 import { AddressInput, EtherInput } from '@/components/eth-mobile';
 import { useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { useTheme } from '@/theme';
 import { formatBalanceDisplay, getParsedError } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -36,6 +37,7 @@ const ERC20_TRANSFER_ABI = [
 ] as const;
 
 export default function SendFundsSheet() {
+  const { colors } = useTheme();
   const { dismiss } = useBottomSheetModal();
   const { openTokenPicker } = useWalletContext() ?? {};
   const account = useActiveAccount();
@@ -187,45 +189,76 @@ export default function SendFundsSheet() {
     })();
 
   return (
-    <BottomSheetScrollView className="flex-1 bg-white">
-      <View className="flex-row items-center px-4 pt-2 pb-4 border-b border-gray-100">
+    <BottomSheetScrollView
+      className="flex-1"
+      style={{ backgroundColor: colors.background }}
+    >
+      <View
+        className="flex-row items-center px-4 pt-2 pb-4 border-b"
+        style={{ borderBottomColor: colors.border }}
+      >
         <Pressable onPress={() => dismiss()} hitSlop={12} className="p-2">
-          <Ionicons name="arrow-back" size={24} color="#374151" />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </Pressable>
-        <Text className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-gray-900 text-center mr-10">
+        <Text
+          className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-center mr-10"
+          style={{ color: colors.text }}
+        >
           Send Funds
         </Text>
         <View />
       </View>
 
       <View className="px-4 pt-4">
-        <Text className="text-sm font-[Poppins-SemiBold] text-gray-500 mb-2">
+        <Text
+          className="text-sm font-[Poppins-SemiBold] mb-2"
+          style={{ color: colors.textMuted }}
+        >
           Token
         </Text>
         <Pressable
-          className="flex-row items-center py-3 px-4 rounded-xl border border-gray-200 bg-white mb-4"
+          className="flex-row items-center py-3 px-4 rounded-xl border mb-4"
+          style={{
+            borderColor: colors.border,
+            backgroundColor: colors.surface
+          }}
           onPress={handleTokenPress}
           disabled={isSending}
         >
-          <View className="w-10 h-10 rounded-full bg-gray-200 items-center justify-center">
-            <Text className="text-sm font-[Poppins-SemiBold] text-gray-600">
+          <View
+            className="w-10 h-10 rounded-full items-center justify-center"
+            style={{ backgroundColor: colors.surfaceVariant }}
+          >
+            <Text
+              className="text-sm font-[Poppins-SemiBold]"
+              style={{ color: colors.textSecondary }}
+            >
               {selectedToken.symbol.slice(0, 2)}
             </Text>
           </View>
           <View className="flex-1 ml-3">
-            <Text className="text-base font-[Poppins-SemiBold] text-gray-900">
+            <Text
+              className="text-base font-[Poppins-SemiBold]"
+              style={{ color: colors.text }}
+            >
               {selectedToken.name}
             </Text>
-            <Text className="text-sm font-[Poppins] text-gray-500">
+            <Text
+              className="text-sm font-[Poppins]"
+              style={{ color: colors.textMuted }}
+            >
               {balanceLoading
                 ? '...'
                 : `${formatBalanceDisplay(displayValue)} ${symbol}`}
             </Text>
           </View>
-          <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
+          <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
         </Pressable>
 
-        <Text className="text-sm font-[Poppins-SemiBold] text-gray-500 mb-2">
+        <Text
+          className="text-sm font-[Poppins-SemiBold] mb-2"
+          style={{ color: colors.textMuted }}
+        >
           Send to
         </Text>
         <View className="mb-4">
@@ -238,7 +271,10 @@ export default function SendFundsSheet() {
           />
         </View>
 
-        <Text className="text-sm font-[Poppins-SemiBold] text-gray-500 mb-2">
+        <Text
+          className="text-sm font-[Poppins-SemiBold] mb-2"
+          style={{ color: colors.textMuted }}
+        >
           Amount
         </Text>
         {selectedToken.id === 'native' ? (
@@ -253,17 +289,27 @@ export default function SendFundsSheet() {
             />
           </View>
         ) : (
-          <View className="flex-row items-center rounded-xl border border-gray-200 bg-white px-4 py-3 mb-6">
+          <View
+            className="flex-row items-center rounded-xl border px-4 py-3 mb-6"
+            style={{
+              borderColor: colors.border,
+              backgroundColor: colors.surface
+            }}
+          >
             <TextInput
-              className="flex-1 text-base font-[Poppins] text-gray-900 p-0"
+              className="flex-1 text-base font-[Poppins] p-0"
+              style={{ color: colors.text }}
               placeholder="0"
-              placeholderTextColor="#9ca3af"
+              placeholderTextColor={colors.textMuted}
               value={amount}
               onChangeText={setAmount}
               keyboardType="decimal-pad"
               editable={!isSending}
             />
-            <Text className="text-base font-[Poppins] text-gray-500 ml-2">
+            <Text
+              className="text-base font-[Poppins] ml-2"
+              style={{ color: colors.textMuted }}
+            >
               {symbol}
             </Text>
           </View>
@@ -271,14 +317,17 @@ export default function SendFundsSheet() {
 
         <Pressable
           className="py-4 rounded-xl active:opacity-90 disabled:opacity-50 flex-row items-center justify-center"
-          style={{ backgroundColor: '#27B858' }}
+          style={{ backgroundColor: colors.primary }}
           onPress={handleSend}
           disabled={isSending || !canSend}
         >
           {isSending ? (
-            <ActivityIndicator size="small" color="#fff" />
+            <ActivityIndicator size="small" color={colors.primaryContrast} />
           ) : (
-            <Text className="text-center text-base font-[Poppins-SemiBold] text-white">
+            <Text
+              className="text-center text-base font-[Poppins-SemiBold]"
+              style={{ color: colors.primaryContrast }}
+            >
               Send
             </Text>
           )}

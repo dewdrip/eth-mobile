@@ -1,3 +1,4 @@
+import { ThemeProvider, useTheme } from '@/theme';
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PaperProvider } from 'react-native-paper';
@@ -7,30 +8,36 @@ import Thirdweb from './Thirdweb';
 import Toast from './Toast';
 import { WalletProvider } from './wallet';
 
-const theme = {
-  colors: {
-    primary: '#27B858',
-    accent: '#f1c40f',
-    background: '#ffffff',
-    surface: '#ffffff',
-    error: '#B00020'
-  }
-};
+function PaperThemeWrapper({ children }: { children: React.ReactNode }) {
+  const { theme: mode, colors } = useTheme();
+  const paperTheme = {
+    dark: mode === 'dark',
+    colors: {
+      primary: colors.primary,
+      background: colors.background,
+      surface: colors.surface,
+      error: colors.error
+    }
+  };
+  return <PaperProvider theme={paperTheme}>{children}</PaperProvider>;
+}
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <Thirdweb>
-      <Toast>
-        <PaperProvider theme={theme}>
-          <MenuProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <Modals>
-                <WalletProvider>{children}</WalletProvider>
-              </Modals>
-            </GestureHandlerRootView>
-          </MenuProvider>
-        </PaperProvider>
-      </Toast>
+      <ThemeProvider>
+        <Toast>
+          <PaperThemeWrapper>
+            <MenuProvider>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Modals>
+                  <WalletProvider>{children}</WalletProvider>
+                </Modals>
+              </GestureHandlerRootView>
+            </MenuProvider>
+          </PaperThemeWrapper>
+        </Toast>
+      </ThemeProvider>
     </Thirdweb>
   );
 }

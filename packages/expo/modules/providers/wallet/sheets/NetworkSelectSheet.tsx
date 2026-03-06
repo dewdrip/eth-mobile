@@ -1,6 +1,7 @@
 import ethmobileConfig, { type Network } from '@/ethmobile.config';
 import { useNetwork } from '@/hooks/eth-mobile';
 import { useNetworkStore } from '@/store';
+import { useTheme } from '@/theme';
 import { networkInitials } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -16,18 +17,21 @@ const NETWORKS: Network[] = Object.values(ethmobileConfig.networks);
 function NetworkRow({
   network,
   isActive,
-  onSelect
+  onSelect,
+  colors
 }: {
   network: Network;
   isActive: boolean;
   onSelect: () => void;
+  colors: import('@/theme').ThemeColors;
 }) {
   const [iconError, setIconError] = useState(false);
   const showIcon = network.icon && !iconError;
 
   return (
     <Pressable
-      className="flex-row items-center py-4 border-b border-gray-100"
+      className="flex-row items-center py-4 border-b"
+      style={{ borderBottomColor: colors.border }}
       onPress={onSelect}
     >
       {showIcon ? (
@@ -38,30 +42,43 @@ function NetworkRow({
           onError={() => setIconError(true)}
         />
       ) : (
-        <View className="w-10 h-10 rounded-full bg-gray-200 items-center justify-center overflow-hidden">
-          <Text className="text-sm font-[Poppins-SemiBold] text-gray-600">
+        <View
+          className="w-10 h-10 rounded-full items-center justify-center overflow-hidden"
+          style={{ backgroundColor: colors.surfaceVariant }}
+        >
+          <Text
+            className="text-sm font-[Poppins-SemiBold]"
+            style={{ color: colors.textSecondary }}
+          >
             {networkInitials(network.name)}
           </Text>
         </View>
       )}
       <View className="flex-1 ml-3">
-        <Text className="text-base font-[Poppins-SemiBold] text-gray-900">
+        <Text
+          className="text-base font-[Poppins-SemiBold]"
+          style={{ color: colors.text }}
+        >
           {network.name}
         </Text>
-        <Text className="text-sm font-[Poppins] text-gray-500">
+        <Text
+          className="text-sm font-[Poppins]"
+          style={{ color: colors.textMuted }}
+        >
           Chain ID {network.id}
         </Text>
       </View>
       {isActive ? (
-        <Ionicons name="checkmark-circle" size={22} color="#27B858" />
+        <Ionicons name="checkmark-circle" size={22} color={colors.primary} />
       ) : (
-        <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+        <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
       )}
     </Pressable>
   );
 }
 
 export default function NetworkSelectSheet() {
+  const { colors } = useTheme();
   const { dismiss } = useBottomSheetModal();
   const currentNetwork = useNetwork();
   const switchNetwork = useNetworkStore(state => state.switchNetwork);
@@ -72,13 +89,22 @@ export default function NetworkSelectSheet() {
   };
 
   return (
-    <BottomSheetScrollView className="flex-1 bg-white">
+    <BottomSheetScrollView
+      className="flex-1"
+      style={{ backgroundColor: colors.background }}
+    >
       <View className="pb-8">
-        <View className="flex-row items-center px-4 pt-2 pb-4 border-b border-gray-100">
+        <View
+          className="flex-row items-center px-4 pt-2 pb-4 border-b"
+          style={{ borderBottomColor: colors.border }}
+        >
           <Pressable onPress={() => dismiss()} hitSlop={12}>
-            <Ionicons name="arrow-back" size={24} color="#374151" />
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
           </Pressable>
-          <Text className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-gray-900 text-center mr-6">
+          <Text
+            className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-center mr-6"
+            style={{ color: colors.text }}
+          >
             Select Network
           </Text>
           <View />
@@ -91,6 +117,7 @@ export default function NetworkSelectSheet() {
               network={network}
               isActive={currentNetwork?.id === network.id}
               onSelect={() => handleSelect(network)}
+              colors={colors}
             />
           ))}
         </View>

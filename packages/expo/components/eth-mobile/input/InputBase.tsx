@@ -1,4 +1,4 @@
-import { COLORS } from '@/utils/constants';
+import { useTheme } from '@/theme';
 import React, { JSX, useCallback } from 'react';
 import { TextInput, View } from 'react-native';
 import { CommonInputProps } from './utils';
@@ -21,6 +21,7 @@ export function InputBase<
   prefix,
   suffix
 }: Props<T>) {
+  const { colors } = useTheme();
   const handleChange = useCallback(
     (value: string) => {
       onChange(value as unknown as T);
@@ -29,14 +30,18 @@ export function InputBase<
   );
 
   return (
-    <View className="flex-row items-center bg-gray-100 rounded-full">
+    <View
+      className="flex-row items-center rounded-full"
+      style={{ backgroundColor: colors.surfaceVariant }}
+    >
       {prefix}
       <TextInput
         value={value?.toString()}
         className="flex-1 px-4 py-3"
-        selectionColor={COLORS.primary}
-        cursorColor={COLORS.primary}
-        placeholderTextColor="#a3a3a3"
+        style={{ color: colors.text }}
+        selectionColor={colors.primary}
+        cursorColor={colors.primary}
+        placeholderTextColor={colors.textMuted}
         placeholder={placeholder}
         onChangeText={handleChange}
       />

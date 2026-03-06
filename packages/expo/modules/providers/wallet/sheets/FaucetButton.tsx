@@ -4,6 +4,7 @@
  * DO NOT use this private key in production or commit to public repos.
  */
 import { useNetwork } from '@/hooks/eth-mobile';
+import { useTheme } from '@/theme';
 import React, { useCallback, useState } from 'react';
 import { Pressable, Text } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
@@ -17,6 +18,7 @@ const HARDHAT_FAUCET_PRIVATE_KEY =
 const LOCAL_CHAIN_ID = 31337;
 
 export default function FaucetButton() {
+  const { colors } = useTheme();
   const account = useActiveAccount();
   const network = useNetwork();
   const toast = useToast();
@@ -71,7 +73,7 @@ export default function FaucetButton() {
     <Pressable className="py-3" onPress={handlePress} disabled={isLoading}>
       <Text
         className="text-base font-[Poppins-SemiBold] text-center"
-        style={{ color: '#27B858' }}
+        style={{ color: colors.primary }}
       >
         {isLoading ? (
           'Sending…'

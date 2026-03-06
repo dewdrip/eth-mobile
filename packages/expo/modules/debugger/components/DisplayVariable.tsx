@@ -1,6 +1,7 @@
 import { Address as AddressComp } from '@/components/eth-mobile';
 import { useReadContract } from '@/hooks/eth-mobile';
-import { COLORS, FONT_SIZE } from '@/utils/constants';
+import { useTheme } from '@/theme';
+import { FONT_SIZE } from '@/utils/constants';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AbiFunction, Address } from 'abitype';
 import { InterfaceAbi, isAddress } from 'ethers';
@@ -21,6 +22,7 @@ export default function DisplayVariable({
   abi,
   refreshDisplayVariables
 }: Props) {
+  const { colors } = useTheme();
   const toast = useToast();
 
   const {
@@ -46,11 +48,10 @@ export default function DisplayVariable({
     if (result === null || result === undefined) return;
 
     if (typeof result === 'object' && isNaN(result)) {
-      // Custom replacer to handle BigInt serialization
       const replacer = (_key: string, value: any) =>
         typeof value === 'bigint' ? value.toString() : value;
       return (
-        <Text className="text-lg font-[Poppins]">
+        <Text className="text-lg font-[Poppins]" style={{ color: colors.text }}>
           {JSON.stringify(result, replacer)}
         </Text>
       );
@@ -60,20 +61,26 @@ export default function DisplayVariable({
       return <AddressComp address={result.toString()} />;
     }
 
-    return <Text className="text-lg font-[Poppins]">{result.toString()}</Text>;
+    return (
+      <Text className="text-lg font-[Poppins]" style={{ color: colors.text }}>
+        {result.toString()}
+      </Text>
+    );
   };
 
   return (
     <View>
       <View className="flex-row items-center gap-2">
-        <Text className="text-lg font-[Poppins]">{abiFunction.name}</Text>
+        <Text className="text-lg font-[Poppins]" style={{ color: colors.text }}>
+          {abiFunction.name}
+        </Text>
         <TouchableOpacity onPress={async () => await refetch()}>
           {isFetching ? (
-            <ActivityIndicator size={FONT_SIZE.lg} color={COLORS.primary} />
+            <ActivityIndicator size={FONT_SIZE.lg} color={colors.primary} />
           ) : (
             <MaterialIcons
               name="cached"
-              color={COLORS.primary}
+              color={colors.primary}
               size={FONT_SIZE.lg}
             />
           )}

@@ -1,3 +1,4 @@
+import { useTheme } from '@/theme';
 import { useCallback } from 'react';
 import { Pressable, Text } from 'react-native';
 import { bytesToString, isHex, toBytes, toHex } from 'viem';
@@ -11,6 +12,7 @@ export function BytesInput({
   placeholder,
   disabled
 }: CommonInputProps) {
+  const { colors } = useTheme();
   const convertStringToBytes = useCallback(() => {
     onChange(
       isHex(value) ? bytesToString(toBytes(value)) : toHex(toBytes(value))
@@ -26,7 +28,12 @@ export function BytesInput({
       disabled={disabled}
       suffix={
         <Pressable onPress={convertStringToBytes} className="px-4">
-          <Text className="text-lg font-[Poppins] font-bold">#</Text>
+          <Text
+            className="text-lg font-[Poppins] font-bold"
+            style={{ color: colors.text }}
+          >
+            #
+          </Text>
         </Pressable>
       }
     />

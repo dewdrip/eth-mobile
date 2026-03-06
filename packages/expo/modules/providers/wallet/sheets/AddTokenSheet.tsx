@@ -5,6 +5,7 @@ import {
   useReadContract
 } from '@/hooks/eth-mobile';
 import { useTokensStore } from '@/store';
+import { useTheme } from '@/theme';
 import { formatBalanceDisplay, parseBalance } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -22,6 +23,7 @@ import {
 import { erc20Abi, isAddress } from 'viem';
 
 export default function AddTokenSheet() {
+  const { colors } = useTheme();
   const { dismiss } = useBottomSheetModal();
   const account = useAccount();
   const network = useNetwork();
@@ -115,85 +117,143 @@ export default function AddTokenSheet() {
   const canLookup = isAddress(addressInput.trim()) && !!account?.address;
 
   return (
-    <BottomSheetScrollView className="flex-1 bg-white">
+    <BottomSheetScrollView
+      className="flex-1"
+      style={{ backgroundColor: colors.background }}
+    >
       <View className="pb-8">
-        <View className="flex-row items-center px-4 pt-2 pb-4 border-b border-gray-100">
+        <View
+          className="flex-row items-center px-4 pt-2 pb-4 border-b"
+          style={{ borderBottomColor: colors.border }}
+        >
           <Pressable onPress={() => dismiss()} hitSlop={12} className="p-2">
-            <Ionicons name="arrow-back" size={24} color="#374151" />
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
           </Pressable>
-          <Text className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-gray-900 text-center">
+          <Text
+            className="flex-1 text-lg font-semibold font-[Poppins-SemiBold] text-center"
+            style={{ color: colors.text }}
+          >
             Add Token
           </Text>
           <View className="w-10" />
         </View>
 
         <View className="px-4 pt-6">
-          <Text className="text-sm font-[Poppins] text-gray-600 mb-2">
+          <Text
+            className="text-sm font-[Poppins] mb-2"
+            style={{ color: colors.textSecondary }}
+          >
             Token contract address
           </Text>
           <TextInput
-            className="border border-gray-200 rounded-xl px-4 py-3 text-base font-[Poppins] text-gray-900 bg-white"
+            className="border rounded-xl px-4 py-3 text-base font-[Poppins]"
+            style={{
+              borderColor: colors.border,
+              color: colors.text,
+              backgroundColor: colors.surface
+            }}
             placeholder="0x..."
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor={colors.textMuted}
             value={addressInput}
             onChangeText={setAddressInput}
             autoCapitalize="none"
             autoCorrect={false}
           />
           {addressInput.trim().length > 0 && !isAddress(addressInput.trim()) ? (
-            <Text className="mt-1.5 text-sm font-[Poppins] text-red-600">
+            <Text
+              className="mt-1.5 text-sm font-[Poppins]"
+              style={{ color: colors.error }}
+            >
               Invalid address
             </Text>
           ) : null}
           <Pressable
             onPress={handleLookup}
             disabled={!canLookup || isLoading}
-            className="mt-4 py-3 rounded-xl bg-gray-900 items-center"
+            className="mt-4 py-3 rounded-xl items-center"
+            style={{ backgroundColor: colors.primary }}
           >
             {isLoading ? (
-              <ActivityIndicator size="small" color="#fff" />
+              <ActivityIndicator size="small" color={colors.primaryContrast} />
             ) : (
-              <Text className="text-base font-[Poppins-SemiBold] text-white">
+              <Text
+                className="text-base font-[Poppins-SemiBold]"
+                style={{ color: colors.primaryContrast }}
+              >
                 Look up
               </Text>
             )}
           </Pressable>
 
           {error ? (
-            <View className="mt-4 p-3 rounded-lg bg-red-50">
-              <Text className="text-sm font-[Poppins] text-red-600">
+            <View
+              className="mt-4 p-3 rounded-lg"
+              style={{ backgroundColor: colors.error + '26' }}
+            >
+              <Text
+                className="text-sm font-[Poppins]"
+                style={{ color: colors.error }}
+              >
                 {error}
               </Text>
             </View>
           ) : null}
 
           {metadata && lookedUpAddress && !error ? (
-            <View className="mt-6 p-4 rounded-xl border border-gray-200 bg-gray-50">
-              <Text className="text-sm font-[Poppins] text-gray-500 mb-1">
+            <View
+              className="mt-6 p-4 rounded-xl border"
+              style={{
+                borderColor: colors.border,
+                backgroundColor: colors.surface
+              }}
+            >
+              <Text
+                className="text-sm font-[Poppins] mb-1"
+                style={{ color: colors.textMuted }}
+              >
                 Name
               </Text>
-              <Text className="text-base font-[Poppins-SemiBold] text-gray-900 mb-3">
+              <Text
+                className="text-base font-[Poppins-SemiBold] mb-3"
+                style={{ color: colors.text }}
+              >
                 {metadata.name}
               </Text>
-              <Text className="text-sm font-[Poppins] text-gray-500 mb-1">
+              <Text
+                className="text-sm font-[Poppins] mb-1"
+                style={{ color: colors.textMuted }}
+              >
                 Symbol
               </Text>
-              <Text className="text-base font-[Poppins-SemiBold] text-gray-900 mb-3">
+              <Text
+                className="text-base font-[Poppins-SemiBold] mb-3"
+                style={{ color: colors.text }}
+              >
                 {metadata.symbol}
               </Text>
-              <Text className="text-sm font-[Poppins] text-gray-500 mb-1">
+              <Text
+                className="text-sm font-[Poppins] mb-1"
+                style={{ color: colors.textMuted }}
+              >
                 Balance
               </Text>
-              <Text className="text-base font-[Poppins-SemiBold] text-gray-900">
+              <Text
+                className="text-base font-[Poppins-SemiBold]"
+                style={{ color: colors.text }}
+              >
                 {balance != null
                   ? `${formatBalanceDisplay(parseBalance(balance, metadata.decimals))} ${metadata.symbol}`
                   : '—'}
               </Text>
               <Pressable
                 onPress={handleAddToken}
-                className="mt-4 py-3 rounded-xl bg-gray-900 items-center"
+                className="mt-4 py-3 rounded-xl items-center"
+                style={{ backgroundColor: colors.primary }}
               >
-                <Text className="text-base font-[Poppins-SemiBold] text-white">
+                <Text
+                  className="text-base font-[Poppins-SemiBold]"
+                  style={{ color: colors.primaryContrast }}
+                >
                   Add
                 </Text>
               </Pressable>

@@ -1,3 +1,4 @@
+import { useTheme } from '@/theme';
 import {
   Contract,
   ContractName,
@@ -16,6 +17,7 @@ export default function ContractVariables({
   refreshDisplayVariables: boolean;
   deployedContractData: Contract<ContractName>;
 }) {
+  const { colors } = useTheme();
   if (!deployedContractData) {
     return null;
   }
@@ -46,7 +48,9 @@ export default function ContractVariables({
 
   if (!functionsToDisplay.length) {
     return (
-      <Text className="text-lg font-[Poppins]">No contract variables</Text>
+      <Text className="text-lg font-[Poppins]" style={{ color: colors.text }}>
+        No contract variables
+      </Text>
     );
   }
 

@@ -1,6 +1,7 @@
 import Button from '@/components/buttons/CustomButton';
 import { useNetwork } from '@/hooks/eth-mobile';
-import { COLORS, FONT_SIZE } from '@/utils/constants';
+import { useTheme } from '@/theme';
+import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
@@ -21,6 +22,7 @@ export default function TxReceiptModal({
     params: { hash, isError }
   }
 }: Props) {
+  const { colors } = useTheme();
   const connectedNetwork = useNetwork();
 
   const openExplorer = () => {
@@ -28,14 +30,21 @@ export default function TxReceiptModal({
   };
 
   return (
-    <View className="bg-white rounded-3xl p-5 m-5 w-[90%]">
+    <View
+      className="rounded-3xl p-5 m-5 w-[90%]"
+      style={{ backgroundColor: colors.surface }}
+    >
       <View className="flex-row items-center justify-between mb-4">
-        <Text className="text-2xl font-[Poppins]">
+        <Text
+          className="text-2xl font-[Poppins]"
+          style={{ color: colors.text }}
+        >
           {isError ? 'Transaction Failed' : 'Transaction Sent'}
         </Text>
         <Ionicons
           name="close-outline"
           size={FONT_SIZE['xl'] * 1.7}
+          color={colors.text}
           onPress={closeModal}
         />
       </View>
@@ -44,9 +53,12 @@ export default function TxReceiptModal({
         <Ionicons
           name={isError ? 'close-circle' : 'checkmark-circle'}
           size={FONT_SIZE['xl'] * 4}
-          color={isError ? COLORS.error : COLORS.primary}
+          color={isError ? colors.error : colors.primary}
         />
-        <Text className="text-lg font-[Poppins] text-center">
+        <Text
+          className="text-lg font-[Poppins] text-center"
+          style={{ color: colors.textSecondary }}
+        >
           {isError
             ? 'Something went wrong while sending your transaction.'
             : 'Your transaction has been sent to the network.'}

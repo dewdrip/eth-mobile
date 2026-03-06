@@ -1,4 +1,5 @@
 import { useClipboard } from '@/hooks/eth-mobile';
+import { useTheme } from '@/theme';
 import { truncateAddress } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -22,12 +23,16 @@ export function Address({
   copyable = true,
   showBlockie = true
 }: Props) {
+  const { colors } = useTheme();
   const { copy, isCopied } = useClipboard();
 
   return (
     <View className="flex-row items-center gap-x-2" style={containerStyle}>
       {showBlockie && <Blockie address={address} size={1.3 * 24} />}
-      <Text className="text-lg font-[Poppins]" style={textStyle}>
+      <Text
+        className="text-lg font-[Poppins]"
+        style={[{ color: colors.text }, textStyle]}
+      >
         {truncateAddress(address)}
       </Text>
       {copyable && (
@@ -35,7 +40,7 @@ export function Address({
           <Ionicons
             name={isCopied ? 'checkmark-circle-outline' : 'copy-outline'}
             size={20}
-            style={[{ color: '#10b981' }, iconStyle]}
+            style={[{ color: colors.primary }, iconStyle]}
           />
         </Pressable>
       )}

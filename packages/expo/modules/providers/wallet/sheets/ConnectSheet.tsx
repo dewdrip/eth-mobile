@@ -1,3 +1,4 @@
+import { useTheme, type ThemeColors } from '@/theme';
 import { Ionicons } from '@expo/vector-icons';
 import {
   BottomSheetScrollView,
@@ -49,7 +50,8 @@ function WalletRow({
   onPress,
   onCancel,
   isLoading,
-  disabled = false
+  disabled = false,
+  colors
 }: {
   name: string;
   sublabel?: string;
@@ -58,12 +60,14 @@ function WalletRow({
   onCancel?: () => void;
   isLoading: boolean;
   disabled?: boolean;
+  colors: ThemeColors;
 }) {
   return (
     <Pressable
       onPress={onPress}
       disabled={isLoading || disabled}
-      className="flex-row items-center py-4 border-b border-gray-100 active:opacity-80 disabled:opacity-60"
+      className="flex-row items-center py-4 border-b active:opacity-80 disabled:opacity-60"
+      style={{ borderBottomColor: colors.border }}
     >
       <Image
         source={logo}
@@ -71,11 +75,17 @@ function WalletRow({
         resizeMode="contain"
       />
       <View className="flex-1 ml-3">
-        <Text className="text-base font-[Poppins-SemiBold] text-gray-900">
+        <Text
+          className="text-base font-[Poppins-SemiBold]"
+          style={{ color: colors.text }}
+        >
           {name}
         </Text>
         {sublabel ? (
-          <Text className="text-xs font-[Poppins] text-gray-500">
+          <Text
+            className="text-xs font-[Poppins]"
+            style={{ color: colors.textMuted }}
+          >
             {sublabel}
           </Text>
         ) : null}
@@ -84,15 +94,18 @@ function WalletRow({
         <View className="flex-row items-center gap-2">
           {onCancel ? (
             <Pressable onPress={onCancel} hitSlop={8} className="py-1 px-0">
-              <Text className="text-sm font-[Poppins-SemiBold] text-red-600">
+              <Text
+                className="text-sm font-[Poppins-SemiBold]"
+                style={{ color: colors.error }}
+              >
                 Cancel
               </Text>
             </Pressable>
           ) : null}
-          <ActivityIndicator size="small" color="#374151" />
+          <ActivityIndicator size="small" color={colors.textMuted} />
         </View>
       ) : (
-        <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+        <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
       )}
     </Pressable>
   );
@@ -101,6 +114,7 @@ function WalletRow({
 type ConnectingId = 'google' | 'facebook' | 'apple' | string | null;
 
 export default function ConnectSheet() {
+  const { colors } = useTheme();
   const { dismiss } = useBottomSheetModal();
   const { connect, cancelConnection } = useConnect({ client });
   const [connectingId, setConnectingId] = useState<ConnectingId>(null);
@@ -165,9 +179,15 @@ export default function ConnectSheet() {
   );
 
   return (
-    <BottomSheetScrollView className="flex-1 bg-white">
+    <BottomSheetScrollView
+      className="flex-1"
+      style={{ backgroundColor: colors.background }}
+    >
       <View className="pb-8">
-        <Text className="text-xl font-semibold font-[Poppins-SemiBold] text-gray-900 ml-4 my-2">
+        <Text
+          className="text-xl font-semibold font-[Poppins-SemiBold] ml-4 my-2"
+          style={{ color: colors.text }}
+        >
           Sign in
         </Text>
 
@@ -180,10 +200,14 @@ export default function ConnectSheet() {
                   key={strategy}
                   onPress={() => handleSocialConnect(strategy)}
                   disabled={!!connectingId}
-                  className="flex-1 aspect-square max-h-14 items-center justify-center rounded-xl border border-gray-200 bg-white active:opacity-80"
+                  className="flex-1 aspect-square max-h-14 items-center justify-center rounded-xl border active:opacity-80"
+                  style={{
+                    borderColor: colors.border,
+                    backgroundColor: colors.background
+                  }}
                 >
                   {isThisConnecting ? (
-                    <ActivityIndicator size="small" color="#374151" />
+                    <ActivityIndicator size="small" color={colors.textMuted} />
                   ) : (
                     <Image
                       source={logo}
@@ -197,12 +221,26 @@ export default function ConnectSheet() {
           </View>
 
           <View className="flex-row items-center gap-3 mb-4">
-            <View className="flex-1 h-px bg-gray-200" />
-            <Text className="text-xs font-[Poppins] text-gray-500">OR</Text>
-            <View className="flex-1 h-px bg-gray-200" />
+            <View
+              className="flex-1 h-px"
+              style={{ backgroundColor: colors.border }}
+            />
+            <Text
+              className="text-xs font-[Poppins]"
+              style={{ color: colors.textMuted }}
+            >
+              OR
+            </Text>
+            <View
+              className="flex-1 h-px"
+              style={{ backgroundColor: colors.border }}
+            />
           </View>
 
-          <Text className="text-sm font-[Poppins] text-gray-600 mb-4">
+          <Text
+            className="text-sm font-[Poppins] mb-4"
+            style={{ color: colors.textSecondary }}
+          >
             Connect a wallet
           </Text>
           {WALLETS.map(w => (
@@ -215,6 +253,7 @@ export default function ConnectSheet() {
               onCancel={handleCancelWalletConnect}
               isLoading={connectingId === w.id}
               disabled={!!connectingId && connectingId !== w.id}
+              colors={colors}
             />
           ))}
         </View>

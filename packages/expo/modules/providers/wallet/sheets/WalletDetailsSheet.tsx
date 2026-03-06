@@ -1,5 +1,6 @@
 import { Address } from '@/components/eth-mobile';
 import { useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { useTheme } from '@/theme';
 import { formatBalanceDisplay, networkInitials } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetView, useBottomSheetModal } from '@gorhom/bottom-sheet';
@@ -15,6 +16,7 @@ import { useWalletContext } from '../context';
 import FaucetButton from './FaucetButton';
 
 export default function WalletDetailsSheet() {
+  const { colors } = useTheme();
   const { dismiss } = useBottomSheetModal();
   const { openViewFunds, openReceive, openSendFunds, openNetworkSelect } =
     useWalletContext() ?? {};
@@ -37,7 +39,10 @@ export default function WalletDetailsSheet() {
   };
 
   return (
-    <BottomSheetView className="flex-1 px-6 pb-8 bg-white">
+    <BottomSheetView
+      className="flex-1 px-6 pb-8"
+      style={{ backgroundColor: colors.background }}
+    >
       <View className="items-center my-3">
         <View className="w-16 h-16 rounded-full overflow-hidden">
           <Blobbie
@@ -54,9 +59,12 @@ export default function WalletDetailsSheet() {
 
       <View className="items-center mb-6">
         {balanceLoading ? (
-          <ActivityIndicator size="small" color="#374151" />
+          <ActivityIndicator size="small" color={colors.textMuted} />
         ) : (
-          <Text className="text-base font-[Poppins-SemiBold] text-gray-900">
+          <Text
+            className="text-base font-[Poppins-SemiBold]"
+            style={{ color: colors.text }}
+          >
             {formatBalanceDisplay(displayValue)} {symbol ?? 'ETH'}
           </Text>
         )}
@@ -64,28 +72,43 @@ export default function WalletDetailsSheet() {
 
       <View className="flex-row gap-3 mb-6">
         <Pressable
-          className="flex-1 flex-row items-center justify-center gap-2 py-3.5 rounded-xl border border-gray-200 bg-white"
+          className="flex-1 flex-row items-center justify-center gap-2 py-3.5 rounded-xl border"
+          style={{
+            borderColor: colors.border,
+            backgroundColor: colors.surface
+          }}
           onPress={() => openSendFunds?.()}
         >
-          <Ionicons name="paper-plane-outline" size={18} color="#374151" />
-          <Text className="text-[15px] font-[Poppins-SemiBold] text-gray-700">
+          <Ionicons name="paper-plane-outline" size={18} color={colors.text} />
+          <Text
+            className="text-[15px] font-[Poppins-SemiBold]"
+            style={{ color: colors.textSecondary }}
+          >
             Send
           </Text>
         </Pressable>
         <Pressable
-          className="flex-1 flex-row items-center justify-center gap-2 py-3.5 rounded-xl border border-gray-200 bg-white"
+          className="flex-1 flex-row items-center justify-center gap-2 py-3.5 rounded-xl border"
+          style={{
+            borderColor: colors.border,
+            backgroundColor: colors.surface
+          }}
           onPress={() => openReceive?.()}
         >
-          <Ionicons name="download-outline" size={18} color="#374151" />
-          <Text className="text-[15px] font-[Poppins-SemiBold] text-gray-700">
+          <Ionicons name="download-outline" size={18} color={colors.text} />
+          <Text
+            className="text-[15px] font-[Poppins-SemiBold]"
+            style={{ color: colors.textSecondary }}
+          >
             Receive
           </Text>
         </Pressable>
       </View>
 
-      <View className="border-t border-gray-100">
+      <View className="border-t" style={{ borderTopColor: colors.border }}>
         <Pressable
-          className="flex-row items-center py-3.5 gap-3 border-b border-gray-100"
+          className="flex-row items-center py-3.5 gap-3 border-b"
+          style={{ borderBottomColor: colors.border }}
           onPress={() => openNetworkSelect?.()}
         >
           {network.icon ? (
@@ -95,33 +118,50 @@ export default function WalletDetailsSheet() {
               resizeMode="cover"
             />
           ) : (
-            <View className="w-8 h-8 rounded-full bg-gray-200 items-center justify-center overflow-hidden">
-              <Text className="text-xs font-[Poppins-SemiBold] text-gray-600">
+            <View
+              className="w-8 h-8 rounded-full items-center justify-center overflow-hidden"
+              style={{ backgroundColor: colors.surfaceVariant }}
+            >
+              <Text
+                className="text-xs font-[Poppins-SemiBold]"
+                style={{ color: colors.textSecondary }}
+              >
                 {networkInitials(network.name)}
               </Text>
             </View>
           )}
-          <Text className="flex-1 text-base font-[Poppins] text-gray-700">
+          <Text
+            className="flex-1 text-base font-[Poppins]"
+            style={{ color: colors.textSecondary }}
+          >
             {network.name}
           </Text>
-          <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+          <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
         </Pressable>
         <Pressable
-          className="flex-row items-center py-3.5 gap-3 border-b border-gray-100"
+          className="flex-row items-center py-3.5 gap-3 border-b"
+          style={{ borderBottomColor: colors.border }}
           onPress={() => openViewFunds?.()}
         >
-          <Ionicons name="cash-outline" size={30} color="#374151" />
-          <Text className="flex-1 text-base font-[Poppins] text-gray-700">
+          <Ionicons name="cash-outline" size={30} color={colors.text} />
+          <Text
+            className="flex-1 text-base font-[Poppins]"
+            style={{ color: colors.textSecondary }}
+          >
             View Funds
           </Text>
-          <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+          <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
         </Pressable>
         <Pressable
-          className="flex-row items-center py-3.5 gap-3 border-b border-gray-100"
+          className="flex-row items-center py-3.5 gap-3 border-b"
+          style={{ borderBottomColor: colors.border }}
           onPress={handleDisconnect}
         >
-          <Ionicons name="log-out-outline" size={30} color="#374151" />
-          <Text className="flex-1 text-base font-[Poppins] text-gray-700">
+          <Ionicons name="log-out-outline" size={30} color={colors.text} />
+          <Text
+            className="flex-1 text-base font-[Poppins]"
+            style={{ color: colors.textSecondary }}
+          >
             Disconnect
           </Text>
         </Pressable>

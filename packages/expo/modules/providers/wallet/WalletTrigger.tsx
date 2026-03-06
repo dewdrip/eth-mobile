@@ -1,3 +1,4 @@
+import { useTheme } from '@/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
   useCallback,
@@ -56,6 +57,7 @@ export default function WalletTrigger({
 }: {
   onOpenWalletDetails: () => void;
 }) {
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const translateY = useSharedValue(0);
   const positionX = useSharedValue(0);
@@ -227,17 +229,20 @@ export default function WalletTrigger({
     [onOpenWalletDetails, minY, maxY, minPositionX, persistHintSeenAndStopHint]
   );
 
-  const pillStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX:
-          positionX.value + pullX.value + hintPullX.value + active.value * -2
-      },
-      { translateY: translateY.value },
-      { scale: 1 + active.value * 0.06 }
-    ],
-    backgroundColor: active.value > 0.5 ? '#27B858' : 'rgba(39, 184, 88, 0.4)'
-  }));
+  const pillStyle = useAnimatedStyle(
+    () => ({
+      transform: [
+        {
+          translateX:
+            positionX.value + pullX.value + hintPullX.value + active.value * -2
+        },
+        { translateY: translateY.value },
+        { scale: 1 + active.value * 0.06 }
+      ],
+      backgroundColor: active.value > 0.5 ? colors.primary : colors.primaryMuted
+    }),
+    [colors.primary, colors.primaryMuted]
+  );
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="box-none">

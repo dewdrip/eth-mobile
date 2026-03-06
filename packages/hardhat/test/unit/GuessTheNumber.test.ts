@@ -30,27 +30,33 @@ describe('GuessTheNumber', function () {
       expect(await guessTheNumber.MAX_BET()).to.equal(MAX_BET);
     });
 
-    it('Should expose MAX_NUMBER as 5', async function () {
-      expect(await guessTheNumber.MAX_NUMBER()).to.equal(5n);
+    it('Should expose MAX_NUMBER as 6', async function () {
+      expect(await guessTheNumber.MAX_NUMBER()).to.equal(6n);
     });
   });
 
   describe('Reverts', function () {
-    it('Should revert when guess > 5', async function () {
+    it('Should revert when guess < 1', async function () {
       await expect(
-        guessTheNumber.play(6, { value: ethers.parseEther('0.01') })
+        guessTheNumber.play(0, { value: ethers.parseEther('0.01') })
+      ).to.be.revertedWithCustomError(guessTheNumber, 'InvalidGuess');
+    });
+
+    it('Should revert when guess > 6', async function () {
+      await expect(
+        guessTheNumber.play(7, { value: ethers.parseEther('0.01') })
       ).to.be.revertedWithCustomError(guessTheNumber, 'InvalidGuess');
     });
 
     it('Should revert when bet is 0', async function () {
       await expect(
-        guessTheNumber.play(0, { value: 0n })
+        guessTheNumber.play(1, { value: 0n })
       ).to.be.revertedWithCustomError(guessTheNumber, 'InvalidBet');
     });
 
     it('Should revert when bet exceeds 0.1 ETH', async function () {
       await expect(
-        guessTheNumber.play(0, { value: ethers.parseEther('0.11') })
+        guessTheNumber.play(1, { value: ethers.parseEther('0.11') })
       ).to.be.revertedWithCustomError(guessTheNumber, 'InvalidBet');
     });
   });
@@ -72,7 +78,7 @@ describe('GuessTheNumber', function () {
       const contractBalanceBefore =
         await ethers.provider.getBalance(contractAddr);
 
-      const tx = await guessTheNumber.connect(player).play(0, { value: bet });
+      const tx = await guessTheNumber.connect(player).play(1, { value: bet });
       const receipt = await tx.wait();
       const gasCost = receipt!.gasUsed * receipt!.gasPrice;
 

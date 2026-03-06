@@ -1,5 +1,6 @@
 import { useCryptoPrice, useNetwork } from '@/hooks/eth-mobile';
-import { COLORS, FONT_SIZE } from '@/utils/constants';
+import { useTheme } from '@/theme';
+import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
@@ -41,6 +42,7 @@ export function EtherInput({
   const [dollarValue, setDollarValue] = useState('');
   const [isDollar, setIsDollar] = useState(false);
 
+  const { colors } = useTheme();
   const toast = useToast();
   const network = useNetwork();
   const symbol = symbolProp ?? network?.token?.symbol ?? 'ETH';
@@ -148,10 +150,10 @@ export function EtherInput({
       <TextInput
         value={displayValue}
         mode="outlined"
-        style={{ backgroundColor: '#f5f5f5' }}
+        style={{ backgroundColor: colors.surfaceVariant }}
         placeholder={`How much ${isDollar ? 'USD' : symbol}?`}
-        placeholderTextColor="#a3a3a3"
-        textColor="black"
+        placeholderTextColor={colors.textMuted}
+        textColor={colors.text}
         onChangeText={handleInputChange}
         onSubmitEditing={onSubmit}
         keyboardType="number-pad"
@@ -159,14 +161,19 @@ export function EtherInput({
         disabled={disabled}
         outlineStyle={{
           borderRadius: 12,
-          borderColor: error ? 'rgba(239, 68, 68, 0.6)' : COLORS.gray
+          borderColor: error ? colors.error : colors.border
         }}
         contentStyle={{ fontFamily: 'Poppins', fontSize: FONT_SIZE.lg }}
         left={
           <TextInput.Icon
             icon={() =>
               isDollar ? (
-                <Text className="text-2xl font-[Poppins] text-black">$</Text>
+                <Text
+                  className="text-2xl font-[Poppins]"
+                  style={{ color: colors.text }}
+                >
+                  $
+                </Text>
               ) : iconUri ? (
                 <Image
                   source={{ uri: iconUri }}
@@ -174,7 +181,12 @@ export function EtherInput({
                   resizeMode="cover"
                 />
               ) : (
-                <Text className="text-3xl font-[Poppins] text-black">♢</Text>
+                <Text
+                  className="text-3xl font-[Poppins]"
+                  style={{ color: colors.text }}
+                >
+                  ♢
+                </Text>
               )
             }
           />
@@ -186,12 +198,12 @@ export function EtherInput({
                 onPress={switchCurrency}
                 disabled={disabled}
                 className="w-full h-full items-center justify-center"
-                style={{ backgroundColor: COLORS.primary }}
+                style={{ backgroundColor: colors.primary }}
               >
                 <Ionicons
                   name="swap-horizontal"
                   size={18}
-                  color={disabled ? COLORS.gray : 'white'}
+                  color={disabled ? colors.textMuted : colors.primaryContrast}
                 />
               </Pressable>
             )}
@@ -200,7 +212,10 @@ export function EtherInput({
       />
 
       {error && (
-        <Text className="text-sm font-[Poppins] text-red-500 mt-1">
+        <Text
+          className="text-sm font-[Poppins] mt-1"
+          style={{ color: colors.error }}
+        >
           {error}
         </Text>
       )}

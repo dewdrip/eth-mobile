@@ -1,3 +1,4 @@
+import { useTheme } from '@/theme';
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -23,8 +24,17 @@ export default function WalletProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { colors } = useTheme();
   const account = useActiveAccount();
   const walletSheetRef = useRef<BottomSheetModal>(null);
+
+  const sheetThemeStyles = useMemo(
+    () => ({
+      handleIndicatorStyle: { backgroundColor: colors.textMuted },
+      backgroundStyle: { backgroundColor: colors.background }
+    }),
+    [colors.textMuted, colors.background]
+  );
   const connectSheetRef = useRef<BottomSheetModal>(null);
   const viewFundsSheetRef = useRef<BottomSheetModal>(null);
   const receiveSheetRef = useRef<BottomSheetModal>(null);
@@ -133,6 +143,8 @@ export default function WalletProvider({
           snapPoints={['55%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
+          handleIndicatorStyle={sheetThemeStyles.handleIndicatorStyle}
+          backgroundStyle={sheetThemeStyles.backgroundStyle}
         >
           <ConnectSheet />
         </BottomSheetModal>
@@ -141,6 +153,8 @@ export default function WalletProvider({
           snapPoints={['60%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
+          handleIndicatorStyle={sheetThemeStyles.handleIndicatorStyle}
+          backgroundStyle={sheetThemeStyles.backgroundStyle}
         >
           <WalletDetailsSheet />
         </BottomSheetModal>
@@ -149,6 +163,8 @@ export default function WalletProvider({
           snapPoints={['70%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
+          handleIndicatorStyle={sheetThemeStyles.handleIndicatorStyle}
+          backgroundStyle={sheetThemeStyles.backgroundStyle}
         >
           <ViewFundsSheet />
         </BottomSheetModal>
@@ -157,6 +173,8 @@ export default function WalletProvider({
           snapPoints={['70%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
+          handleIndicatorStyle={sheetThemeStyles.handleIndicatorStyle}
+          backgroundStyle={sheetThemeStyles.backgroundStyle}
         >
           <ReceiveSheet />
         </BottomSheetModal>
@@ -165,6 +183,8 @@ export default function WalletProvider({
           snapPoints={['65%', '95%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
+          handleIndicatorStyle={sheetThemeStyles.handleIndicatorStyle}
+          backgroundStyle={sheetThemeStyles.backgroundStyle}
         >
           <SendFundsSheet />
         </BottomSheetModal>
@@ -173,6 +193,8 @@ export default function WalletProvider({
           snapPoints={['70%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
+          handleIndicatorStyle={sheetThemeStyles.handleIndicatorStyle}
+          backgroundStyle={sheetThemeStyles.backgroundStyle}
         >
           <TokenPickerSheet />
         </BottomSheetModal>
@@ -181,6 +203,8 @@ export default function WalletProvider({
           snapPoints={['70%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
+          handleIndicatorStyle={sheetThemeStyles.handleIndicatorStyle}
+          backgroundStyle={sheetThemeStyles.backgroundStyle}
         >
           <NetworkSelectSheet />
         </BottomSheetModal>
@@ -189,6 +213,8 @@ export default function WalletProvider({
           snapPoints={['70%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
+          handleIndicatorStyle={sheetThemeStyles.handleIndicatorStyle}
+          backgroundStyle={sheetThemeStyles.backgroundStyle}
         >
           <AddTokenSheet />
         </BottomSheetModal>

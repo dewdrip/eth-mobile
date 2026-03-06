@@ -1,4 +1,5 @@
 import { useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { useTheme } from '@/theme';
 import { parseBalance } from '@/utils/eth-mobile';
 import React from 'react';
 import { Text, TextStyle, View } from 'react-native';
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export function Balance({ address, style }: Props) {
+  const { colors } = useTheme();
   const network = useNetwork();
   const { balance, isLoading } = useBalance({ address });
 
@@ -16,7 +18,10 @@ export function Balance({ address, style }: Props) {
 
   return (
     <View className="items-center">
-      <Text className="text-lg font-[Poppins]" style={style}>
+      <Text
+        className="text-lg font-[Poppins]"
+        style={[{ color: colors.text }, style]}
+      >
         {balance !== null
           ? `${Number(parseBalance(balance, network.token.decimals)).toLocaleString('en-US')} ${network.token.symbol}`
           : null}

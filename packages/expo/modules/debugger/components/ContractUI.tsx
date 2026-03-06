@@ -1,5 +1,6 @@
 import { Address, Balance } from '@/components/eth-mobile';
 import { useDeployedContractInfo, useNetwork } from '@/hooks/eth-mobile';
+import { useTheme } from '@/theme';
 import globalStyles from '@/utils/globalStyles';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import React, { useReducer } from 'react';
@@ -9,6 +10,7 @@ import ContractVariables from './ContractVariables';
 import ContractWriteMethods from './ContractWriteMethods';
 
 export default function ContractUI() {
+  const { colors } = useTheme();
   const route = useRoute();
   const isFocused = useIsFocused();
   const contractName = route.name;
@@ -25,35 +27,56 @@ export default function ContractUI() {
   if (isDeployedContractLoading || !isFocused) {
     return (
       <View className="mt-12">
-        <ActivityIndicator className="text-green-500" size="large" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   if (!deployedContractData) {
     return (
-      <Text className="mt-12 text-lg font-[Poppins]">
+      <Text
+        className="mt-12 text-lg font-[Poppins]"
+        style={{ color: colors.text }}
+      >
         {`No contract found by the name of "${contractName}" on chain "${network.name}". Are you on the right network?`}
       </Text>
     );
   }
 
   return (
-    <ScrollView className="flex-1 bg-white p-4">
+    <ScrollView
+      className="flex-1 p-4"
+      style={{ backgroundColor: colors.background }}
+    >
       <View
-        className="bg-white mb-6 p-4 gap-y-2 rounded-lg"
-        style={globalStyles.shadow}
+        className="mb-6 p-4 gap-y-2 rounded-lg"
+        style={[globalStyles.shadow, { backgroundColor: colors.surface }]}
       >
-        <Text className="text-lg font-[Poppins]">{contractName}</Text>
+        <Text className="text-lg font-[Poppins]" style={{ color: colors.text }}>
+          {contractName}
+        </Text>
         <Address address={deployedContractData?.address} />
         <View className="flex-row items-center">
-          <Text className="text-lg font-[Poppins]">Balance: </Text>
+          <Text
+            className="text-lg font-[Poppins]"
+            style={{ color: colors.text }}
+          >
+            Balance:{' '}
+          </Text>
           <Balance address={deployedContractData?.address} />
         </View>
         {network && (
           <View className="flex-row items-center">
-            <Text className="text-lg font-[Poppins]">Network: </Text>
-            <Text className="text-lg font-semibold font-[Poppins-SemiBold]">
+            <Text
+              className="text-lg font-[Poppins]"
+              style={{ color: colors.text }}
+            >
+              Network:{' '}
+            </Text>
+            <Text
+              className="text-lg font-semibold font-[Poppins-SemiBold]"
+              style={{ color: colors.text }}
+            >
               {network.name}
             </Text>
           </View>
@@ -61,8 +84,8 @@ export default function ContractUI() {
       </View>
 
       <View
-        className="bg-white mb-6 p-4 rounded-lg"
-        style={globalStyles.shadow}
+        className="mb-6 p-4 rounded-lg"
+        style={[globalStyles.shadow, { backgroundColor: colors.surface }]}
       >
         <ContractVariables
           refreshDisplayVariables={refreshDisplayVariables}
@@ -71,19 +94,41 @@ export default function ContractUI() {
       </View>
 
       <View className="mb-6">
-        <View className="bg-green-100 self-start -mb-2 px-2 py-1 rounded-lg">
-          <Text className="text-lg mb-2 font-[Poppins]">Read</Text>
+        <View
+          className="self-start -mb-2 px-2 py-1 rounded-lg"
+          style={{ backgroundColor: colors.primaryMuted }}
+        >
+          <Text
+            className="text-lg mb-2 font-[Poppins]"
+            style={{ color: colors.text }}
+          >
+            Read
+          </Text>
         </View>
-        <View className="bg-white p-4 rounded-lg" style={globalStyles.shadow}>
+        <View
+          className="p-4 rounded-lg"
+          style={[globalStyles.shadow, { backgroundColor: colors.surface }]}
+        >
           <ContractReadMethods deployedContractData={deployedContractData} />
         </View>
       </View>
 
       <View className="mb-6">
-        <View className="bg-green-100 self-start -mb-2 px-2 py-1 rounded-lg">
-          <Text className="text-lg mb-2 font-[Poppins]">Write</Text>
+        <View
+          className="self-start -mb-2 px-2 py-1 rounded-lg"
+          style={{ backgroundColor: colors.primaryMuted }}
+        >
+          <Text
+            className="text-lg mb-2 font-[Poppins]"
+            style={{ color: colors.text }}
+          >
+            Write
+          </Text>
         </View>
-        <View className="bg-white p-4 rounded-lg" style={globalStyles.shadow}>
+        <View
+          className="p-4 rounded-lg"
+          style={[globalStyles.shadow, { backgroundColor: colors.surface }]}
+        >
           <ContractWriteMethods
             deployedContractData={deployedContractData}
             onChange={triggerRefreshDisplayVariables}

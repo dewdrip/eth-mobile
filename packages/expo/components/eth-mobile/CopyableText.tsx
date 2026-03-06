@@ -1,4 +1,5 @@
 import { useClipboard } from '@/hooks/eth-mobile';
+import { useTheme } from '@/theme';
 import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -19,6 +20,7 @@ export function CopyableText({
   iconStyle,
   displayText
 }: Props) {
+  const { colors } = useTheme();
   const { copy, isCopied } = useClipboard();
 
   return (
@@ -27,13 +29,16 @@ export function CopyableText({
       className="flex-row items-center gap-x-2"
       style={containerStyle}
     >
-      <Text className="text-lg font-[Poppins]" style={textStyle}>
+      <Text
+        className="text-lg font-[Poppins]"
+        style={[{ color: colors.text }, textStyle]}
+      >
         {displayText || value}
       </Text>
       <Ionicons
         name={isCopied ? 'checkmark-circle-outline' : 'copy-outline'}
         size={FONT_SIZE.xl}
-        className="text-[#10b981]"
+        color={colors.primary}
         style={iconStyle}
       />
     </Pressable>

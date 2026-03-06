@@ -1,5 +1,5 @@
-import { useAccount, useBalance } from '@/hooks/eth-mobile';
-import { getStorageKey, removeToken } from '@/store/reducers/Tokens';
+import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { getStorageKey, useTokensStore } from '@/store';
 import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -8,7 +8,6 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, { useCallback, useMemo } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import { DEFAULT_TOKENS, type SendToken } from './tokens';
 import { useWalletContext } from './WalletProvider';
 
@@ -75,36 +74,20 @@ function TokenRow({
 
 export default function ViewFundsSheet() {
   const { dismiss } = useBottomSheetModal();
-  const dispatch = useDispatch();
   const { openAddToken } = useWalletContext() ?? {};
   const account = useAccount();
-  const network = useSelector(
-    (state: { connectedNetwork?: { id?: number } }) => state.connectedNetwork
-  );
-  const userTokens = useSelector(
-    (state: {
-      tokens: Record<
-        string,
-        Array<{
-          address: string;
-          name: string;
-          symbol: string;
-          decimals?: number;
-        }>
-      >;
-    }) => {
-      const key =
-        account?.address && network?.id != null
-          ? getStorageKey(String(network.id), account.address)
-          : null;
-      return key ? (state.tokens[key] ?? []) : [];
-    }
-  );
+  const network = useNetwork();
+  const tokensState = useTokensStore(state => state.tokens);
 
   const tokensList: SendToken[] = useMemo(() => {
     const defaultAddresses = new Set(
       DEFAULT_TOKENS.map(t => t.tokenAddress?.toLowerCase()).filter(Boolean)
     );
+    const key =
+      account?.address && network?.id != null
+        ? getStorageKey(String(network.id), account.address)
+        : null;
+    const userTokens = key ? (tokensState[key] ?? []) : [];
     const custom = userTokens
       .filter(t => !defaultAddresses.has(t.address.toLowerCase()))
       .map(t => ({
@@ -115,25 +98,28 @@ export default function ViewFundsSheet() {
         tokenAddress: t.address as `0x${string}`
       }));
     return [...DEFAULT_TOKENS, ...custom];
-  }, [userTokens]);
+  }, [account?.address, network?.id, tokensState]);
 
   const removableAddresses = useMemo(
-    () => new Set(userTokens.map(t => t.address.toLowerCase())),
-    [userTokens]
+    () =>
+      new Set(
+        Object.values(tokensState)
+          .flat()
+          .map(t => t.address.toLowerCase())
+      ),
+    [tokensState]
   );
 
   const handleRemoveToken = useCallback(
     (tokenAddress: `0x${string}`) => {
       if (!account?.address || network?.id == null) return;
-      dispatch(
-        removeToken({
-          networkId: String(network.id),
-          accountAddress: account.address,
-          tokenAddress
-        })
-      );
+      useTokensStore.getState().removeToken({
+        networkId: String(network.id),
+        accountAddress: account.address,
+        tokenAddress
+      });
     },
-    [account?.address, network?.id, dispatch]
+    [account?.address, network?.id]
   );
 
   return (

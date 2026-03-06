@@ -4,7 +4,7 @@ import {
   useNetwork,
   useReadContract
 } from '@/hooks/eth-mobile';
-import { addToken } from '@/store/reducers/Tokens';
+import { useTokensStore } from '@/store';
 import { formatBalanceDisplay, parseBalance } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -19,36 +19,10 @@ import {
   TextInput,
   View
 } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { isAddress } from 'viem';
-
-const ERC20_ABI = [
-  {
-    type: 'function',
-    name: 'name',
-    inputs: [],
-    outputs: [{ type: 'string' }],
-    stateMutability: 'view'
-  },
-  {
-    type: 'function',
-    name: 'symbol',
-    inputs: [],
-    outputs: [{ type: 'string' }],
-    stateMutability: 'view'
-  },
-  {
-    type: 'function',
-    name: 'decimals',
-    inputs: [],
-    outputs: [{ type: 'uint8' }],
-    stateMutability: 'view'
-  }
-] as const;
+import { erc20Abi, isAddress } from 'viem';
 
 export default function AddTokenSheet() {
   const { dismiss } = useBottomSheetModal();
-  const dispatch = useDispatch();
   const account = useAccount();
   const network = useNetwork();
   const { readContract } = useReadContract({});
@@ -87,17 +61,17 @@ export default function AddTokenSheet() {
     try {
       const [name, symbol, decimals] = await Promise.all([
         readContract({
-          abi: ERC20_ABI as any,
+          abi: erc20Abi as any,
           address: addr,
           functionName: 'name'
         }),
         readContract({
-          abi: ERC20_ABI as any,
+          abi: erc20Abi as any,
           address: addr,
           functionName: 'symbol'
         }),
         readContract({
-          abi: ERC20_ABI as any,
+          abi: erc20Abi as any,
           address: addr,
           functionName: 'decimals'
         })
@@ -121,31 +95,22 @@ export default function AddTokenSheet() {
   const handleAddToken = useCallback(() => {
     if (!metadata || !lookedUpAddress || !account?.address || !network?.id)
       return;
-    dispatch(
-      addToken({
-        networkId: String(network.id),
-        accountAddress: account.address,
-        token: {
-          address: lookedUpAddress,
-          name: metadata.name,
-          symbol: metadata.symbol,
-          decimals: metadata.decimals
-        }
-      })
-    );
+    useTokensStore.getState().addToken({
+      networkId: String(network.id),
+      accountAddress: account.address,
+      token: {
+        address: lookedUpAddress,
+        name: metadata.name,
+        symbol: metadata.symbol,
+        decimals: metadata.decimals
+      }
+    });
     setAddressInput('');
     setLookedUpAddress(null);
     setMetadata(null);
     setMetaError(null);
     dismiss();
-  }, [
-    metadata,
-    lookedUpAddress,
-    account?.address,
-    network?.id,
-    dispatch,
-    dismiss
-  ]);
+  }, [metadata, lookedUpAddress, account?.address, network?.id, dismiss]);
 
   const canLookup = isAddress(addressInput.trim()) && !!account?.address;
 

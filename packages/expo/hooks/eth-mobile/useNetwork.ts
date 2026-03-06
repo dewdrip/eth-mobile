@@ -1,10 +1,6 @@
-import { Network } from '@/ethmobile.config';
-import { useSelector } from 'react-redux';
+import { useNetworkStore } from '@/store';
 
 export const useNetwork = () => {
-  const connectedNetwork: Network = useSelector(
-    (state: any) => state.connectedNetwork
-  );
-
-  return connectedNetwork;
+  const network = useNetworkStore(state => state.network);
+  return network;
 };

@@ -1,6 +1,6 @@
 import ethmobileConfig, { type Network } from '@/ethmobile.config';
 import { useNetwork } from '@/hooks/eth-mobile';
-import { switchNetwork } from '@/store/reducers/ConnectedNetwork';
+import { useNetworkStore } from '@/store';
 import { networkInitials } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -9,7 +9,6 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, { useState } from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
-import { useDispatch } from 'react-redux';
 
 /** Networks from ethmobile.config – add or edit networks there to change this list. */
 const NETWORKS: Network[] = Object.values(ethmobileConfig.networks);
@@ -64,11 +63,11 @@ function NetworkRow({
 
 export default function NetworkSelectSheet() {
   const { dismiss } = useBottomSheetModal();
-  const dispatch = useDispatch();
   const currentNetwork = useNetwork();
+  const switchNetwork = useNetworkStore(state => state.switchNetwork);
 
   const handleSelect = (network: Network) => {
-    dispatch(switchNetwork(network.id));
+    switchNetwork(network.id);
     dismiss();
   };
 

@@ -1,6 +1,6 @@
-import { useAccount, useBalance } from '@/hooks/eth-mobile';
+import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
 import { useWalletContext } from '@/modules/providers/WalletProvider';
-import { getStorageKey } from '@/store/reducers/Tokens';
+import { getStorageKey, useTokensStore } from '@/store';
 import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -9,7 +9,6 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, { useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
 import { DEFAULT_TOKENS, type SendToken } from './tokens';
 
 function TokenRow({
@@ -61,28 +60,15 @@ export default function TokenPickerSheet() {
   const { dismiss } = useBottomSheetModal();
   const { tokenPickerOnSelectRef } = useWalletContext() ?? {};
   const account = useAccount();
-  const network = useSelector(
-    (state: { connectedNetwork?: { id?: number } }) => state.connectedNetwork
-  );
-  const userTokens = useSelector(
-    (state: {
-      tokens: Record<
-        string,
-        Array<{
-          address: string;
-          name: string;
-          symbol: string;
-          decimals?: number;
-        }>
-      >;
-    }) => {
-      const key =
-        account?.address && network?.id != null
-          ? getStorageKey(String(network.id), account.address)
-          : null;
-      return key ? (state.tokens[key] ?? []) : [];
-    }
-  );
+  const network = useNetwork();
+  const tokensState = useTokensStore(state => state.tokens);
+  const userTokens = useMemo(() => {
+    const key =
+      account?.address && network?.id != null
+        ? getStorageKey(String(network.id), account.address)
+        : null;
+    return key ? (tokensState[key] ?? []) : [];
+  }, [account?.address, network?.id, tokensState]);
 
   const tokensList: SendToken[] = useMemo(() => {
     const defaultAddresses = new Set(

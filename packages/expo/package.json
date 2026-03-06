@@ -40,7 +40,6 @@
     "@react-native-community/netinfo": "^12.0.1",
     "@react-navigation/material-top-tabs": "^7.3.2",
     "@react-navigation/native": "^7.1.6",
-    "@reduxjs/toolkit": "^2.8.2",
     "@thirdweb-dev/react-native-adapter": "^1.5.5",
     "@walletconnect/react-native-compat": "^2.23.6",
     "abitype": "^1.0.2",
@@ -103,8 +102,6 @@
     "react-native-url-polyfill": "2.0.0",
     "react-native-vision-camera": "4.7.1",
     "react-native-webview": "13.13.5",
-    "react-redux": "9.1.0",
-    "redux-persist": "^6.0.0",
     "stream-browserify": "^3.0.0",
     "tailwindcss": "^3.4.17",
     "thirdweb": "^5.119.0",
@@ -112,7 +109,8 @@
     "usehooks-ts": "3.0.2",
     "util": "^0.12.5",
     "viem": "^2.37.9",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

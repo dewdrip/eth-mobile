@@ -208,7 +208,6 @@ export default function WalletProvider({
   const tokenPickerOnSelectRef = useRef<((token: SendToken) => void) | null>(
     null
   );
-  const snapPoints = ['60%'];
 
   const handleOpenPrimarySheet = useCallback(() => {
     if (account?.address) {
@@ -312,7 +311,7 @@ export default function WalletProvider({
         </BottomSheetModal>
         <BottomSheetModal
           ref={walletSheetRef}
-          snapPoints={snapPoints}
+          snapPoints={['60%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
         >
@@ -328,7 +327,7 @@ export default function WalletProvider({
         </BottomSheetModal>
         <BottomSheetModal
           ref={receiveSheetRef}
-          snapPoints={['75%']}
+          snapPoints={['70%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
         >
@@ -336,7 +335,7 @@ export default function WalletProvider({
         </BottomSheetModal>
         <BottomSheetModal
           ref={sendFundsSheetRef}
-          snapPoints={['75%']}
+          snapPoints={['65%']}
           enableDynamicSizing={false}
           backdropComponent={renderBackdrop}
         >

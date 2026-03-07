@@ -3,6 +3,7 @@ import {
   useAccount,
   useDeployedContractInfo,
   useNetwork,
+  useScaffoldContractEvent,
   useScaffoldWriteContract
 } from '@/hooks/eth-mobile';
 import {
@@ -21,8 +22,8 @@ import { useTheme } from '@/theme';
 import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
-import { createPublicClient, decodeEventLog, http, parseEther } from 'viem';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { formatEther, parseEther } from 'viem';
 
 const MAX_BET_ETH = '0.1';
 const LOCAL_CHAIN_ID = 31337;
@@ -51,11 +52,6 @@ export default function Home() {
 
   const [guess, setGuess] = useState<number>(1);
   const [betEth, setBetEth] = useState('');
-  const [lastResult, setLastResult] = useState<{
-    won: boolean;
-    result: number;
-    bet: string;
-  } | null>(null);
   const [error, setError] = useState('');
 
   const hasGuessContract = useMemo(() => {
@@ -71,6 +67,46 @@ export default function Home() {
     guessContract?.address &&
     isLocalNetwork &&
     hasGuessContract;
+
+  const { data: playEvents } = useScaffoldContractEvent({
+    contractName: 'LuckyGuess',
+    eventName: 'Played',
+    fromBlock: 0n,
+    watch: true,
+    enabled: true
+  });
+
+  const playHistory = useMemo(() => {
+    if (!playEvents?.length || !account?.address) return [];
+    const myAddress = account.address.toLowerCase();
+    return playEvents
+      .filter(
+        e =>
+          e.args &&
+          String(
+            (e.args as any).player ?? (e.args as any)[0] ?? ''
+          ).toLowerCase() === myAddress
+      )
+      .map(e => {
+        const a = e.args as any;
+        const won = Boolean(a?.won ?? a?.[4]);
+        const result = Number(a?.result ?? a?.[2] ?? 0);
+        const betWei = a?.bet ?? a?.[3] ?? 0n;
+        const betStr =
+          typeof betWei === 'bigint' ? formatEther(betWei) : String(betWei);
+        return { won, result, bet: betStr };
+      })
+      .reverse();
+  }, [playEvents, account?.address]);
+
+  const winsCount = useMemo(
+    () => playHistory.filter(r => r.won).length,
+    [playHistory]
+  );
+  const lossesCount = useMemo(
+    () => playHistory.filter(r => !r.won).length,
+    [playHistory]
+  );
 
   const betWei = useMemo(() => {
     const v = betEth.trim();
@@ -90,70 +126,12 @@ export default function Home() {
   const play = useCallback(async () => {
     if (!canPlay || !betValid || isPlaying) return;
     setError('');
-    setLastResult(null);
     try {
-      const result = (await playAsync({
+      await playAsync({
         functionName: 'play',
         args: [guess],
         value: betWei
-      })) as any;
-      // Support both viem receipt and Thirdweb-style result (logs may be in different places)
-      let logs =
-        result?.logs ??
-        result?.transaction?.logs ??
-        result?.receipt?.logs ??
-        [];
-      // If no logs, try fetching receipt by hash (e.g. Thirdweb returns only hash)
-      const txHash =
-        result?.transactionHash ??
-        result?.hash ??
-        result?.receipt?.transactionHash;
-      if (
-        logs.length === 0 &&
-        txHash &&
-        network?.provider &&
-        network?.id != null
-      ) {
-        try {
-          const publicClient = createPublicClient({
-            chain: {
-              id: network.id,
-              name: 'Local',
-              nativeCurrency: { decimals: 18, name: 'ETH', symbol: 'ETH' },
-              rpcUrls: { default: { http: [network.provider] } }
-            },
-            transport: http(network.provider)
-          });
-          const receipt = await publicClient.getTransactionReceipt({
-            hash: txHash as `0x${string}`
-          });
-          logs = receipt?.logs ?? [];
-        } catch {
-          // ignore
-        }
-      }
-      for (const log of logs) {
-        try {
-          const decoded = decodeEventLog({
-            abi: guessContract!.abi as any,
-            data: log.data,
-            topics: log.topics
-          });
-          if ((decoded as any).eventName === 'Played') {
-            const args = (decoded as any).args;
-            if (args) {
-              setLastResult({
-                won: args.won,
-                result: Number(args.result),
-                bet: betEth
-              });
-            }
-            break;
-          }
-        } catch {
-          // skip non-Played logs
-        }
-      }
+      });
     } catch (e: any) {
       const raw =
         typeof e === 'string'
@@ -161,18 +139,7 @@ export default function Home() {
           : (e?.message ?? e?.details ?? 'Transaction failed.');
       setError(getPlayErrorMessage(raw));
     }
-  }, [
-    canPlay,
-    betValid,
-    isPlaying,
-    playAsync,
-    guess,
-    betWei,
-    betEth,
-    guessContract,
-    network?.provider,
-    network?.id
-  ]);
+  }, [canPlay, betValid, isPlaying, playAsync, guess, betWei]);
 
   if (contractLoading && !guessContract) {
     return <HomeLoading />;
@@ -214,13 +181,27 @@ export default function Home() {
               disabled={!betValid}
               isLoading={isPlaying}
             />
-            {lastResult ? (
-              <HomeLastResult
-                won={lastResult.won}
-                result={lastResult.result}
-                bet={lastResult.bet}
-              />
-            ) : null}
+            <View className="mt-6">
+              <Text
+                className="mb-2 px-4 text-sm font-[Poppins-SemiBold]"
+                style={{ color: colors.textMuted }}
+              >
+                History
+              </Text>
+              <Text
+                className="mb-3 px-4 text-xs font-[Poppins]"
+                style={{ color: colors.textMutedAlt }}
+              >
+                {playHistory.length === 0
+                  ? 'No plays yet. Wins and losses will appear here.'
+                  : `${winsCount} win${winsCount !== 1 ? 's' : ''}, ${lossesCount} loss${lossesCount !== 1 ? 'es' : ''}`}
+              </Text>
+              {playHistory.map((r, i) => (
+                <View key={i} className="mt-2">
+                  <HomeLastResult won={r.won} result={r.result} bet={r.bet} />
+                </View>
+              ))}
+            </View>
           </>
         )}
       </ScrollView>

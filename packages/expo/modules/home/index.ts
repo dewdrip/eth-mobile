@@ -5,6 +5,6 @@ export { HomeNoContract } from './HomeNoContract';
 export { HomeGameIntro } from './HomeGameIntro';
 export { HomeGuessPicker } from './HomeGuessPicker';
 export { HomeBetInput } from './HomeBetInput';
-export { HomePlayError } from './HomePlayError';
-export { HomePlayButton } from './HomePlayButton';
+export { HomeGuessError } from './HomeGuessError';
+export { HomeGuessButton } from './HomeGuessButton';
 export { HomeLastResult } from './HomeLastResult';

@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from '../src/utils/eth-mobile/contract';
 const deployedContracts = {
   31337: {
     LuckyGuess: {
-      address: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
+      address: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
       abi: [
         {
           inputs: [],
@@ -95,14 +95,46 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: 'address',
+              name: '',
+              type: 'address'
+            }
+          ],
+          name: 'betsPerAddress',
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: '',
+              type: 'uint256'
+            }
+          ],
+          stateMutability: 'view',
+          type: 'function'
+        },
+        {
+          inputs: [
+            {
               internalType: 'uint8',
-              name: 'guess',
+              name: '_guess',
               type: 'uint8'
             }
           ],
-          name: 'play',
+          name: 'guess',
           outputs: [],
           stateMutability: 'payable',
+          type: 'function'
+        },
+        {
+          inputs: [],
+          name: 'totalBets',
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: '',
+              type: 'uint256'
+            }
+          ],
+          stateMutability: 'view',
           type: 'function'
         },
         {

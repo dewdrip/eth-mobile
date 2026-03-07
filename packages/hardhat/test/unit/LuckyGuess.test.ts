@@ -38,36 +38,37 @@ describe('LuckyGuess', function () {
   describe('Reverts', function () {
     it('Should revert when guess < 1', async function () {
       await expect(
-        luckyGuess.play(0, { value: ethers.parseEther('0.01') })
+        luckyGuess.guess(0, { value: ethers.parseEther('0.01') })
       ).to.be.revertedWithCustomError(luckyGuess, 'InvalidGuess');
     });
 
     it('Should revert when guess > 6', async function () {
       await expect(
-        luckyGuess.play(7, { value: ethers.parseEther('0.01') })
+        luckyGuess.guess(7, { value: ethers.parseEther('0.01') })
       ).to.be.revertedWithCustomError(luckyGuess, 'InvalidGuess');
     });
 
     it('Should revert when bet is 0', async function () {
       await expect(
-        luckyGuess.play(1, { value: 0n })
+        luckyGuess.guess(1, { value: 0n })
       ).to.be.revertedWithCustomError(luckyGuess, 'InvalidBet');
     });
 
     it('Should revert when bet exceeds 0.1 ETH', async function () {
       await expect(
-        luckyGuess.play(1, { value: ethers.parseEther('0.11') })
+        luckyGuess.guess(1, { value: ethers.parseEther('0.11') })
       ).to.be.revertedWithCustomError(luckyGuess, 'InvalidBet');
     });
   });
 
-  describe('play()', function () {
+  describe('guess()', function () {
     it('Should accept valid guess and bet and emit Played', async function () {
       const [player] = await ethers.getSigners();
       const bet = ethers.parseEther('0.01');
-      await expect(
-        luckyGuess.connect(player).play(3, { value: bet })
-      ).to.emit(luckyGuess, 'Played');
+      await expect(luckyGuess.connect(player).guess(3, { value: bet })).to.emit(
+        luckyGuess,
+        'Played'
+      );
     });
 
     it('Should either pay 2x on win or keep bet on loss', async function () {
@@ -78,7 +79,7 @@ describe('LuckyGuess', function () {
       const contractBalanceBefore =
         await ethers.provider.getBalance(contractAddr);
 
-      const tx = await luckyGuess.connect(player).play(1, { value: bet });
+      const tx = await luckyGuess.connect(player).guess(1, { value: bet });
       const receipt = await tx.wait();
       const gasCost = receipt!.gasUsed * receipt!.gasPrice;
 

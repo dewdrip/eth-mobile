@@ -67,7 +67,12 @@ export function HomeWelcome() {
           className="mt-3 text-center text-base font-[Poppins]"
           style={{ color: colors.textMuted }}
         >
-          Connect your wallet to play —{' '}
+          Connect your wallet to play
+        </Text>
+        <Text
+          className="text-center text-base font-[Poppins]"
+          style={{ color: colors.textMuted }}
+        >
           <Text
             className="font-[Poppins-SemiBold]"
             style={{ color: colors.primary }}

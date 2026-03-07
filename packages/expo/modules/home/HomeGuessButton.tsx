@@ -8,7 +8,7 @@ type Props = {
   isLoading: boolean;
 };
 
-export function HomePlayButton({ onPress, disabled, isLoading }: Props) {
+export function HomeGuessButton({ onPress, disabled, isLoading }: Props) {
   const { colors } = useTheme();
   return (
     <View className="mx-4 mt-5">
@@ -25,7 +25,7 @@ export function HomePlayButton({ onPress, disabled, isLoading }: Props) {
             className="text-center text-lg font-bold font-[Poppins-Bold]"
             style={{ color: colors.primaryContrast }}
           >
-            Play
+            Try your luck!
           </Text>
         )}
       </Pressable>

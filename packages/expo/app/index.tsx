@@ -9,12 +9,12 @@ import {
 import {
   HomeBetInput,
   HomeGameIntro,
+  HomeGuessButton,
+  HomeGuessError,
   HomeGuessPicker,
   HomeLastResult,
   HomeLoading,
   HomeNoContract,
-  HomePlayButton,
-  HomePlayError,
   HomeWelcome,
   HomeWrongNetwork
 } from '@/modules/home';
@@ -28,7 +28,7 @@ import { formatEther, parseEther } from 'viem';
 const MAX_BET_ETH = '0.1';
 const LOCAL_CHAIN_ID = 31337;
 
-function getPlayErrorMessage(raw: string): string {
+function getGuessErrorMessage(raw: string): string {
   const s = raw.toLowerCase();
   if (s.includes('invalidguess')) return 'Guess must be between 1 and 6.';
   if (s.includes('invalidbet'))
@@ -47,10 +47,10 @@ export default function Home() {
   const network = useNetwork();
   const { data: guessContract, isLoading: contractLoading } =
     useDeployedContractInfo({ contractName: 'LuckyGuess' });
-  const { writeContractAsync: playAsync, isMining: isPlaying } =
+  const { writeContractAsync: playAsync, isMining: isGuessing } =
     useScaffoldWriteContract({ contractName: 'LuckyGuess' });
 
-  const [guess, setGuess] = useState<number>(1);
+  const [selectedGuess, setSelectedGuess] = useState<number>(1);
   const [betEth, setBetEth] = useState('');
   const [error, setError] = useState('');
 
@@ -62,13 +62,13 @@ export default function Home() {
   }, []);
 
   const isLocalNetwork = network?.id === LOCAL_CHAIN_ID;
-  const canPlay =
+  const canGuess =
     account?.address &&
     guessContract?.address &&
     isLocalNetwork &&
     hasGuessContract;
 
-  const { data: playEvents } = useScaffoldContractEvent({
+  const { data: guessEvents } = useScaffoldContractEvent({
     contractName: 'LuckyGuess',
     eventName: 'Played',
     fromBlock: 0n,
@@ -76,10 +76,10 @@ export default function Home() {
     enabled: true
   });
 
-  const playHistory = useMemo(() => {
-    if (!playEvents?.length || !account?.address) return [];
+  const guessHistory = useMemo(() => {
+    if (!guessEvents?.length || !account?.address) return [];
     const myAddress = account.address.toLowerCase();
-    return playEvents
+    return guessEvents
       .filter(
         e =>
           e.args &&
@@ -97,15 +97,15 @@ export default function Home() {
         return { won, result, bet: betStr };
       })
       .reverse();
-  }, [playEvents, account?.address]);
+  }, [guessEvents, account?.address]);
 
   const winsCount = useMemo(
-    () => playHistory.filter(r => r.won).length,
-    [playHistory]
+    () => guessHistory.filter(r => r.won).length,
+    [guessHistory]
   );
   const lossesCount = useMemo(
-    () => playHistory.filter(r => !r.won).length,
-    [playHistory]
+    () => guessHistory.filter(r => !r.won).length,
+    [guessHistory]
   );
 
   const betWei = useMemo(() => {
@@ -123,13 +123,13 @@ export default function Home() {
 
   const betValid = betWei > 0n && betWei <= parseEther(MAX_BET_ETH);
 
-  const play = useCallback(async () => {
-    if (!canPlay || !betValid || isPlaying) return;
+  const guess = useCallback(async () => {
+    if (!canGuess || !betValid || isGuessing) return;
     setError('');
     try {
       await playAsync({
-        functionName: 'play',
-        args: [guess],
+        functionName: 'guess',
+        args: [selectedGuess],
         value: betWei
       });
     } catch (e: any) {
@@ -137,9 +137,9 @@ export default function Home() {
         typeof e === 'string'
           ? e
           : (e?.message ?? e?.details ?? 'Transaction failed.');
-      setError(getPlayErrorMessage(raw));
+      setError(getGuessErrorMessage(raw));
     }
-  }, [canPlay, betValid, isPlaying, playAsync, guess, betWei]);
+  }, [canGuess, betValid, isGuessing, playAsync, selectedGuess, betWei]);
 
   if (contractLoading && !guessContract) {
     return <HomeLoading />;
@@ -167,7 +167,10 @@ export default function Home() {
         ) : (
           <>
             <HomeGameIntro />
-            <HomeGuessPicker guess={guess} onGuessChange={setGuess} />
+            <HomeGuessPicker
+              guess={selectedGuess}
+              onGuessChange={setSelectedGuess}
+            />
             <HomeBetInput
               value={betEth}
               onChange={t => {
@@ -175,11 +178,11 @@ export default function Home() {
                 setError('');
               }}
             />
-            {error ? <HomePlayError message={error} /> : null}
-            <HomePlayButton
-              onPress={play}
+            {error ? <HomeGuessError message={error} /> : null}
+            <HomeGuessButton
+              onPress={guess}
               disabled={!betValid}
-              isLoading={isPlaying}
+              isLoading={isGuessing}
             />
             <View className="mt-6">
               <Text
@@ -192,11 +195,11 @@ export default function Home() {
                 className="mb-3 px-4 text-xs font-[Poppins]"
                 style={{ color: colors.textMutedAlt }}
               >
-                {playHistory.length === 0
-                  ? 'No plays yet. Wins and losses will appear here.'
+                {guessHistory.length === 0
+                  ? 'No guesses yet. Wins and losses will appear here.'
                   : `${winsCount} win${winsCount !== 1 ? 's' : ''}, ${lossesCount} loss${lossesCount !== 1 ? 'es' : ''}`}
               </Text>
-              {playHistory.map((r, i) => (
+              {guessHistory.map((r, i) => (
                 <View key={i} className="mt-2">
                   <HomeLastResult won={r.won} result={r.result} bet={r.bet} />
                 </View>

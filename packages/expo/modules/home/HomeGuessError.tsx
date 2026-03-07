@@ -6,7 +6,7 @@ type Props = {
   message: string;
 };
 
-export function HomePlayError({ message }: Props) {
+export function HomeGuessError({ message }: Props) {
   const { colors } = useTheme();
   return (
     <View

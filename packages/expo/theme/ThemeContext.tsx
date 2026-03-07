@@ -1,7 +1,10 @@
+import { StatusBar } from 'expo-status-bar';
+import * as SystemUI from 'expo-system-ui';
 import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState
 } from 'react';
@@ -24,13 +27,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const colors = useMemo(() => getColors(theme), [theme]);
   const setTheme = useCallback((mode: ThemeMode) => setOverride(mode), []);
 
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(colors.background).catch(() => {});
+  }, [colors.background]);
+
   const value = useMemo<ThemeContextValue>(
     () => ({ theme, colors, setTheme }),
     [theme, colors, setTheme]
   );
 
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>
+      <StatusBar
+        style={theme === 'dark' ? 'light' : 'dark'}
+        backgroundColor={colors.background}
+      />
+      {children}
+    </ThemeContext.Provider>
   );
 }
 

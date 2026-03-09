@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import type { SendToken } from '../tokens';
+import type { SendToken } from './tokens';
 
 export type WalletContextValue = {
   openViewFunds: () => void;

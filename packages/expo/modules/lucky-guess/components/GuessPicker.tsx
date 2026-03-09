@@ -9,7 +9,7 @@ type Props = {
   onGuessChange: (n: number) => void;
 };
 
-export function HomeGuessPicker({ guess, onGuessChange }: Props) {
+export function GuessPicker({ guess, onGuessChange }: Props) {
   const { colors } = useTheme();
   return (
     <View

@@ -2,7 +2,7 @@ import { useTheme } from '@/theme';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-export function HomeGameIntro() {
+export function GameIntro() {
   const { colors } = useTheme();
   return (
     <View

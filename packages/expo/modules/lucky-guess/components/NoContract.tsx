@@ -2,7 +2,7 @@ import { useTheme } from '@/theme';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-export function HomeNoContract() {
+export function NoContract() {
   const { colors } = useTheme();
   return (
     <View

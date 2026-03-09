@@ -9,7 +9,7 @@ type Props = {
   onChange: (value: string) => void;
 };
 
-export function HomeBetInput({ value, onChange }: Props) {
+export function BetInput({ value, onChange }: Props) {
   const { colors } = useTheme();
   return (
     <View

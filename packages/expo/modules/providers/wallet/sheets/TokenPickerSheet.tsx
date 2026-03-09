@@ -9,8 +9,8 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, { useMemo } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { getDefaultTokensForNetwork, type SendToken } from '../../tokens';
 import { useWalletContext } from '../context';
+import { getDefaultTokensForNetwork, type SendToken } from '../tokens';
 
 function TokenRow({
   token,

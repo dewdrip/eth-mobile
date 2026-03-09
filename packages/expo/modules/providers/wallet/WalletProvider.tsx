@@ -7,7 +7,6 @@ import {
 import React, { useCallback, useMemo, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useActiveAccount } from 'thirdweb/react';
-import type { SendToken } from '../tokens';
 import { WalletContext } from './context';
 import AddTokenSheet from './sheets/AddTokenSheet';
 import ConnectSheet from './sheets/ConnectSheet';
@@ -17,6 +16,7 @@ import SendFundsSheet from './sheets/SendFundsSheet';
 import TokenPickerSheet from './sheets/TokenPickerSheet';
 import ViewFundsSheet from './sheets/ViewFundsSheet';
 import WalletDetailsSheet from './sheets/WalletDetailsSheet';
+import type { SendToken } from './tokens';
 import WalletTrigger from './WalletTrigger';
 
 export default function WalletProvider({

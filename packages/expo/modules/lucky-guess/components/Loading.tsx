@@ -2,7 +2,7 @@ import { useTheme } from '@/theme';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
-export function HomeLoading() {
+export function Loading() {
   const { colors } = useTheme();
   return (
     <View

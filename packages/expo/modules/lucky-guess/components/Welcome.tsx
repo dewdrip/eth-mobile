@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-export function HomeWelcome() {
+export function Welcome() {
   const { colors } = useTheme();
   return (
     <View className="mx-4 mt-6 flex-1 px-1">

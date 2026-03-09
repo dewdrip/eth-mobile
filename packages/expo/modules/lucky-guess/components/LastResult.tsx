@@ -8,7 +8,7 @@ type Props = {
   bet: string;
 };
 
-export function HomeLastResult({ won, result, bet }: Props) {
+export function LastResult({ won, result, bet }: Props) {
   const { colors } = useTheme();
   return (
     <View

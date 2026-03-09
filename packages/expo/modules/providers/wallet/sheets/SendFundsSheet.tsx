@@ -21,8 +21,8 @@ import { defineChain } from 'thirdweb/chains';
 import { useActiveAccount, useSendTransaction } from 'thirdweb/react';
 import { isAddress, parseUnits } from 'viem';
 import { client } from '../../Thirdweb';
-import { getDefaultTokensForNetwork, type SendToken } from '../../tokens';
 import { useWalletContext } from '../context';
+import { getDefaultTokensForNetwork, type SendToken } from '../tokens';
 
 const ERC20_TRANSFER_ABI = [
   {

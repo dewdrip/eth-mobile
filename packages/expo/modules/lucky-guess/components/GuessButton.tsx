@@ -8,7 +8,7 @@ type Props = {
   isLoading: boolean;
 };
 
-export function HomeGuessButton({ onPress, disabled, isLoading }: Props) {
+export function GuessButton({ onPress, disabled, isLoading }: Props) {
   const { colors } = useTheme();
   return (
     <View className="mx-4 mt-5">

@@ -1,10 +1,9 @@
-import Button from '@/components/CustomButton';
 import { useNetwork } from '@/hooks/eth-mobile';
 import { useTheme } from '@/theme';
 import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Linking, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, Text, View } from 'react-native';
 
 type Props = {
   modal: {
@@ -64,19 +63,20 @@ export default function TxReceiptModal({
             : 'Your transaction has been sent to the network.'}
         </Text>
         {!isError && connectedNetwork.blockExplorer && (
-          <Button
-            text="View on Explorer"
+          <Pressable
+            className="mt-2 px-4 py-3 rounded-lg"
             onPress={openExplorer}
-            style={styles.button}
-          />
+            style={{ backgroundColor: colors.primary }}
+          >
+            <Text
+              className="text-base font-[Poppins]"
+              style={{ color: '#fff' }}
+            >
+              View on Explorer
+            </Text>
+          </Pressable>
         )}
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    marginTop: 10
-  }
-});

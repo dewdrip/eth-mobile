@@ -1,13 +1,9 @@
 import { createThirdwebClient } from 'thirdweb';
 import { ThirdwebProvider } from 'thirdweb/react';
 
-const clientId = process.env.EXPO_PUBLIC_THIRDWEB_CLIENT_ID!;
-
-if (!clientId) {
-  throw new Error(
-    'Missing EXPO_PUBLIC_THIRDWEB_CLIENT_ID - make sure to set it in your .env file'
-  );
-}
+const clientId =
+  process.env.EXPO_PUBLIC_THIRDWEB_CLIENT_ID ||
+  'a1362670597ae044c2f45ba78f9472ae';
 
 export const client = createThirdwebClient({
   clientId

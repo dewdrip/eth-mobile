@@ -30,8 +30,10 @@ export type NetworkConfig = {
 /* 
   This is our default Alchemy API key.
   You can get your own at https://dashboard.alchemyapi.io
+  It's recommended to store it in an env variable:
 */
-const ALCHEMY_KEY = '_yem4FCVzmN6wbB44mPtF';
+const ALCHEMY_KEY =
+  process.env.EXPO_PUBLIC_ALCHEMY_KEY || '_yem4FCVzmN6wbB44mPtF';
 
 /*
   Get the `coingeckoPriceId` of your network from https://docs.google.com/spreadsheets/d/1wTTuxXt8n9q7C4NDXqQpI3wpKu1_5bGVmP9Xz0XGSyU/edit?gid=0#gid=0

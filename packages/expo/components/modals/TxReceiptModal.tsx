@@ -1,4 +1,4 @@
-import Button from '@/components/buttons/CustomButton';
+import Button from '@/components/CustomButton';
 import { useNetwork } from '@/hooks/eth-mobile';
 import { useTheme } from '@/theme';
 import { FONT_SIZE } from '@/utils/constants';

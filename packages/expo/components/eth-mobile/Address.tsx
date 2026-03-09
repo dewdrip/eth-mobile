@@ -15,6 +15,19 @@ type Props = {
   showBlockie?: boolean;
 };
 
+/**
+ * Displays an Ethereum address with optional blockie and copy functionality.
+ *
+ * @param address - The Ethereum address to display
+ * @param containerStyle - Optional style for the container
+ * @param textStyle - Optional style for the text
+ * @param iconStyle - Optional style for the icon
+ * @param copyable - Whether to show the copy icon (default: true)
+ * @param showBlockie - Whether to show the blockie (default: true)
+ * @returns A component displaying the Ethereum address with optional blockie and copy functionality
+ * @example
+ * <Address address="0x123..." />
+ */
 export function Address({
   address,
   containerStyle,

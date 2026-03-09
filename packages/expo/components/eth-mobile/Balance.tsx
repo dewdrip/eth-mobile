@@ -9,6 +9,15 @@ type Props = {
   style?: TextStyle;
 };
 
+/**
+ * Displays the balance of an Ethereum address.
+ *
+ * @param address - The Ethereum address to display the balance of
+ * @param style - Optional style for the text
+ * @returns A component displaying the balance of the Ethereum address
+ * @example
+ * <Balance address="0x123..." />
+ */
 export function Balance({ address, style }: Props) {
   const { colors } = useTheme();
   const network = useNetwork();

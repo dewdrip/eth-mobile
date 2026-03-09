@@ -27,7 +27,16 @@ type Props = {
  * @param onChange The function to call when the input value changes
  * @param onSubmit The function to call when the user submits the input value
  * @param balance The user's ETH balance (optional)
+ * @param symbol The symbol of the token to display in the input (optional)
+ * @param iconUri The URI of the icon to display in the input (optional)
  * @returns A component that allows the user to input an amount of ETH
+ * @example
+ * <EtherInput
+ *   value="1"
+ *   onChange={value => console.log(value)}
+ *   onSubmit={() => console.log('submitted')}
+ * />
+ *
  */
 export function EtherInput({
   value,

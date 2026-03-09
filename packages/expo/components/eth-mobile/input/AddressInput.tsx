@@ -28,6 +28,29 @@ type Props = {
   scan?: boolean;
 };
 
+/**
+ * Displays an Ethereum address input with optional scan functionality.
+ *
+ * @param value - The value of the input
+ * @param placeholder - The placeholder text for the input
+ * @param error - The error message to display
+ * @param onChange - The function to call when the input value changes
+ * @param onSubmit - The function to call when the user submits the input value
+ * @param containerClassName - Optional style for the container
+ * @param inputContainerClassName - Optional style for the input container
+ * @param inputClassName - Optional style for the input
+ * @param errorClassName - Optional style for the error text
+ * @param scan - Whether to show the scan button (default: false)
+ * @returns A component displaying the Ethereum address input with optional scan functionality
+ * @example
+ * <AddressInput
+ *   value="0x123..."
+ *   onChange={value => console.log(value)}
+ *   onSubmit={() => console.log('submitted')}
+ *   scan={true}
+ * />
+ *
+ */
 export function AddressInput({
   value,
   placeholder,

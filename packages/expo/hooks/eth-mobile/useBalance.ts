@@ -12,12 +12,18 @@ interface UseBalanceConfig {
 }
 
 /**
- * Returns the balance of an address in native token (or optional ERC20) using Thirdweb.
+ * Returns the balance of an address in native token (or optional ERC20).
  *
  * @param config - The config settings
  * @param config.address - account address
  * @param config.tokenAddress - optional token address for ERC20 balance
  * @param config.watch - when true, refetch balance on an interval
+ *
+ * @returns The balance of the address
+ * @example
+ * const { balance } = useBalance({ address: '0x123...' });
+ *
+ * console.log(balance);
  */
 export function useBalance({
   address,

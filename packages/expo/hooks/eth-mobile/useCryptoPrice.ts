@@ -22,6 +22,24 @@ type UseCryptoPriceParams = {
   enabled?: boolean;
 };
 
+/**
+ * Hook to fetch the current USD price of a given cryptocurrency (default: Ethereum) from CoinGecko.
+ *
+ * @param {Object} [params]
+ * @param {string} [params.priceID='ethereum'] - CoinGecko price identifier, e.g. 'ethereum', 'arbitrum'.
+ * @param {number} [params.decimalPlaces=2] - Number of decimal places for the price.
+ * @param {boolean} [params.enabled=true] - Whether to perform price fetching automatically.
+ * @returns {{
+ *   price: number | null,      // Current price in USD
+ *   loading: boolean,          // Loading state
+ *   error: string | null,      // Error message, if any
+ *   fetchPrice: Function       // Manual price refresh
+ * }}
+ *
+ * @example
+ * const { price, loading, error, fetchPrice } = useCryptoPrice({ priceID: 'arbitrum' });
+ */
+
 export const useCryptoPrice = ({
   priceID = 'ethereum',
   decimalPlaces = 2,

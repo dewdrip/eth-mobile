@@ -126,51 +126,6 @@ const getContractEvents = async (
 /**
  * Reads events from a deployed contract using ethers
  *
- * @example
- * ```tsx
- * // Basic usage with Staker contract Stake event
- * const { data: events, isLoading, error } = useScaffoldContractEvent({
- *   contractName: "Staker",
- *   eventName: "Stake",
- *   fromBlock: 0n,
- * });
- *
- * // Access decoded event arguments
- * events?.forEach((event, index) => {
- *   console.log("User:", event.args[0]); // address
- *   console.log("Amount:", event.args[1]); // uint256
- *   console.log("Event name:", event.eventName); // "Stake"
- *   console.log("Block number:", event.log.blockNumber);
- *   console.log("Transaction hash:", event.log.transactionHash);
- * });
- *
- * // With filters
- * const { data: events } = useScaffoldContractEvent({
- *   contractName: "Staker",
- *   eventName: "Stake",
- *   fromBlock: 1000n,
- *   filters: { user: "0x123..." }, // Filter by specific user
- * });
- *
- * // With additional data
- * const { data: events } = useScaffoldContractEvent({
- *   contractName: "Staker",
- *   eventName: "Stake",
- *   fromBlock: 0n,
- *   blockData: true,
- *   transactionData: true,
- *   receiptData: true,
- * });
- *
- * // With watch enabled for real-time updates
- * const { data: events } = useScaffoldContractEvent({
- *   contractName: "Staker",
- *   eventName: "Stake",
- *   fromBlock: 0n,
- *   watch: true,
- * });
- * ```
- *
  * @param config - The config settings
  * @param config.contractName - deployed contract name from deployedContracts.ts
  * @param config.eventName - name of the event to listen for
@@ -190,6 +145,20 @@ const getContractEvents = async (
  * - isLoading: Boolean indicating if the query is loading
  * - isFetchingNewEvent: Boolean indicating if fetching new events
  * - refetch: Function to manually refetch the data
+ * @example
+ * ```tsx
+ * // Basic usage with Staker contract Stake event
+ * const { data: events } = useScaffoldContractEvent({
+ *   contractName: "Staker",
+ *   eventName: "Stake",
+ *   fromBlock: 0n,
+ * });
+ *
+ * events?.forEach((event, index) => {
+ *   console.log("User:", event.args[0]); // address
+ *   console.log("Amount:", event.args[1]); // uint256
+ * });
+ * ```
  */
 export const useScaffoldContractEvent = <
   TContractName extends ContractName,

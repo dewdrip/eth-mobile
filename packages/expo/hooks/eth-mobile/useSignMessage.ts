@@ -13,7 +13,15 @@ export interface UseSignMessageReturn {
 /**
  * Hook for signing messages using the Thirdweb connected account.
  *
- * @returns {UseSignMessageReturn} sign, signature, error, isSigning, reset
+ * @returns An object with:
+ * - sign: Function to sign a message
+ * - signature: The signed message
+ * - error: The error message
+ * - isSigning: Boolean indicating if the message is being signed
+ * - reset: Function to reset the signature and error
+ * @example
+ * const { sign } = useSignMessage();
+ * await sign('Hello, world!');
  */
 export function useSignMessage(): UseSignMessageReturn {
   const account = useAccount();

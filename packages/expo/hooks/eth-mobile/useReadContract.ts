@@ -60,6 +60,27 @@ export function getMethodSignature(
   return `function ${functionName}(${inputs}) ${stateMutability}`;
 }
 
+/**
+ * Hook for reading from smart contracts.
+ *
+ * @param config - The config settings
+ * @param config.abi - contract ABI
+ * @param config.address - contract address
+ * @param config.functionName - name of the function to be called
+ * @param config.args - args to be passed to the function call (Optional)
+ * @param config.enabled - enable the contract read (Optional)
+ * @param config.watch - watch the contract read (Optional)
+ * @param config.onError - error handler (Optional)
+ * @returns The contract read result
+ * @example
+ * const { data } = useReadContract({
+ *   abi: MyContractAbi,
+ *   address: '0x123...',
+ *   functionName: 'greeting'
+ * });
+ *
+ * console.log(data);
+ */
 export function useReadContract({
   abi,
   address,

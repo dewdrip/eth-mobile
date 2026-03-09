@@ -33,6 +33,17 @@ export interface WriteContractArgs {
  * @param config.address - contract address
  * @param config.blockConfirmations - reserved for compatibility (Thirdweb handles confirmation)
  * @param config.gasLimit - optional gas limit for the transaction
+ * @returns The contract write result
+ * @example
+ * const { writeContractAsync } = useWriteContract({
+ *   abi: MyContractAbi,
+ *   address: '0x123...'
+ * });
+ *
+ * await writeContractAsync({
+ *   functionName: 'greeting',
+ *   args: ['Hello'],
+ * });
  */
 export function useWriteContract({
   abi,

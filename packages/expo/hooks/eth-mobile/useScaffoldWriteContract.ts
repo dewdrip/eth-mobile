@@ -17,6 +17,16 @@ interface UseScaffoldWriteContractConfig {
  * @param config.contractName - deployed contract name
  * @param config.blockConfirmations - reserved for compatibility
  * @param config.gasLimit - optional gas limit
+ * @returns The contract write result
+ * @example
+ * const { writeContractAsync } = useScaffoldWriteContract({
+ *   contractName: 'MyContract'
+ * });
+ *
+ * await writeContractAsync({
+ *   functionName: 'greeting',
+ *   args: ['Hello'],
+ * });
  */
 export function useScaffoldWriteContract({
   contractName,

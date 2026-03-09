@@ -11,6 +11,16 @@ interface UseDeployedContractInfoConfig {
 /**
  * Gets the matching contract info for the provided contract name from the contracts present in deployedContracts.ts
  * corresponding to networks configured in ethmobile.config.ts
+ *
+ * @param config - The config settings
+ * @param config.contractName - The name of the contract to get info for
+ * @param config.chainId - The chain ID to get info for
+ * @returns The deployed contract info
+ * @example
+ * const { data } = useDeployedContractInfo({ contractName: 'MyContract' });
+ *
+ * console.log(data?.address);
+ * console.log(data?.abi);
  */
 export const useDeployedContractInfo = (
   config: UseDeployedContractInfoConfig

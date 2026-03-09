@@ -19,7 +19,7 @@ type ReadContractResult = any | any[] | null;
 /**
  * This automatically loads (by name) the contract ABI and address from
  * the contracts present in deployedContracts.ts corresponding to networks configured in ethmobile.config.ts.
- * Reads are performed via Thirdweb under the hood.
+
  *
  * @param config - The config settings
  * @param config.contractName - deployed contract name
@@ -27,6 +27,14 @@ type ReadContractResult = any | any[] | null;
  * @param config.args - args to be passed to the function call (Optional)
  * @param config.enabled - enable the contract read (Optional)
  * @param config.watch - watch the contract read (Optional)
+ * @returns The contract read result
+ * @example
+ * const { data } = useScaffoldReadContract({
+ *   contractName: 'MyContract',
+ *   functionName: 'greeting',
+ * });
+ * 
+ * console.log(data);
  */
 export function useScaffoldReadContract({
   contractName,

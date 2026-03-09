@@ -23,10 +23,10 @@ export default function DebugContracts() {
     >
       <View className="flex-row items-center justify-between px-4 py-2">
         <Pressable onPress={() => router.back()} hitSlop={12}>
-          <Ionicons name="arrow-back" size={24} color="#111" />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </Pressable>
 
-        <Text className="text-[22px] font-bold text-[#111]">
+        <Text className="text-[22px] font-bold" style={{ color: colors.text }}>
           Contract Debugger
         </Text>
 

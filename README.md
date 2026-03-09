@@ -2,7 +2,7 @@
 
 An open-source toolkit for building mobile decentralized applications (dApps) on Ethereum and other EVM-compatible blockchains. It simplifies mobile dApp development with fast, secure and customizable pre-built components to create, deploy and interact with smart contracts.
 
-⚙️ **Tech Stack**: Built with React Native, Hardhat, Ethers, and TypeScript to streamline mobile dApp development.
+⚙️ **Tech Stack**: Built with React Native, Hardhat, Ethers, TypeScript, and Thirdweb to streamline mobile dApp development.
 
 ### Key Features
 
@@ -10,7 +10,7 @@ An open-source toolkit for building mobile decentralized applications (dApps) on
 
 ![Contract Debugger](https://dewdrip.github.io/eth-mobile/assets/debugger.png)
 
-- 💳 **In-Built Wallet**: A secure mobile crypto wallet for managing funds, signing transactions, and interacting with multiple EVM-compatible chains.
+- 💳 **In-Built Wallet**: A secure mobile crypto wallet for managing funds, signing transactions, and interacting with multiple EVM-compatible chains. Powered by [Thirdweb](https://thirdweb.com/)
 
 ![Wallet](https://dewdrip.github.io/eth-mobile/assets/wallet.png)
 
@@ -67,15 +67,13 @@ yarn configure-network
 
 This command sets your local IP address as your `hardhat.provider` in `ethmobile.config.ts`. It uses the script located in `packages/expo/utils/eth-mobile/configureLocalNetwork.ts`
 
-5. Set the `ALCHEMY_KEY` in `ethmobile.config.ts`
-
-6. Prebuild native modules:
+5. Prebuild native modules:
 
 ```
 yarn prebuild
 ```
 
-7. Run on device:
+6. Run on device:
 
 ```
 yarn android

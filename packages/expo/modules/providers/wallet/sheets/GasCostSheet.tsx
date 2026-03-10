@@ -1,42 +1,11 @@
+import { Skeleton } from '@/components/eth-mobile';
 import { useNetwork } from '@/hooks/eth-mobile';
-import { useTheme, type ThemeColors } from '@/theme';
+import { useTheme } from '@/theme';
 import { Ionicons } from '@expo/vector-icons';
 import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withTiming
-} from 'react-native-reanimated';
 import { useEstimateGasCost } from 'thirdweb/react';
-
-function GasCostSkeleton({ colors }: { colors: ThemeColors }) {
-  const opacity = useSharedValue(0.35);
-
-  useEffect(() => {
-    opacity.value = withRepeat(withTiming(0.75, { duration: 800 }), -1, true);
-  }, [opacity]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value
-  }));
-
-  return (
-    <Animated.View
-      style={[
-        {
-          height: 28,
-          minWidth: 120,
-          borderRadius: 8,
-          backgroundColor: colors.textMuted
-        },
-        animatedStyle
-      ]}
-    />
-  );
-}
 
 export type GasSheetParams = {
   transaction: unknown;
@@ -129,7 +98,7 @@ export default function GasCostSheet({ params, onClose }: Props) {
         </Text>
         <View className="mt-1 min-h-[36px] items-center justify-center">
           {isEstimating ? (
-            <GasCostSkeleton colors={colors} />
+            <Skeleton height={28} minWidth={150} borderRadius={8} />
           ) : error ? (
             <Text
               className="text-center text-base font-[Poppins]"

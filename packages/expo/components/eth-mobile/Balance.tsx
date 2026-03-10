@@ -1,14 +1,9 @@
+import { Skeleton } from '@/components/eth-mobile';
 import { useBalance, useNetwork } from '@/hooks/eth-mobile';
 import { useTheme } from '@/theme';
 import { formatBalanceDisplay, parseBalance } from '@/utils/eth-mobile';
 import React, { useEffect } from 'react';
 import { Text, TextStyle, View, ViewStyle } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withTiming
-} from 'react-native-reanimated';
 
 type Props = {
   address: string;
@@ -20,35 +15,6 @@ type Props = {
   /** When true, refetch balance on an interval. */
   watch?: boolean;
 };
-
-function BalanceSkeleton() {
-  const { colors } = useTheme();
-  const opacity = useSharedValue(0.35);
-
-  useEffect(() => {
-    opacity.value = withRepeat(withTiming(0.75, { duration: 800 }), -1, true);
-  }, [opacity]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value
-  }));
-
-  return (
-    <View className="items-center">
-      <Animated.View
-        style={[
-          {
-            height: 22,
-            minWidth: 100,
-            borderRadius: 6,
-            backgroundColor: colors.textMuted
-          },
-          animatedStyle
-        ]}
-      />
-    </View>
-  );
-}
 
 /**
  * Displays the balance of an Ethereum address (native or ERC20).
@@ -83,7 +49,9 @@ export function Balance({
   if (isLoading) {
     return (
       <View style={[{ alignItems: 'center' }, containerStyle]}>
-        <BalanceSkeleton />
+        <View className="items-center">
+          <Skeleton height={22} minWidth={100} borderRadius={6} />
+        </View>
       </View>
     );
   }

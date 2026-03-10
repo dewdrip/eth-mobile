@@ -143,6 +143,233 @@ const deployedContracts = {
         }
       ],
       inheritedFunctions: {}
+    },
+    MultiReturnDemo: {
+      address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+      abi: [
+        {
+          inputs: [],
+          stateMutability: 'nonpayable',
+          type: 'constructor'
+        },
+        {
+          inputs: [
+            {
+              internalType: 'address',
+              name: '',
+              type: 'address'
+            }
+          ],
+          name: 'balanceOf',
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: '',
+              type: 'uint256'
+            }
+          ],
+          stateMutability: 'view',
+          type: 'function'
+        },
+        {
+          inputs: [
+            {
+              internalType: 'address',
+              name: 'account',
+              type: 'address'
+            }
+          ],
+          name: 'getAccountInfo',
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: 'balance',
+              type: 'uint256'
+            },
+            {
+              internalType: 'bool',
+              name: 'active',
+              type: 'bool'
+            }
+          ],
+          stateMutability: 'view',
+          type: 'function'
+        },
+        {
+          inputs: [
+            {
+              internalType: 'address',
+              name: 'account',
+              type: 'address'
+            }
+          ],
+          name: 'getAccountInfoStruct',
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: 'uint256',
+                  name: 'balance',
+                  type: 'uint256'
+                },
+                {
+                  internalType: 'bool',
+                  name: 'isActive',
+                  type: 'bool'
+                },
+                {
+                  internalType: 'address',
+                  name: 'account',
+                  type: 'address'
+                }
+              ],
+              internalType: 'struct MultiReturnDemo.AccountInfo',
+              name: 'info',
+              type: 'tuple'
+            }
+          ],
+          stateMutability: 'view',
+          type: 'function'
+        },
+        {
+          inputs: [],
+          name: 'getStats',
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: 'count',
+              type: 'uint256'
+            },
+            {
+              internalType: 'bool',
+              name: 'isPaused',
+              type: 'bool'
+            },
+            {
+              internalType: 'address',
+              name: 'ownerAddress',
+              type: 'address'
+            }
+          ],
+          stateMutability: 'view',
+          type: 'function'
+        },
+        {
+          inputs: [],
+          name: 'increment',
+          outputs: [],
+          stateMutability: 'nonpayable',
+          type: 'function'
+        },
+        {
+          inputs: [
+            {
+              internalType: 'address',
+              name: '',
+              type: 'address'
+            }
+          ],
+          name: 'isWhitelisted',
+          outputs: [
+            {
+              internalType: 'bool',
+              name: '',
+              type: 'bool'
+            }
+          ],
+          stateMutability: 'view',
+          type: 'function'
+        },
+        {
+          inputs: [],
+          name: 'owner',
+          outputs: [
+            {
+              internalType: 'address',
+              name: '',
+              type: 'address'
+            }
+          ],
+          stateMutability: 'view',
+          type: 'function'
+        },
+        {
+          inputs: [],
+          name: 'paused',
+          outputs: [
+            {
+              internalType: 'bool',
+              name: '',
+              type: 'bool'
+            }
+          ],
+          stateMutability: 'view',
+          type: 'function'
+        },
+        {
+          inputs: [
+            {
+              internalType: 'address',
+              name: 'account',
+              type: 'address'
+            },
+            {
+              internalType: 'uint256',
+              name: 'amount',
+              type: 'uint256'
+            }
+          ],
+          name: 'setBalance',
+          outputs: [],
+          stateMutability: 'nonpayable',
+          type: 'function'
+        },
+        {
+          inputs: [
+            {
+              internalType: 'bool',
+              name: '_paused',
+              type: 'bool'
+            }
+          ],
+          name: 'setPaused',
+          outputs: [],
+          stateMutability: 'nonpayable',
+          type: 'function'
+        },
+        {
+          inputs: [
+            {
+              internalType: 'address',
+              name: 'account',
+              type: 'address'
+            },
+            {
+              internalType: 'bool',
+              name: 'status',
+              type: 'bool'
+            }
+          ],
+          name: 'setWhitelisted',
+          outputs: [],
+          stateMutability: 'nonpayable',
+          type: 'function'
+        },
+        {
+          inputs: [],
+          name: 'totalCount',
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: '',
+              type: 'uint256'
+            }
+          ],
+          stateMutability: 'view',
+          type: 'function'
+        }
+      ],
+      inheritedFunctions: {}
     }
   }
 } as const;

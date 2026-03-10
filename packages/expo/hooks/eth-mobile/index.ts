@@ -1,6 +1,7 @@
 export * from './useAccount';
 export * from './useBalance';
 export * from './useClipboard';
+export * from './useEnsName';
 export * from './useReadContract';
 export * from './useWriteContract';
 export * from './useCryptoPrice';

@@ -1,5 +1,5 @@
 import { Skeleton } from '@/components/eth-mobile';
-import { useNetwork } from '@/hooks/eth-mobile';
+import { useCryptoPrice, useNetwork } from '@/hooks/eth-mobile';
 import { useTheme } from '@/theme';
 import { Ionicons } from '@expo/vector-icons';
 import { useBottomSheetModal } from '@gorhom/bottom-sheet';
@@ -23,6 +23,10 @@ export default function GasCostSheet({ params, onClose }: Props) {
   const network = useNetwork();
   const symbol = network?.token?.symbol ?? 'ETH';
   const { dismiss } = useBottomSheetModal();
+  const { price: usdPrice, loading: usdPriceLoading } = useCryptoPrice({
+    priceID: network?.coingeckoPriceId ?? 'ethereum',
+    decimalPlaces: 2
+  });
   const [estimate, setEstimate] = useState<{
     ether: string;
     wei: bigint;
@@ -78,6 +82,14 @@ export default function GasCostSheet({ params, onClose }: Props) {
         })()
       : '—';
 
+  const usdValue =
+    estimate != null &&
+    usdPrice != null &&
+    Number.isFinite(Number(estimate.ether)) &&
+    Number(estimate.ether) > 0
+      ? Number(estimate.ether) * usdPrice
+      : null;
+
   return (
     <View
       className="flex-1 px-6 pb-8"
@@ -107,12 +119,26 @@ export default function GasCostSheet({ params, onClose }: Props) {
               {error}
             </Text>
           ) : (
-            <Text
-              className="text-center text-2xl font-[Poppins-SemiBold]"
-              style={{ color: colors.primary }}
-            >
-              ~{displayFee} {symbol}
-            </Text>
+            <>
+              <Text
+                className="text-center text-2xl font-[Poppins-SemiBold]"
+                style={{ color: colors.primary }}
+              >
+                ~{displayFee} {symbol}
+              </Text>
+              {usdPriceLoading && estimate != null ? (
+                <View className="mt-1 items-center">
+                  <Skeleton height={14} minWidth={60} borderRadius={4} />
+                </View>
+              ) : usdValue != null ? (
+                <Text
+                  className="mt-1 text-center text-sm font-[Poppins]"
+                  style={{ color: colors.textMuted }}
+                >
+                  ≈ ${usdValue.toFixed(2)} USD
+                </Text>
+              ) : null}
+            </>
           )}
         </View>
       </View>

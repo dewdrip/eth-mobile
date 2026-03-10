@@ -46,28 +46,22 @@ export function IntegerInput({
       error={inputError}
       onChange={onChange}
       disabled={disabled}
+      keyboardType="number-pad"
       suffix={
         !inputError &&
         !disableMultiplyBy1e18 && (
           <Pressable
             onPress={multiplyBy1e18}
             disabled={disabled}
-            className="px-4 flex-row items-start rounded-2xl mr-2"
-            style={{
-              backgroundColor: colors.primary
-            }}
+            className="px-3 py-2 rounded-2xl mr-2"
+            style={{ backgroundColor: colors.primary }}
+            accessibilityLabel="Multiply by 10^18 (wei)"
           >
             <Text
-              className="text-lg font-[Poppins]"
+              className="text-sm font-[Poppins]"
               style={{ color: colors.primaryContrast }}
             >
-              10
-            </Text>
-            <Text
-              className="text-xs font-[Poppins]"
-              style={{ color: colors.primaryContrast }}
-            >
-              18
+              ×10¹⁸
             </Text>
           </Pressable>
         )

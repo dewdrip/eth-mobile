@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { useToast } from 'react-native-toast-notifications';
-import { TransactionReceipt } from 'viem';
+import { formatEther, TransactionReceipt } from 'viem';
 import ContractInput from './ContractInput';
 import {
   getFunctionInputKey,
@@ -88,15 +88,42 @@ export default function WriteOnlyFunctionForm({
       <View className="gap-4 mt-4">{inputElements}</View>
 
       {abiFunction.stateMutability === 'payable' ? (
-        <View className="mt-2">
+        <View className="mt-4">
+          <Text
+            className="text-sm font-[Poppins] mb-1.5"
+            style={{ color: colors.textMuted }}
+          >
+            Value (wei)
+          </Text>
           <IntegerInput
             value={txValue}
             onChange={updatedTxValue => {
               setTxReceipt(undefined);
               setTxValue(updatedTxValue);
             }}
-            placeholder="value (wei)"
+            placeholder="0"
           />
+          {txValue !== '' &&
+            txValue !== undefined &&
+            (() => {
+              try {
+                const wei =
+                  typeof txValue === 'bigint'
+                    ? txValue
+                    : BigInt(String(txValue).replace(/\D/g, '') || '0');
+                if (wei === 0n) return null;
+                return (
+                  <Text
+                    className="text-xs font-[Poppins] mt-1.5"
+                    style={{ color: colors.textMuted }}
+                  >
+                    ≈ {formatEther(wei)} ETH
+                  </Text>
+                );
+              } catch {
+                return null;
+              }
+            })()}
         </View>
       ) : null}
       <View className="flex-row items-center justify-between mt-4">

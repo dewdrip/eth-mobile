@@ -1,12 +1,13 @@
 import { useTheme } from '@/theme';
 import React, { JSX, useCallback } from 'react';
-import { TextInput, View } from 'react-native';
+import { TextInput, TextInputProps, View } from 'react-native';
 import { CommonInputProps } from './utils';
 
 type Props<T> = CommonInputProps<T> & {
   error?: boolean;
   prefix?: JSX.Element | false;
   suffix?: JSX.Element | false;
+  keyboardType?: TextInputProps['keyboardType'];
 };
 
 export function InputBase<
@@ -19,7 +20,8 @@ export function InputBase<
   error,
   disabled,
   prefix,
-  suffix
+  suffix,
+  keyboardType
 }: Props<T>) {
   const { colors } = useTheme();
   const handleChange = useCallback(
@@ -32,7 +34,11 @@ export function InputBase<
   return (
     <View
       className="flex-row items-center rounded-full"
-      style={{ backgroundColor: colors.surfaceVariant }}
+      style={{
+        backgroundColor: colors.surfaceVariant,
+        borderWidth: 1,
+        borderColor: error ? colors.error : 'transparent'
+      }}
     >
       {prefix}
       <TextInput
@@ -44,6 +50,7 @@ export function InputBase<
         placeholderTextColor={colors.textMuted}
         placeholder={placeholder}
         onChangeText={handleChange}
+        keyboardType={keyboardType}
       />
       {suffix}
     </View>

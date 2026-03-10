@@ -46,7 +46,7 @@ export function IntegerInput({
       error={inputError}
       onChange={onChange}
       disabled={disabled}
-      keyboardType="number-pad"
+      keyboardType="decimal-pad"
       suffix={
         !inputError &&
         !disableMultiplyBy1e18 && (

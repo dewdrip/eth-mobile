@@ -92,10 +92,17 @@ export default function LuckyGuessGame() {
         const betWei = a?.bet ?? a?.[3] ?? 0n;
         const betStr =
           typeof betWei === 'bigint' ? formatEther(betWei) : String(betWei);
-        return { won, result, bet: betStr };
+        return { won, result, bet: betStr, betWei };
       })
       .reverse();
   }, [guessEvents, account?.address]);
+
+  const totalProfitLossWei = useMemo(() => {
+    return guessHistory.reduce(
+      (sum, r) => sum + (r.won ? r.betWei : -r.betWei),
+      0n
+    );
+  }, [guessHistory]);
 
   const winsCount = useMemo(
     () => guessHistory.filter(r => r.won).length,
@@ -153,6 +160,20 @@ export default function LuckyGuessGame() {
         <NoContract />
       ) : (
         <>
+          <Text
+            className="text-xl text-center font-semibold font-[Poppins-SemiBold]"
+            style={{
+              color:
+                totalProfitLossWei > 0n
+                  ? colors.success
+                  : totalProfitLossWei < 0n
+                    ? colors.error
+                    : colors.textMuted
+            }}
+          >
+            {totalProfitLossWei > 0n ? '+' : ''}
+            {formatEther(totalProfitLossWei)} {network?.token?.symbol ?? 'ETH'}
+          </Text>
           <GameIntro />
           <GuessPicker guess={selectedGuess} onGuessChange={setSelectedGuess} />
           <BetInput

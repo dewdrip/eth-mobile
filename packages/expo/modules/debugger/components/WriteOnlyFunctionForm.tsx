@@ -75,7 +75,9 @@ export default function WriteOnlyFunctionForm({
   });
 
   const showReceipt = () => {
-    openModal('TxReceiptModal', { txReceipt });
+    if (txReceipt) {
+      openModal('TxReceiptModal', { hash: txReceipt.transactionHash });
+    }
   };
   return (
     <View>

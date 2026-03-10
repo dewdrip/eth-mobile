@@ -12,7 +12,7 @@ export default function HomeScreen() {
     <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ paddingBottom: 48 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 48 }}
         showsVerticalScrollIndicator={false}
       >
         <Link href="/debugContracts" push asChild>

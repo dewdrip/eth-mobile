@@ -144,7 +144,7 @@ export default function LuckyGuessGame() {
   }
 
   return (
-    <>
+    <View className="flex-1">
       {!account?.address ? (
         <Welcome />
       ) : !isLocalNetwork ? (
@@ -191,6 +191,6 @@ export default function LuckyGuessGame() {
           </View>
         </>
       )}
-    </>
+    </View>
   );
 }

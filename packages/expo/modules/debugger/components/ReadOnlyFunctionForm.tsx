@@ -83,18 +83,20 @@ export default function ReadOnlyFunctionForm({
           >
             Result:
           </Text>
-          {result.map((data: any) => {
+          {result.map((data: any, index: number) => {
             const replacer = (_key: string, value: any) =>
               typeof value === 'bigint' ? value.toString() : value;
             return (
               <Text
-                key={Math.random().toString()}
+                key={`result-${index}`}
                 className="text-lg font-[Poppins]"
                 style={{ color: colors.text }}
               >
-                {typeof data == 'object' && isNaN(data)
+                {typeof data === 'object' &&
+                data !== null &&
+                !(data instanceof Date)
                   ? JSON.stringify(data, replacer)
-                  : data?.toString()}
+                  : (data?.toString() ?? String(data))}
               </Text>
             );
           })}
@@ -108,9 +110,15 @@ export default function ReadOnlyFunctionForm({
         }}
         disabled={isFetching}
         onPress={async () => {
-          const data = await refetch();
-          if (data === undefined) return;
-          setResult(Array.isArray(data) ? data : [data]);
+          if (!refetch) return;
+          const refetchResult = (await refetch()) as
+            | { data?: unknown }
+            | undefined;
+          const contractData = refetchResult?.data;
+          if (contractData === undefined) return;
+          setResult(
+            Array.isArray(contractData) ? contractData : [contractData]
+          );
         }}
       >
         {isFetching && (

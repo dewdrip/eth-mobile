@@ -1,11 +1,11 @@
-import { Address } from '@/components/eth-mobile';
-import { useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { Address, Balance } from '@/components/eth-mobile';
+import { useNetwork } from '@/hooks/eth-mobile';
 import { useTheme } from '@/theme';
-import { formatBalanceDisplay, networkInitials } from '@/utils/eth-mobile';
+import { networkInitials } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetView, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import React from 'react';
-import { ActivityIndicator, Image, Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import {
   Blobbie,
   useActiveAccount,
@@ -23,11 +23,6 @@ export default function WalletDetailsSheet() {
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
-  const {
-    displayValue,
-    symbol,
-    isLoading: balanceLoading
-  } = useBalance({ address: account?.address ?? '', watch: true });
   const network = useNetwork();
 
   if (!account?.address) return null;
@@ -58,16 +53,14 @@ export default function WalletDetailsSheet() {
       </View>
 
       <View className="items-center mb-6">
-        {balanceLoading ? (
-          <ActivityIndicator size="small" color={colors.textMuted} />
-        ) : (
-          <Text
-            className="text-base font-[Poppins-SemiBold]"
-            style={{ color: colors.text }}
-          >
-            {formatBalanceDisplay(displayValue)} {symbol ?? 'ETH'}
-          </Text>
-        )}
+        <Balance
+          address={account.address}
+          watch
+          style={{
+            fontSize: 16,
+            fontFamily: 'Poppins-SemiBold'
+          }}
+        />
       </View>
 
       <View className="flex-row gap-3 mb-6">

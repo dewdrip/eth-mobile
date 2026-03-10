@@ -65,6 +65,8 @@ export function useBalance({
   const error = result.error
     ? String(result.error.message ?? result.error)
     : null;
+  const decimals =
+    result.data?.decimals != null ? Number(result.data.decimals) : undefined;
 
   return {
     balance,
@@ -74,6 +76,8 @@ export function useBalance({
     error,
     /** Thirdweb result: formatted display value and symbol (e.g. "0.5", "ETH") */
     displayValue: result.data?.displayValue,
-    symbol: result.data?.symbol
+    symbol: result.data?.symbol,
+    /** Token decimals (native or ERC20). Use when formatting balance manually. */
+    decimals
   };
 }

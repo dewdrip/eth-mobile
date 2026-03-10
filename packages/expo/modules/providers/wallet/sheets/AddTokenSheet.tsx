@@ -1,12 +1,7 @@
-import {
-  useAccount,
-  useBalance,
-  useNetwork,
-  useReadContract
-} from '@/hooks/eth-mobile';
+import { Balance } from '@/components/eth-mobile';
+import { useAccount, useNetwork, useReadContract } from '@/hooks/eth-mobile';
 import { useTokensStore } from '@/store';
 import { useTheme } from '@/theme';
-import { formatBalanceDisplay, parseBalance } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
   BottomSheetScrollView,
@@ -40,17 +35,8 @@ export default function AddTokenSheet() {
   const [metaError, setMetaError] = useState<string | null>(null);
   const [metaLoading, setMetaLoading] = useState(false);
 
-  const {
-    balance,
-    isLoading: balanceLoading,
-    error: balanceError
-  } = useBalance({
-    address: account?.address ?? '',
-    tokenAddress: lookedUpAddress ?? undefined
-  });
-
-  const isLoading = metaLoading || balanceLoading;
-  const error = metaError ?? balanceError;
+  const isLoading = metaLoading;
+  const error = metaError;
 
   const handleLookup = useCallback(async () => {
     const trimmed = addressInput.trim();
@@ -237,14 +223,16 @@ export default function AddTokenSheet() {
               >
                 Balance
               </Text>
-              <Text
-                className="text-base font-[Poppins-SemiBold]"
-                style={{ color: colors.text }}
-              >
-                {balance != null
-                  ? `${formatBalanceDisplay(parseBalance(balance, metadata.decimals))} ${metadata.symbol}`
-                  : '—'}
-              </Text>
+              <Balance
+                address={account?.address ?? ''}
+                tokenAddress={lookedUpAddress ?? undefined}
+                containerStyle={{ alignItems: 'flex-start' }}
+                style={{
+                  fontSize: 16,
+                  fontFamily: 'Poppins-SemiBold',
+                  color: colors.text
+                }}
+              />
               <Pressable
                 onPress={handleAddToken}
                 className="mt-4 py-3 rounded-xl items-center"

@@ -1,7 +1,7 @@
-import { useAccount, useBalance, useNetwork } from '@/hooks/eth-mobile';
+import { Balance } from '@/components/eth-mobile';
+import { useAccount, useNetwork } from '@/hooks/eth-mobile';
 import { getStorageKey, useTokensStore } from '@/store';
 import { useTheme } from '@/theme';
-import { formatBalanceDisplay } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
   BottomSheetScrollView,
@@ -22,14 +22,6 @@ function TokenRow({
   colors: import('@/theme').ThemeColors;
 }) {
   const account = useAccount();
-  const {
-    displayValue,
-    symbol: resolvedSymbol,
-    isLoading
-  } = useBalance({
-    address: account?.address ?? '',
-    tokenAddress: token.tokenAddress
-  });
 
   return (
     <Pressable
@@ -55,20 +47,16 @@ function TokenRow({
         >
           {token.name}
         </Text>
-        {isLoading ? (
-          <View
-            className="h-4 w-20 rounded mt-0.5"
-            style={{ backgroundColor: colors.surfaceVariant }}
-          />
-        ) : (
-          <Text
-            className="text-sm font-[Poppins]"
-            style={{ color: colors.textMuted }}
-          >
-            {formatBalanceDisplay(displayValue)}{' '}
-            {resolvedSymbol ?? token.symbol}
-          </Text>
-        )}
+        <Balance
+          address={account?.address ?? ''}
+          tokenAddress={token.tokenAddress}
+          containerStyle={{ alignItems: 'flex-start' }}
+          style={{
+            fontSize: 14,
+            fontFamily: 'Poppins',
+            color: colors.textMuted
+          }}
+        />
       </View>
       <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
     </Pressable>

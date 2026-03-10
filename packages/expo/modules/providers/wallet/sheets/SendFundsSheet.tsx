@@ -1,7 +1,7 @@
-import { AddressInput, EtherInput } from '@/components/eth-mobile';
+import { AddressInput, Balance, EtherInput } from '@/components/eth-mobile';
 import { useBalance, useNetwork } from '@/hooks/eth-mobile';
 import { useTheme } from '@/theme';
-import { formatBalanceDisplay, getParsedError } from '@/utils/eth-mobile';
+import { getParsedError } from '@/utils/eth-mobile';
 import { Ionicons } from '@expo/vector-icons';
 import {
   BottomSheetScrollView,
@@ -51,7 +51,6 @@ export default function SendFundsSheet() {
 
   const {
     balance,
-    displayValue,
     symbol: resolvedSymbol,
     isLoading: balanceLoading
   } = useBalance({
@@ -243,14 +242,16 @@ export default function SendFundsSheet() {
             >
               {selectedToken.name}
             </Text>
-            <Text
-              className="text-sm font-[Poppins]"
-              style={{ color: colors.textMuted }}
-            >
-              {balanceLoading
-                ? '...'
-                : `${formatBalanceDisplay(displayValue)} ${symbol}`}
-            </Text>
+            <Balance
+              address={account?.address ?? ''}
+              tokenAddress={selectedToken.tokenAddress}
+              containerStyle={{ alignItems: 'flex-start' }}
+              style={{
+                fontSize: 14,
+                fontFamily: 'Poppins',
+                color: colors.textMuted
+              }}
+            />
           </View>
           <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
         </Pressable>

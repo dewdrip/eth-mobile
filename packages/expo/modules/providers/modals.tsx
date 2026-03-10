@@ -1,5 +1,4 @@
-import QRCodeScanner from '@/components/modals/QRCodeScanner';
-import TxReceiptModal from '@/components/modals/TxReceiptModal';
+import { QRCodeScanner, TxReceiptModal } from '@/components/eth-mobile/modals';
 import React from 'react';
 import {
   createModalStack,

@@ -47,7 +47,10 @@ export default function ContractUI() {
 
   if (isDeployedContractLoading || !isFocused) {
     return (
-      <View className="mt-12">
+      <View
+        className="flex-1 items-center justify-center"
+        style={{ backgroundColor: colors.background }}
+      >
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );

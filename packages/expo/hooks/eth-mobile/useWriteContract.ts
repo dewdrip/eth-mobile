@@ -1,4 +1,5 @@
 import { client } from '@/modules/providers/Thirdweb';
+import { useWalletContext } from '@/modules/providers/wallet/context';
 import { getParsedError } from '@/utils/eth-mobile';
 import { Abi } from 'abitype';
 import { InterfaceAbi } from 'ethers';
@@ -54,6 +55,7 @@ export function useWriteContract({
   const network = useNetwork();
   const toast = useToast();
   const account = useAccount();
+  const openGasSheet = useWalletContext()?.openGasSheet;
 
   const chain = useMemo(
     () =>
@@ -113,22 +115,31 @@ export function useWriteContract({
             params: args,
             ...(value > 0n && { value })
           } as any);
-          sendTx(transaction, {
-            onSuccess: (result: unknown) => {
-              toast.show('Transaction successful!', { type: 'success' });
-              resolve(result as TransactionReceipt);
-            },
-            onError: (error: unknown) => {
-              const parsed = getParsedError(error);
-              reject(parsed);
-            }
-          });
+          const doSend = () => {
+            sendTx(transaction, {
+              onSuccess: (result: unknown) => {
+                toast.show('Transaction successful!', { type: 'success' });
+                resolve(result as TransactionReceipt);
+              },
+              onError: (error: unknown) => {
+                const parsed = getParsedError(error);
+                reject(parsed);
+              }
+            });
+          };
+          if (openGasSheet) {
+            openGasSheet(transaction, doSend, () =>
+              reject(new Error('User rejected'))
+            );
+          } else {
+            doSend();
+          }
         } catch (error) {
           reject(getParsedError(error));
         }
       });
     },
-    [account?.address, contract, abi, sendTx, toast]
+    [account?.address, contract, abi, sendTx, toast, openGasSheet]
   );
 
   const writeContract = useCallback(

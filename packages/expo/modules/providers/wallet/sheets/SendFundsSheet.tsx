@@ -39,7 +39,7 @@ const ERC20_TRANSFER_ABI = [
 export default function SendFundsSheet() {
   const { colors } = useTheme();
   const { dismiss } = useBottomSheetModal();
-  const { openTokenPicker } = useWalletContext() ?? {};
+  const { openTokenPicker, openGasSheet } = useWalletContext() ?? {};
   const account = useActiveAccount();
   const network = useNetwork();
   const toast = useToast();
@@ -117,6 +117,20 @@ export default function SendFundsSheet() {
 
     const toAddress = trimmedRecipient as `0x${string}`;
 
+    const onSuccess = () => {
+      toast.show('Transfer Successful', { type: 'success' });
+      setAmount('');
+      setRecipient('');
+      dismiss();
+    };
+    const onError = (error: unknown) => {
+      toast.show(getParsedError(error), { type: 'danger' });
+    };
+
+    const doSend = (transaction: Parameters<typeof sendTx>[0]) => {
+      sendTx(transaction, { onSuccess, onError });
+    };
+
     if (selectedToken.id === 'native') {
       const transaction = prepareTransaction({
         client,
@@ -124,17 +138,11 @@ export default function SendFundsSheet() {
         to: toAddress,
         value: amountWei
       });
-      sendTx(transaction, {
-        onSuccess: () => {
-          toast.show('Transfer Successful', { type: 'success' });
-          setAmount('');
-          setRecipient('');
-          dismiss();
-        },
-        onError: (error: unknown) => {
-          toast.show(getParsedError(error), { type: 'danger' });
-        }
-      });
+      if (openGasSheet) {
+        openGasSheet(transaction, () => doSend(transaction));
+      } else {
+        doSend(transaction);
+      }
     } else if (selectedToken.tokenAddress) {
       const contract = getContract({
         client,
@@ -147,17 +155,11 @@ export default function SendFundsSheet() {
         method: 'function transfer(address to, uint256 value)',
         params: [toAddress, amountWei]
       });
-      sendTx(transaction, {
-        onSuccess: () => {
-          toast.show('Transfer Successful', { type: 'success' });
-          setAmount('');
-          setRecipient('');
-          dismiss();
-        },
-        onError: (error: unknown) => {
-          toast.show(getParsedError(error), { type: 'danger' });
-        }
-      });
+      if (openGasSheet) {
+        openGasSheet(transaction, () => doSend(transaction));
+      } else {
+        doSend(transaction);
+      }
     }
   }, [
     recipient,
@@ -167,7 +169,8 @@ export default function SendFundsSheet() {
     chain,
     sendTx,
     toast,
-    dismiss
+    dismiss,
+    openGasSheet
   ]);
 
   if (!account?.address) return null;

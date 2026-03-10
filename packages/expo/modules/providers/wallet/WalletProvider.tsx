@@ -4,12 +4,13 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider
 } from '@gorhom/bottom-sheet';
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useActiveAccount } from 'thirdweb/react';
 import { WalletContext } from './context';
 import AddTokenSheet from './sheets/AddTokenSheet';
 import ConnectSheet from './sheets/ConnectSheet';
+import GasCostSheet from './sheets/GasCostSheet';
 import NetworkSelectSheet from './sheets/NetworkSelectSheet';
 import ReceiveSheet from './sheets/ReceiveSheet';
 import SendFundsSheet from './sheets/SendFundsSheet';
@@ -42,6 +43,12 @@ export default function WalletProvider({
   const tokenPickerSheetRef = useRef<BottomSheetModal>(null);
   const networkSelectSheetRef = useRef<BottomSheetModal>(null);
   const addTokenSheetRef = useRef<BottomSheetModal>(null);
+  const gasSheetRef = useRef<BottomSheetModal>(null);
+  const [gasSheetParams, setGasSheetParams] = useState<{
+    transaction: unknown;
+    onConfirm: () => void;
+    onCancel?: () => void;
+  } | null>(null);
   const tokenPickerOnSelectRef = useRef<((token: SendToken) => void) | null>(
     null
   );
@@ -82,6 +89,19 @@ export default function WalletProvider({
     []
   );
 
+  const openGasSheet = useCallback(
+    (transaction: unknown, onConfirm: () => void, onCancel?: () => void) => {
+      setGasSheetParams({ transaction, onConfirm, onCancel });
+      gasSheetRef.current?.present();
+    },
+    []
+  );
+
+  const closeGasSheet = useCallback(() => {
+    setGasSheetParams(null);
+    gasSheetRef.current?.dismiss();
+  }, []);
+
   const contextValue = useMemo(
     () => ({
       openViewFunds,
@@ -90,7 +110,10 @@ export default function WalletProvider({
       openNetworkSelect,
       openTokenPicker,
       openAddToken,
-      tokenPickerOnSelectRef
+      openGasSheet,
+      closeGasSheet,
+      tokenPickerOnSelectRef,
+      gasSheetParams
     }),
     [
       openViewFunds,
@@ -98,7 +121,10 @@ export default function WalletProvider({
       openSendFunds,
       openNetworkSelect,
       openTokenPicker,
-      openAddToken
+      openAddToken,
+      openGasSheet,
+      closeGasSheet,
+      gasSheetParams
     ]
   );
 
@@ -111,6 +137,8 @@ export default function WalletProvider({
     tokenPickerSheetRef.current?.dismiss();
     networkSelectSheetRef.current?.dismiss();
     addTokenSheetRef.current?.dismiss();
+    gasSheetRef.current?.dismiss();
+    setGasSheetParams(null);
   }, []);
 
   const renderBackdrop = useCallback(
@@ -217,6 +245,16 @@ export default function WalletProvider({
           backgroundStyle={sheetThemeStyles.backgroundStyle}
         >
           <AddTokenSheet />
+        </BottomSheetModal>
+        <BottomSheetModal
+          ref={gasSheetRef}
+          snapPoints={['45%']}
+          enableDynamicSizing={false}
+          backdropComponent={renderBackdrop}
+          handleIndicatorStyle={sheetThemeStyles.handleIndicatorStyle}
+          backgroundStyle={sheetThemeStyles.backgroundStyle}
+        >
+          <GasCostSheet params={gasSheetParams} onClose={closeGasSheet} />
         </BottomSheetModal>
       </BottomSheetModalProvider>
     </WalletContext.Provider>

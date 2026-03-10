@@ -1,4 +1,5 @@
 import React, { createContext } from 'react';
+import type { GasSheetParams } from './sheets/GasCostSheet';
 import type { SendToken } from './tokens';
 
 export type WalletContextValue = {
@@ -8,9 +9,16 @@ export type WalletContextValue = {
   openNetworkSelect: () => void;
   openTokenPicker: (onSelect: (token: SendToken) => void) => void;
   openAddToken: () => void;
+  openGasSheet: (
+    transaction: unknown,
+    onConfirm: () => void,
+    onCancel?: () => void
+  ) => void;
+  closeGasSheet: () => void;
   tokenPickerOnSelectRef: React.MutableRefObject<
     ((token: SendToken) => void) | null
   >;
+  gasSheetParams: GasSheetParams | null;
 };
 
 export const WalletContext = createContext<WalletContextValue | null>(null);

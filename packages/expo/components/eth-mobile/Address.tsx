@@ -36,7 +36,7 @@ type Props = {
  * @param iconStyle - Optional style for the icon
  * @param copyable - Whether to show the copy icon (default: true)
  * @param showBlockie - Whether to show the blockie (default: true)
- * @param resolveEns - Whether to resolve and show ENS name (default: false)
+ * @param resolveEns - Whether to resolve and show ENS name (default: true)
  */
 export function Address({
   address,

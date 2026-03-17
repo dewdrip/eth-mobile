@@ -10,7 +10,7 @@ import { useActiveAccount } from 'thirdweb/react';
 import { WalletContext } from './context';
 import AddTokenSheet from './sheets/AddTokenSheet';
 import ConnectSheet from './sheets/ConnectSheet';
-import GasCostSheet from './sheets/GasCostSheet';
+import GasCostSheet, { type GasSheetParams } from './sheets/GasCostSheet';
 import NetworkSelectSheet from './sheets/NetworkSelectSheet';
 import ReceiveSheet from './sheets/ReceiveSheet';
 import SendFundsSheet from './sheets/SendFundsSheet';
@@ -44,11 +44,9 @@ export default function WalletProvider({
   const networkSelectSheetRef = useRef<BottomSheetModal>(null);
   const addTokenSheetRef = useRef<BottomSheetModal>(null);
   const gasSheetRef = useRef<BottomSheetModal>(null);
-  const [gasSheetParams, setGasSheetParams] = useState<{
-    transaction: unknown;
-    onConfirm: () => void;
-    onCancel?: () => void;
-  } | null>(null);
+  const [gasSheetParams, setGasSheetParams] = useState<GasSheetParams | null>(
+    null
+  );
   const tokenPickerOnSelectRef = useRef<((token: SendToken) => void) | null>(
     null
   );
@@ -90,8 +88,20 @@ export default function WalletProvider({
   );
 
   const openGasSheet = useCallback(
-    (transaction: unknown, onConfirm: () => void, onCancel?: () => void) => {
-      setGasSheetParams({ transaction, onConfirm, onCancel });
+    (
+      transaction: unknown,
+      onConfirm: () => void,
+      onCancel?: () => void,
+      fromAddress?: string | null,
+      toAddress?: string | null
+    ) => {
+      setGasSheetParams({
+        transaction,
+        onConfirm,
+        onCancel,
+        fromAddress: fromAddress ?? null,
+        toAddress: toAddress ?? null
+      });
       gasSheetRef.current?.present();
     },
     []

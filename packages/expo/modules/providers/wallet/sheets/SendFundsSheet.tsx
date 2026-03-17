@@ -139,7 +139,12 @@ export default function SendFundsSheet() {
         value: amountWei
       });
       if (openGasSheet) {
-        openGasSheet(transaction, () => doSend(transaction));
+        openGasSheet(
+          transaction,
+          () => doSend(transaction),
+          undefined,
+          toAddress
+        );
       } else {
         doSend(transaction);
       }
@@ -156,7 +161,12 @@ export default function SendFundsSheet() {
         params: [toAddress, amountWei]
       });
       if (openGasSheet) {
-        openGasSheet(transaction, () => doSend(transaction));
+        openGasSheet(
+          transaction,
+          () => doSend(transaction),
+          undefined,
+          selectedToken.tokenAddress
+        );
       } else {
         doSend(transaction);
       }

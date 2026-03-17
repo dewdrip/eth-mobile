@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from '../src/utils/eth-mobile/contract';
 const deployedContracts = {
   31337: {
     LuckyGuess: {
-      address: '0xa513E6E4b8f2a923D98304ec87F64353C4D5C853',
+      address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
       abi: [
         {
           inputs: [],
@@ -145,7 +145,7 @@ const deployedContracts = {
       inheritedFunctions: {}
     },
     MockERC20: {
-      address: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
+      address: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
       abi: [
         {
           inputs: [

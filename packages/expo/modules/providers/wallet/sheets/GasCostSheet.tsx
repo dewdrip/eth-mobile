@@ -1,6 +1,7 @@
-import { Skeleton } from '@/components/eth-mobile';
+import { Address, Skeleton } from '@/components/eth-mobile';
 import { useCryptoPrice, useNetwork } from '@/hooks/eth-mobile';
 import { useTheme } from '@/theme';
+import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -9,6 +10,8 @@ import { useEstimateGasCost } from 'thirdweb/react';
 
 export type GasSheetParams = {
   transaction: unknown;
+  fromAddress?: string | null;
+  toAddress?: string | null;
   onConfirm: () => void;
   onCancel?: () => void;
 };
@@ -95,13 +98,45 @@ export default function GasCostSheet({ params, onClose }: Props) {
       className="flex-1 px-6 pb-8"
       style={{ backgroundColor: colors.background }}
     >
-      <View className="items-center pt-4 pb-6">
+      {/* Header: From / Lightning / To */}
+      <View className="flex-row items-center justify-between pt-4 pb-4">
+        <View className="w-2/5">
+          <Text
+            className="text-xs font-[Poppins] opacity-70 mb-1"
+            style={{ color: colors.textMuted }}
+          >
+            From
+          </Text>
+          <Address
+            address={params.fromAddress ?? ''}
+            showBlockie={false}
+            textStyle={{ fontSize: FONT_SIZE.md * 0.9 }}
+          />
+        </View>
+
         <View
-          className="mb-4 h-14 w-14 items-center justify-center rounded-full"
+          className="w-14 h-14 items-center justify-center rounded-full"
           style={{ backgroundColor: colors.primaryMuted }}
         >
           <Ionicons name="flash-outline" size={28} color={colors.primary} />
         </View>
+
+        <View className="w-2/5 items-end">
+          <Text
+            className="text-xs font-[Poppins] opacity-70 mb-1"
+            style={{ color: colors.textMuted }}
+          >
+            To
+          </Text>
+          <Address
+            address={params.toAddress ?? ''}
+            showBlockie={false}
+            textStyle={{ fontSize: FONT_SIZE.md * 0.9 }}
+          />
+        </View>
+      </View>
+
+      <View className="items-center pb-6">
         <Text
           className="text-center text-lg font-[Poppins-SemiBold]"
           style={{ color: colors.text }}

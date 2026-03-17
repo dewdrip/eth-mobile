@@ -128,8 +128,12 @@ export function useWriteContract({
             });
           };
           if (openGasSheet) {
-            openGasSheet(transaction, doSend, () =>
-              reject(new Error('User rejected'))
+            openGasSheet(
+              transaction,
+              doSend,
+              () => reject(new Error('User rejected')),
+              account.address,
+              address
             );
           } else {
             doSend();

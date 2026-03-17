@@ -12,7 +12,9 @@ export type WalletContextValue = {
   openGasSheet: (
     transaction: unknown,
     onConfirm: () => void,
-    onCancel?: () => void
+    onCancel?: () => void,
+    fromAddress?: string | null,
+    toAddress?: string | null
   ) => void;
   closeGasSheet: () => void;
   tokenPickerOnSelectRef: React.MutableRefObject<

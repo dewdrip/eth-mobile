@@ -1,4 +1,5 @@
 import { useTheme } from '@/theme';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {
   useCallback,
@@ -7,7 +8,7 @@ import React, {
   useRef,
   useState
 } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   cancelAnimation,
@@ -34,7 +35,7 @@ const PILL_DRAG_PADDING = 16;
 
 const pillBaseTop = height / 2 - PILL_HEIGHT / 2;
 
-const pillStyles = StyleSheet.create({
+const iosPillStyles = StyleSheet.create({
   pillContainer: {
     position: 'absolute',
     right: PILL_EDGE_OFFSET,
@@ -48,11 +49,14 @@ const pillStyles = StyleSheet.create({
   }
 });
 
+const ANDROID_PILL_SIZE = 54;
+const ANDROID_PILL_MARGIN = 16;
+
 const PEEK_MAX = 7;
 const HOLD_MOVEMENT_THRESHOLD = 12;
 const PULL_OPEN_THRESHOLD = 36;
 
-export default function WalletTrigger({
+function IosWalletTrigger({
   onOpenWalletDetails
 }: {
   onOpenWalletDetails: () => void;
@@ -248,11 +252,133 @@ export default function WalletTrigger({
     <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
       <GestureDetector gesture={panGesture}>
         <Animated.View
-          style={[pillStyles.pillContainer, pillStyle]}
+          style={[iosPillStyles.pillContainer, pillStyle]}
           hitSlop={{ left: 25, right: 16, top: 25, bottom: 25 }}
           collapsable={false}
         />
       </GestureDetector>
     </View>
   );
+}
+
+function AndroidWalletTrigger({
+  onOpenWalletDetails
+}: {
+  onOpenWalletDetails: () => void;
+}) {
+  const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const startX = width - ANDROID_PILL_SIZE - ANDROID_PILL_MARGIN - insets.right;
+  const startY =
+    height - ANDROID_PILL_SIZE - ANDROID_PILL_MARGIN - insets.bottom;
+
+  const translateX = useSharedValue(startX);
+  const translateY = useSharedValue(startY);
+
+  const gestureStartX = useSharedValue(startX);
+  const gestureStartY = useSharedValue(startY);
+
+  const isDragging = useSharedValue(0);
+
+  const minX = ANDROID_PILL_MARGIN + insets.left;
+  const maxX = width - ANDROID_PILL_SIZE - ANDROID_PILL_MARGIN - insets.right;
+  const minY = ANDROID_PILL_MARGIN + insets.top;
+  const maxY = height - ANDROID_PILL_SIZE - ANDROID_PILL_MARGIN - insets.bottom;
+
+  const panGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .onStart(() => {
+          gestureStartX.value = translateX.value;
+          gestureStartY.value = translateY.value;
+          isDragging.value = withSpring(1, {
+            damping: 16,
+            stiffness: 220
+          });
+        })
+        .onUpdate(e => {
+          const rawX = gestureStartX.value + e.translationX;
+          const rawY = gestureStartY.value + e.translationY;
+          translateX.value = Math.min(Math.max(rawX, minX), maxX);
+          translateY.value = Math.min(Math.max(rawY, minY), maxY);
+        })
+        .onEnd(() => {
+          // Snap horizontally to nearest edge after drag
+          const centerX = translateX.value + ANDROID_PILL_SIZE / 2;
+          const screenMidX = width / 2;
+          const snapTargetX = centerX < screenMidX ? minX : maxX;
+          translateX.value = withSpring(snapTargetX, {
+            damping: 18,
+            stiffness: 260
+          });
+          isDragging.value = withSpring(0, {
+            damping: 16,
+            stiffness: 220
+          });
+        }),
+    [
+      gestureStartX,
+      gestureStartY,
+      translateX,
+      translateY,
+      minX,
+      maxX,
+      minY,
+      maxY
+    ]
+  );
+
+  const tapGesture = useMemo(
+    () =>
+      Gesture.Tap()
+        .maxDuration(250)
+        .maxDistance(10)
+        .onEnd((_e, success) => {
+          if (success) {
+            runOnJS(onOpenWalletDetails)();
+          }
+        }),
+    [onOpenWalletDetails]
+  );
+
+  const pillStyle = useAnimatedStyle(() => ({
+    position: 'absolute',
+    left: translateX.value,
+    top: translateY.value,
+    transform: [{ scale: 1 + isDragging.value * 0.06 }]
+  }));
+
+  return (
+    <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+      <GestureDetector gesture={Gesture.Race(tapGesture, panGesture)}>
+        <Animated.View
+          style={[
+            {
+              width: ANDROID_PILL_SIZE,
+              height: ANDROID_PILL_SIZE,
+              borderRadius: ANDROID_PILL_SIZE / 2,
+              backgroundColor: colors.primaryMuted,
+              justifyContent: 'center',
+              alignItems: 'center'
+            },
+            pillStyle
+          ]}
+          hitSlop={{ left: 16, right: 16, top: 16, bottom: 28 }}
+          collapsable={false}
+        >
+          <Ionicons name="wallet-outline" size={24} color={colors.primary} />
+        </Animated.View>
+      </GestureDetector>
+    </View>
+  );
+}
+
+export default function WalletTrigger(props: {
+  onOpenWalletDetails: () => void;
+}) {
+  if (Platform.OS === 'ios') {
+    return <IosWalletTrigger {...props} />;
+  }
+  return <AndroidWalletTrigger {...props} />;
 }

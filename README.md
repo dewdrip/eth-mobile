@@ -10,7 +10,7 @@ An open-source toolkit for building mobile decentralized applications (dApps) on
 
 ![Contract Debugger](https://dewdrip.github.io/eth-mobile/assets/debugger.png)
 
-- 💳 **In-Built Wallet**: A secure mobile crypto wallet for managing funds, signing transactions, and interacting with multiple EVM-compatible chains. Powered by [Thirdweb](https://thirdweb.com/)
+- 💳 **In-Built Wallet**: Use your social account to own a secure mobile crypto wallet for managing funds, signing transactions, and interacting with EVM-compatible chains. Powered by [Thirdweb](https://thirdweb.com/)
 
 ![Wallet](https://dewdrip.github.io/eth-mobile/assets/wallet.png)
 
@@ -89,7 +89,7 @@ You can interact with your smart contract using the `debugContracts` screen. You
 
 Run smart contract test with `yarn hardhat:test`
 
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
+- Edit your smart contract `LuckyGuess.sol` in `packages/hardhat/contracts`
 - Edit your deployment scripts in `packages/hardhat/deploy`
 - Edit your frontend in `packages/expo/app`
 

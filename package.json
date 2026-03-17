@@ -1,11 +1,10 @@
 {
-  "name": "ethmobile",
-  "version": "1.1.0",
+  "name": "eth-mobile",
+  "version": "0.0.1",
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/hardhat",
-      "packages/expo"
+      "packages/*"
     ]
   },
   "scripts": {
@@ -69,8 +68,8 @@
   },
   "packageManager": "yarn@3.2.3",
   "devDependencies": {
-    "husky": "^8.0.1",
-    "lint-staged": "^13.0.3"
+    "husky": "9.1.7",
+    "lint-staged": "^16.4.0"
   },
   "resolutions": {
     "usehooks-ts@^2.7.2": "patch:usehooks-ts@npm:^2.7.2#./.yarn/patches/usehooks-ts-npm-2.7.2-fceffe0e43.patch"

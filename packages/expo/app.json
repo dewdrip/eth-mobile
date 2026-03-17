@@ -28,7 +28,7 @@
         "monochromeImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "softwareKeyboardLayoutMode": "pan",
+      "softwareKeyboardLayoutMode": "resize",
       "package": "com.dewdrip.ethmobile",
       "intentFilters": [
         {
@@ -54,16 +54,6 @@
         {
           "android": {
             "minSdkVersion": 26
-          },
-          "ios": {
-            "extraPods": [
-              {
-                "name": "OpenSSL-Universal",
-                "configurations": ["Release", "Debug"],
-                "modular_headers": true,
-                "version": "3.3.2000"
-              }
-            ]
           }
         }
       ],
@@ -91,6 +81,9 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "65d7b5ca-83fe-497c-bbfd-e30071e62002"
       }
     },
     "owner": "dewdrip"

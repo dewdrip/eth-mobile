@@ -6,7 +6,17 @@ type Props = {
   address: string;
   size: number;
 };
-export const Blockie = ({ address, size }: Props) => {
+
+/**
+ * Displays a blockie for an Ethereum address.
+ *
+ * @param address - The Ethereum address to display the blockie for
+ * @param size - The size of the blockie
+ * @returns A component displaying the blockie for the Ethereum address
+ * @example
+ * <Blockie address="0x123..." size={24} />
+ */
+export function Blockie({ address, size }: Props) {
   const iconScale = 0.4 * size;
   const iconSize = 10;
   return (
@@ -154,4 +164,4 @@ export const Blockie = ({ address, size }: Props) => {
       />
     </View>
   );
-};
+}

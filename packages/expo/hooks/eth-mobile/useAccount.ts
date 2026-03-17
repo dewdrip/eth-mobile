@@ -1,14 +1,16 @@
-import { Account } from '@/store/reducers/Accounts';
-import { useSelector } from 'react-redux';
+import { useActiveAccount } from 'thirdweb/react';
 
 /**
+ * Returns the active account.
  *
- * @returns The connected account
+ * @returns The active account, or undefined if unavailable
+ * @example
+ * const account = useAccount();
+ *
+ * console.log(account);
  */
 export function useAccount() {
-  const connectedAccount: Account | undefined = useSelector((state: any) =>
-    state.accounts.find((account: Account) => account.isConnected)
-  );
+  const account = useActiveAccount();
 
-  return connectedAccount;
+  return account;
 }

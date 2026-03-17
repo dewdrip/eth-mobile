@@ -1,94 +1,60 @@
-import { Account } from '@/store/reducers/Wallet';
-import { getParsedError } from '@/utils/eth-mobile';
-import { useRoute } from '@react-navigation/native';
-import { JsonRpcProvider, Wallet } from 'ethers';
-import { useModal } from 'react-native-modalfy';
-import { useSelector } from 'react-redux';
-import { useAccount, useNetwork } from '.';
+import { useCallback, useState } from 'react';
+import { signMessage as thirdwebSignMessage } from 'thirdweb/utils';
+import { useAccount } from './useAccount';
 
-interface UseSignMessageConfig {
-  message?: string | Uint8Array<ArrayBufferLike>;
-}
-
-interface UseSignMessageReturn {
-  signMessage: (config?: UseSignMessageConfig) => Promise<string>;
+export interface UseSignMessageReturn {
+  sign: (message: string) => Promise<void>;
+  signature: string | null;
+  error: string | null;
+  isSigning: boolean;
+  reset: () => void;
 }
 
 /**
- * Hook for signing messages using the connected wallet.
+ * Hook for signing messages using the Thirdweb connected account.
  *
- * @param {UseSignMessageConfig} config - Optional configuration.
- * @param {string} [config.message] - Default message to sign (can be overridden).
- * @returns {UseSignMessageReturn} An object containing the `signMessage` function.
+ * @returns An object with:
+ * - sign: Function to sign a message
+ * - signature: The signed message
+ * - error: The error message
+ * - isSigning: Boolean indicating if the message is being signed
+ * - reset: Function to reset the signature and error
+ * @example
+ * const { sign } = useSignMessage();
+ * await sign('Hello, world!');
  */
-export function useSignMessage({
-  message
-}: UseSignMessageConfig = {}): UseSignMessageReturn {
-  const { openModal } = useModal();
-  const network = useNetwork();
-  const connectedAccount = useAccount();
-  const wallet = useSelector((state: any) => state.wallet);
-  const route = useRoute();
+export function useSignMessage(): UseSignMessageReturn {
+  const account = useAccount();
+  const [signature, setSignature] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isSigning, setIsSigning] = useState(false);
 
-  /**
-   * Signs a message using the connected wallet.
-   *
-   * @param {UseSignMessageConfig} [config] - Optional override for the default message.
-   * @returns {Promise<string>} A promise that resolves to the signed message.
-   * @throws {Error} If signing fails or is rejected.
-   */
-  const signMessage = async (
-    config?: UseSignMessageConfig
-  ): Promise<string> => {
-    const messageToSign = config?.message || message;
-    if (!messageToSign) {
-      throw new Error('No message provided for signing.');
-    }
-
-    return new Promise((resolve, reject) => {
-      openModal('SignMessageModal', {
-        message: messageToSign,
-        onReject,
-        onConfirm
-      });
-
-      function onReject() {
-        reject(new Error('Message signing was rejected.'));
+  const sign = useCallback(
+    async (message: string) => {
+      const trimmed = message?.trim();
+      if (!account || !trimmed) return;
+      setError(null);
+      setSignature(null);
+      setIsSigning(true);
+      try {
+        const sig = await thirdwebSignMessage({
+          message: trimmed,
+          account
+        });
+        setSignature(sig);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+      } finally {
+        setIsSigning(false);
       }
+    },
+    [account]
+  );
 
-      async function onConfirm() {
-        try {
-          const provider = new JsonRpcProvider(network.provider);
+  const reset = useCallback(() => {
+    setSignature(null);
+    setError(null);
+  }, []);
 
-          if (!wallet.accounts || !Array.isArray(wallet.accounts)) {
-            throw new Error('No accounts found in secure storage.');
-          }
-
-          const activeAccount = wallet.accounts.find(
-            (account: Account) =>
-              account.address.toLowerCase() ===
-              connectedAccount.address.toLowerCase()
-          );
-
-          if (!activeAccount) {
-            // Get current route for navigation context
-            const currentScreen = route.name;
-            openModal('PromptWalletCreationModal', {
-              sourceScreen: currentScreen,
-              sourceParams: route.params
-            });
-            return;
-          }
-
-          const activeWallet = new Wallet(activeAccount.privateKey, provider);
-          const signature = await activeWallet.signMessage(messageToSign!);
-          resolve(signature);
-        } catch (error) {
-          reject(getParsedError(error));
-        }
-      }
-    });
-  };
-
-  return { signMessage };
+  return { sign, signature, error, isSigning, reset };
 }

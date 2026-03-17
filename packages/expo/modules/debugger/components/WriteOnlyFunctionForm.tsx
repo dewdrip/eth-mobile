@@ -1,12 +1,12 @@
 import { IntegerInput } from '@/components/eth-mobile';
 import { useWriteContract } from '@/hooks/eth-mobile';
-import { COLORS } from '@/utils/constants';
+import { useTheme } from '@/theme';
 import { Abi, AbiFunction, Address } from 'abitype';
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useModal } from 'react-native-modalfy';
 import { useToast } from 'react-native-toast-notifications';
-import { TransactionReceipt } from 'viem';
+import { formatEther, TransactionReceipt } from 'viem';
 import ContractInput from './ContractInput';
 import {
   getFunctionInputKey,
@@ -27,6 +27,7 @@ export default function WriteOnlyFunctionForm({
   contractAddress,
   onChange
 }: Props) {
+  const { colors } = useTheme();
   const [form, setForm] = useState<Record<string, any>>(() =>
     getInitialFormState(abiFunction)
   );
@@ -74,24 +75,55 @@ export default function WriteOnlyFunctionForm({
   });
 
   const showReceipt = () => {
-    openModal('TxReceiptModal', { txReceipt });
+    if (txReceipt) {
+      openModal('TxReceiptModal', { hash: txReceipt.transactionHash });
+    }
   };
   return (
     <View>
-      <Text className="text-lg font-[Poppins]">{abiFunction.name}</Text>
+      <Text className="text-lg font-[Poppins]" style={{ color: colors.text }}>
+        {abiFunction.name}
+      </Text>
 
       <View className="gap-4 mt-4">{inputElements}</View>
 
       {abiFunction.stateMutability === 'payable' ? (
-        <View className="mt-2">
+        <View className="mt-4">
+          <Text
+            className="text-sm font-[Poppins] mb-1.5"
+            style={{ color: colors.textMuted }}
+          >
+            Value (wei)
+          </Text>
           <IntegerInput
             value={txValue}
             onChange={updatedTxValue => {
               setTxReceipt(undefined);
               setTxValue(updatedTxValue);
             }}
-            placeholder="value (wei)"
+            placeholder="0"
           />
+          {txValue !== '' &&
+            txValue !== undefined &&
+            (() => {
+              try {
+                const wei =
+                  typeof txValue === 'bigint'
+                    ? txValue
+                    : BigInt(String(txValue).replace(/\D/g, '') || '0');
+                if (wei === 0n) return null;
+                return (
+                  <Text
+                    className="text-xs font-[Poppins] mt-1.5"
+                    style={{ color: colors.textMuted }}
+                  >
+                    ≈ {formatEther(wei)} ETH
+                  </Text>
+                );
+              } catch {
+                return null;
+              }
+            })()}
         </View>
       ) : null}
       <View className="flex-row items-center justify-between mt-4">
@@ -99,9 +131,12 @@ export default function WriteOnlyFunctionForm({
           <Pressable
             className="px-4 py-1 rounded-full"
             onPress={showReceipt}
-            style={{ backgroundColor: COLORS.primary }}
+            style={{ backgroundColor: colors.primary }}
           >
-            <Text className="text-base text-white font-[Poppins]">
+            <Text
+              className="text-base font-[Poppins]"
+              style={{ color: colors.primaryContrast }}
+            >
               Show Receipt
             </Text>
           </Pressable>
@@ -112,7 +147,7 @@ export default function WriteOnlyFunctionForm({
         <Pressable
           className="gap-x-2 flex-row items-center self-end px-4 py-1 rounded-full"
           style={{
-            backgroundColor: isLoading ? COLORS.primary : COLORS.primaryLight
+            backgroundColor: isLoading ? colors.primary : colors.primaryMuted
           }}
           disabled={isLoading}
           onPress={handleWrite}
@@ -120,12 +155,12 @@ export default function WriteOnlyFunctionForm({
           {isLoading && (
             <ActivityIndicator
               size="small"
-              color={isLoading ? 'white' : COLORS.primary}
+              color={isLoading ? colors.primaryContrast : colors.primary}
             />
           )}
           <Text
             className="text-base font-[Poppins]"
-            style={{ color: isLoading ? 'white' : 'black' }}
+            style={{ color: isLoading ? colors.primaryContrast : colors.text }}
           >
             Write
           </Text>

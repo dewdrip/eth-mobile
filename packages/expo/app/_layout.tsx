@@ -5,7 +5,6 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -21,29 +20,11 @@ function RootLayout() {
     }
   }, [loaded]);
 
-  const auth = useSelector((state: any) => state.auth);
-
   if (!loaded) {
     return null;
   }
 
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!auth.hasOnboarded}>
-        <Stack.Screen name="index" />
-      </Stack.Protected>
-
-      <Stack.Protected guard={!auth.isSignedUp}>
-        <Stack.Screen name="(sign-up)" />
-      </Stack.Protected>
-
-      <Stack.Protected guard={auth.isSignedUp}>
-        <Stack.Screen name="login" />
-      </Stack.Protected>
-
-      <Stack.Screen name="(dashboard)" />
-    </Stack>
-  );
+  return <Stack screenOptions={{ headerShown: false }} />;
 }
 
 export default function RootLayoutProviders() {

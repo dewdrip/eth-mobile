@@ -1,15 +1,11 @@
-import { Account } from '@/store/reducers/Wallet';
+import { client } from '@/modules/providers/Thirdweb';
 import { getParsedError } from '@/utils/eth-mobile';
-import {
-  Contract,
-  ContractRunner,
-  InterfaceAbi,
-  JsonRpcProvider,
-  Wallet
-} from 'ethers';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useAccount, useNetwork } from '.';
+import { InterfaceAbi } from 'ethers';
+import { useCallback, useMemo } from 'react';
+import { getContract, readContract as thirdwebReadContract } from 'thirdweb';
+import { defineChain } from 'thirdweb/chains';
+import { useReadContract as useThirdwebReadContract } from 'thirdweb/react';
+import { useNetwork } from '.';
 
 interface UseReadContractConfig {
   abi?: InterfaceAbi;
@@ -21,15 +17,70 @@ interface UseReadContractConfig {
   onError?: (error: any) => void;
 }
 
-interface ReadContractConfig {
+export interface ReadContractConfig {
   abi: InterfaceAbi;
   address: string;
   functionName: string;
   args?: any[];
 }
 
-type ReadContractResult = any | any[] | null;
+export type ReadContractResult = any | any[] | null;
 
+type AbiFunctionFragment = {
+  type?: string;
+  name?: string;
+  inputs?: Array<{ type?: string; name?: string; internalType?: string }>;
+  outputs?: Array<{ type?: string; name?: string; internalType?: string }>;
+  stateMutability?: string;
+};
+
+/**
+ * Build Thirdweb method signature string from ABI and function name.
+ * e.g. "function greeting() view returns (string)"
+ */
+export function getMethodSignature(
+  abi: InterfaceAbi,
+  functionName: string
+): string {
+  const fragments = Array.isArray(abi) ? abi : [];
+  const fragment = fragments.find(
+    (item: AbiFunctionFragment) =>
+      (item.type === 'function' || (item as any).type === 'function') &&
+      item.name === functionName
+  ) as AbiFunctionFragment | undefined;
+  if (!fragment?.name) return '';
+  const inputs = (fragment.inputs || []).map(i => i.type || 'bytes').join(', ');
+  const outputs = (fragment.outputs || [])
+    .map(o => o.type || 'bytes')
+    .join(', ');
+  const stateMutability = fragment.stateMutability || 'view';
+  if (outputs) {
+    return `function ${functionName}(${inputs}) ${stateMutability} returns (${outputs})`;
+  }
+  return `function ${functionName}(${inputs}) ${stateMutability}`;
+}
+
+/**
+ * Hook for reading from smart contracts.
+ *
+ * @param config - The config settings
+ * @param config.abi - contract ABI
+ * @param config.address - contract address
+ * @param config.functionName - name of the function to be called
+ * @param config.args - args to be passed to the function call (Optional)
+ * @param config.enabled - enable the contract read (Optional)
+ * @param config.watch - watch the contract read (Optional)
+ * @param config.onError - error handler (Optional)
+ * @returns The contract read result
+ * @example
+ * const { data } = useReadContract({
+ *   abi: MyContractAbi,
+ *   address: '0x123...',
+ *   functionName: 'greeting'
+ * });
+ *
+ * console.log(data);
+ */
 export function useReadContract({
   abi,
   address,
@@ -40,121 +91,133 @@ export function useReadContract({
   onError
 }: Partial<UseReadContractConfig> = {}) {
   const network = useNetwork();
-  const connectedAccount = useAccount();
-  const wallet = useSelector((state: any) => state.wallet);
 
-  const [data, setData] = useState<ReadContractResult>(null);
-  const [isLoading, setIsLoading] = useState(enabled);
-  const [error, setError] = useState<any>(null);
+  const chain = useMemo(
+    () =>
+      network?.id != null && network?.provider
+        ? defineChain({
+            id: network.id,
+            rpc: network.provider,
+            nativeCurrency: {
+              name: network.token?.symbol ?? 'ETH',
+              symbol: network.token?.symbol ?? 'ETH',
+              decimals: network.token?.decimals ?? 18
+            }
+          })
+        : defineChain(1),
+    [network?.id, network?.provider, network?.token]
+  );
 
-  async function fetchData(): Promise<ReadContractResult> {
-    if (!abi || !address || !functionName) {
-      console.warn(
-        'Missing required parameters: abi, address, or functionName'
-      );
-      return;
+  const contract = useMemo(() => {
+    const contractAddress =
+      address ||
+      ('0x0000000000000000000000000000000000000000' as `0x${string}`);
+    return getContract({
+      client,
+      address: contractAddress,
+      chain
+    });
+  }, [address, chain]);
+
+  const methodSignature = useMemo(
+    () => (abi && functionName ? getMethodSignature(abi, functionName) : ''),
+    [abi, functionName]
+  );
+
+  const queryEnabled =
+    enabled &&
+    !!address &&
+    !!chain &&
+    !!methodSignature &&
+    !!abi &&
+    !!functionName;
+
+  const thirdwebResult = useThirdwebReadContract({
+    contract,
+    method: methodSignature || 'function noop() view returns (bool)',
+    params: args ?? [],
+    queryOptions: {
+      enabled: queryEnabled,
+      refetchInterval: watch ? 4_000 : undefined,
+      retry: false,
+      ...(onError && {
+        throwOnError: false,
+        onError(err: unknown) {
+          const parsed = getParsedError(err);
+          onError(parsed);
+        }
+      })
     }
+  } as any);
 
-    try {
-      setIsLoading(true);
-      const provider = new JsonRpcProvider(network.provider);
-
-      const activeAccount = wallet.accounts.find(
-        (account: Account) =>
-          account.address.toLowerCase() ===
-          connectedAccount?.address.toLowerCase()
-      );
-
-      let runner: ContractRunner;
-
-      if (activeAccount) {
-        const activeWallet = new Wallet(activeAccount.privateKey, provider);
-        runner = activeWallet;
-      } else {
-        runner = provider;
-      }
-
-      const contract = new Contract(address, abi, runner);
-
-      const result = await contract[functionName](...(args || []));
-
-      if (error) {
-        setError(null);
-      }
-      setData(result);
-
-      return result;
-    } catch (error) {
-      setError(getParsedError(error));
-
-      if (onError) {
-        onError(getParsedError(error));
-      }
-    } finally {
-      setIsLoading(false);
+  const resultData = (
+    thirdwebResult as {
+      data?: unknown;
+      error?: unknown;
+      isLoading?: boolean;
+      refetch?: () => void;
     }
-  }
+  ).data;
+  const data: ReadContractResult =
+    queryEnabled && resultData !== undefined ? resultData : null;
+  const resultError = (thirdwebResult as { error?: unknown }).error;
+  const error = resultError ? getParsedError(resultError) : null;
+  const isLoading = (thirdwebResult as { isLoading?: boolean }).isLoading;
+  const refetch = (thirdwebResult as { refetch?: () => void }).refetch;
 
-  async function readContract({
-    abi,
-    address,
-    functionName,
-    args
-  }: ReadContractConfig) {
-    try {
-      setIsLoading(true);
-      const provider = new JsonRpcProvider(network.provider);
-
-      const activeAccount = wallet.accounts.find(
-        (account: Account) =>
-          account.address.toLowerCase() ===
-          connectedAccount?.address.toLowerCase()
-      );
-
-      let runner: ContractRunner;
-
-      if (activeAccount) {
-        const activeWallet = new Wallet(activeAccount.privateKey, provider);
-        runner = activeWallet;
-      } else {
-        runner = provider;
+  const readContract = useCallback(
+    async (config: ReadContractConfig) => {
+      const {
+        abi: configAbi,
+        address: configAddress,
+        functionName: configFn,
+        args: configArgs = []
+      } = config;
+      if (!configAddress || !configAbi || !configFn) {
+        console.warn(
+          'Missing required parameters: abi, address, or functionName'
+        );
+        return undefined;
       }
-      const contract = new Contract(address, abi, runner);
-
-      const result = await contract[functionName](...(args || []));
-
-      return result;
-    } catch (error) {
-      console.error(getParsedError(error));
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    if (!enabled) return;
-
-    const provider = new JsonRpcProvider(network.provider);
-
-    provider.off('block');
-
-    fetchData();
-
-    if (watch) {
-      provider.on('block', blockNumber => {
-        fetchData();
-      });
-    }
-    return () => {
-      provider.off('block');
-    };
-  }, [enabled, watch, network, args, functionName]);
+      if (network?.id == null || !network?.provider) {
+        console.warn('No network connected');
+        return undefined;
+      }
+      try {
+        const configChain = defineChain({
+          id: network.id,
+          rpc: network.provider,
+          nativeCurrency: {
+            name: network.token?.symbol ?? 'ETH',
+            symbol: network.token?.symbol ?? 'ETH',
+            decimals: network.token?.decimals ?? 18
+          }
+        });
+        const configContract = getContract({
+          client,
+          address: configAddress as `0x${string}`,
+          chain: configChain
+        });
+        const method = getMethodSignature(configAbi, configFn);
+        const result = await thirdwebReadContract({
+          contract: configContract,
+          method,
+          params: configArgs
+        } as any);
+        return result;
+      } catch (err) {
+        console.error(getParsedError(err));
+        return undefined;
+      }
+    },
+    [network?.id, network?.provider, network?.token]
+  );
 
   return {
     data,
     isLoading,
     error,
-    refetch: fetchData,
+    refetch,
     readContract
   };
 }

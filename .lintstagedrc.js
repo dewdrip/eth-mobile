@@ -13,7 +13,7 @@ const buildHardhatEslintCommand = (filenames) =>
     .join(" ")}`;
 
 module.exports = {
-  "packages/expo/**/*.{ts,tsx}": [
+  "packages/nextjs/**/*.{ts,tsx}": [
     buildNextEslintCommand,
     checkTypesNextCommand,
   ],

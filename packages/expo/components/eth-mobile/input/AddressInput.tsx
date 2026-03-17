@@ -1,4 +1,4 @@
-import { COLORS } from '@/utils/constants';
+import { useTheme } from '@/theme';
 import Device from '@/utils/device';
 import { isENS } from '@/utils/eth-mobile';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -28,6 +28,29 @@ type Props = {
   scan?: boolean;
 };
 
+/**
+ * Displays an Ethereum address input with optional scan functionality.
+ *
+ * @param value - The value of the input
+ * @param placeholder - The placeholder text for the input
+ * @param error - The error message to display
+ * @param onChange - The function to call when the input value changes
+ * @param onSubmit - The function to call when the user submits the input value
+ * @param containerClassName - Optional style for the container
+ * @param inputContainerClassName - Optional style for the input container
+ * @param inputClassName - Optional style for the input
+ * @param errorClassName - Optional style for the error text
+ * @param scan - Whether to show the scan button (default: false)
+ * @returns A component displaying the Ethereum address input with optional scan functionality
+ * @example
+ * <AddressInput
+ *   value="0x123..."
+ *   onChange={value => console.log(value)}
+ *   onSubmit={() => console.log('submitted')}
+ *   scan={true}
+ * />
+ *
+ */
 export function AddressInput({
   value,
   placeholder,
@@ -40,6 +63,7 @@ export function AddressInput({
   errorClassName,
   scan
 }: Props) {
+  const { colors } = useTheme();
   const { openModal } = useModal();
 
   const [error, setError] = useState(errorProp || '');
@@ -64,7 +88,7 @@ export function AddressInput({
         setIsLoading(true);
 
         const provider = new JsonRpcProvider(
-          'https://eth-mainnet.alchemyapi.io/v2/K18rs5rCTi1A-RDyPUw92tvL7I2cGVUB'
+          'https://eth-mainnet.g.alchemy.com/v2/_yem4FCVzmN6wbB44mPtF'
         );
 
         const address = await provider.resolveName(value);
@@ -86,12 +110,17 @@ export function AddressInput({
   return (
     <View className={`gap-y-2 ${containerClassName}`}>
       <View
-        className={`bg-gray-100 border border-gray-200 flex-row items-center gap-x-1 px-3 py-2 rounded-lg ${inputContainerClassName}`}
+        className={`flex-row items-center gap-x-1 px-3 py-2 rounded-lg ${inputContainerClassName}`}
+        style={{
+          backgroundColor: colors.surfaceVariant,
+          borderColor: colors.border,
+          borderWidth: 1
+        }}
       >
         {isLoading ? (
           <ActivityIndicator
             size={Device.getDeviceWidth() * 0.09}
-            color={COLORS.primary}
+            color={colors.primary}
           />
         ) : (
           isAddress(value) && (
@@ -102,7 +131,8 @@ export function AddressInput({
           placeholder={placeholder || 'Enter address or ENS name'}
           value={value}
           className={`flex-1 text-lg font-[Poppins] ${inputClassName}`}
-          placeholderTextColor="#a3a3a3"
+          style={{ color: colors.text }}
+          placeholderTextColor={colors.textMuted}
           onChangeText={handleInputChange}
           onSubmitEditing={onSubmit}
         />
@@ -111,7 +141,7 @@ export function AddressInput({
             <MaterialIcons
               name="qr-code-scanner"
               size={Device.getDeviceWidth() * 0.075}
-              color="black"
+              color={colors.textMuted}
             />
           </Pressable>
         )}
@@ -119,7 +149,8 @@ export function AddressInput({
 
       {error && (
         <Text
-          className={`text-sm text-red-500 font-[Poppins] ${errorClassName}`}
+          className={`text-sm font-[Poppins] ${errorClassName}`}
+          style={{ color: colors.error }}
         >
           {error}
         </Text>

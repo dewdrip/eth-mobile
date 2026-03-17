@@ -73,8 +73,8 @@ export enum IntegerVariant {
   INT256 = 'int256'
 }
 
-export const SIGNED_NUMBER_REGEX = /^-?\d+\.?\d*$/;
-export const UNSIGNED_NUMBER_REGEX = /^\.?\d+\.?\d*$/;
+const SIGNED_NUMBER_REGEX = /^-?\d+\.?\d*$/;
+const UNSIGNED_NUMBER_REGEX = /^\.?\d+\.?\d*$/;
 
 export const isValidInteger = (
   dataType: IntegerVariant,
@@ -113,7 +113,3 @@ export const isValidInteger = (
   }
   return true;
 };
-
-// Treat any dot-separated string as a potential ENS name
-const ensRegex = /.+\..+/;
-export const isENS = (address = '') => ensRegex.test(address);

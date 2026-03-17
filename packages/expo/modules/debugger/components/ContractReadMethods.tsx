@@ -1,3 +1,4 @@
+import { useTheme } from '@/theme';
 import { GenericContract, InheritedFunctions } from '@/utils/eth-mobile';
 import { Abi, AbiFunction } from 'abitype';
 import { InterfaceAbi } from 'ethers';
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export default function ContractReadMethods({ deployedContractData }: Props) {
+  const { colors } = useTheme();
   if (!deployedContractData) {
     return null;
   }
@@ -39,7 +41,11 @@ export default function ContractReadMethods({ deployedContractData }: Props) {
     );
 
   if (!functionsToDisplay.length) {
-    return <Text className="text-lg font-[Poppins]">No read methods</Text>;
+    return (
+      <Text className="text-lg font-[Poppins]" style={{ color: colors.text }}>
+        No read methods
+      </Text>
+    );
   }
   return (
     <View className="gap-4">

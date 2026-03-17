@@ -1,12 +1,13 @@
-import { COLORS } from '@/utils/constants';
+import { useTheme } from '@/theme';
 import React, { JSX, useCallback } from 'react';
-import { TextInput, View } from 'react-native';
+import { TextInput, TextInputProps, View } from 'react-native';
 import { CommonInputProps } from './utils';
 
 type Props<T> = CommonInputProps<T> & {
   error?: boolean;
   prefix?: JSX.Element | false;
   suffix?: JSX.Element | false;
+  keyboardType?: TextInputProps['keyboardType'];
 };
 
 export function InputBase<
@@ -19,8 +20,10 @@ export function InputBase<
   error,
   disabled,
   prefix,
-  suffix
+  suffix,
+  keyboardType
 }: Props<T>) {
+  const { colors } = useTheme();
   const handleChange = useCallback(
     (value: string) => {
       onChange(value as unknown as T);
@@ -29,16 +32,25 @@ export function InputBase<
   );
 
   return (
-    <View className="flex-row items-center bg-gray-100 rounded-full">
+    <View
+      className="flex-row items-center rounded-full"
+      style={{
+        backgroundColor: colors.surfaceVariant,
+        borderWidth: 1,
+        borderColor: error ? colors.error : 'transparent'
+      }}
+    >
       {prefix}
       <TextInput
         value={value?.toString()}
         className="flex-1 px-4 py-3"
-        selectionColor={COLORS.primary}
-        cursorColor={COLORS.primary}
-        placeholderTextColor="#a3a3a3"
+        style={{ color: colors.text }}
+        selectionColor={colors.primary}
+        cursorColor={colors.primary}
+        placeholderTextColor={colors.textMuted}
         placeholder={placeholder}
         onChangeText={handleChange}
+        keyboardType={keyboardType}
       />
       {suffix}
     </View>

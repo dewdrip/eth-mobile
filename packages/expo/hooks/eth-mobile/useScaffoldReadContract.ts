@@ -1,21 +1,12 @@
-import { Account } from '@/store/reducers/Wallet';
-import { getParsedError } from '@/utils/eth-mobile';
-import {
-  Contract,
-  ContractRunner,
-  InterfaceAbi,
-  JsonRpcProvider,
-  Wallet
-} from 'ethers';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useAccount, useDeployedContractInfo, useNetwork } from '.';
+import { InterfaceAbi } from 'ethers';
+import { useCallback } from 'react';
+import { useDeployedContractInfo, useReadContract } from '.';
 
 type Props = {
   contractName: string;
   functionName: string;
   args?: any[];
-  enable?: boolean;
+  enabled?: boolean;
   watch?: boolean;
 };
 
@@ -27,20 +18,30 @@ type ReadContractResult = any | any[] | null;
 
 /**
  * This automatically loads (by name) the contract ABI and address from
- * the contracts present in deployedContracts.ts & externalContracts.ts corresponding to networks configured in ethmobile.config.ts
+ * the contracts present in deployedContracts.ts corresponding to networks configured in ethmobile.config.ts.
+
+ *
  * @param config - The config settings
  * @param config.contractName - deployed contract name
  * @param config.functionName - name of the function to be called
  * @param config.args - args to be passed to the function call (Optional)
- * @param config.enable - enable the contract read (Optional)
+ * @param config.enabled - enable the contract read (Optional)
  * @param config.watch - watch the contract read (Optional)
+ * @returns The contract read result
+ * @example
+ * const { data } = useScaffoldReadContract({
+ *   contractName: 'MyContract',
+ *   functionName: 'greeting',
+ * });
+ * 
+ * console.log(data);
  */
 export function useScaffoldReadContract({
   contractName,
   functionName,
   args,
   watch,
-  enable = true
+  enabled = true
 }: Props) {
   const {
     data: deployedContractData,
@@ -48,126 +49,41 @@ export function useScaffoldReadContract({
   } = useDeployedContractInfo({
     contractName
   });
-  const network = useNetwork();
-  const connectedAccount = useAccount();
-  const wallet = useSelector((state: any) => state.wallet);
 
-  const [data, setData] = useState<ReadContractResult>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<any>(null);
-
-  async function fetchData() {
-    if (!deployedContractData) return;
-
-    try {
-      setIsLoading(true);
-      const provider = new JsonRpcProvider(network.provider);
-
-      const activeAccount = wallet.accounts.find(
-        (account: Account) =>
-          account.address.toLowerCase() ===
-          connectedAccount.address.toLowerCase()
-      );
-
-      let runner: ContractRunner;
-
-      if (activeAccount) {
-        const activeWallet = new Wallet(activeAccount.privateKey, provider);
-        runner = activeWallet;
-      } else {
-        runner = provider;
-      }
-      const contract = new Contract(
-        deployedContractData.address,
-        deployedContractData.abi as InterfaceAbi,
-        runner
-      );
-
-      const result = await contract[functionName](...(args || []));
-
-      if (error) {
-        setError(null);
-      }
-      setData(result);
-      return result;
-    } catch (error) {
-      setError(getParsedError(error));
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function readContract({ args }: ReadContractConfig) {
-    if (!deployedContractData) return;
-
-    try {
-      setIsLoading(true);
-      const provider = new JsonRpcProvider(network.provider);
-
-      const activeAccount = wallet.accounts.find(
-        (account: Account) =>
-          account.address.toLowerCase() ===
-          connectedAccount.address.toLowerCase()
-      );
-
-      let runner: ContractRunner;
-
-      if (activeAccount) {
-        const activeWallet = new Wallet(activeAccount.privateKey, provider);
-        runner = activeWallet;
-      } else {
-        runner = provider;
-      }
-      const contract = new Contract(
-        deployedContractData.address,
-        deployedContractData.abi as InterfaceAbi,
-        runner
-      );
-
-      const result = await contract[functionName](...(args || []));
-
-      return result;
-    } catch (error) {
-      console.error(getParsedError(error));
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    if (!enable) return;
-    if (!deployedContractData) return;
-
-    const provider = new JsonRpcProvider(network.provider);
-
-    provider.off('block');
-
-    fetchData();
-
-    if (watch) {
-      provider.on('block', blockNumber => {
-        fetchData();
-      });
-    }
-    return () => {
-      provider.off('block');
-    };
-  }, [
-    isLoadingDeployedContractData,
-    watch,
-    network,
-    connectedAccount,
-    args,
+  const {
+    data,
+    isLoading: isReadLoading,
+    error,
+    refetch,
+    readContract: readContractImperative
+  } = useReadContract({
+    address: deployedContractData?.address,
+    abi: deployedContractData?.abi as InterfaceAbi | undefined,
     functionName,
-    enable,
-    deployedContractData
-  ]);
+    args,
+    enabled: enabled && !!deployedContractData,
+    watch
+  });
+
+  const readContract = useCallback(
+    async (config?: ReadContractConfig) => {
+      if (!deployedContractData) return undefined;
+      const overrideArgs = config?.args ?? args;
+      return readContractImperative({
+        address: deployedContractData.address,
+        abi: deployedContractData.abi as InterfaceAbi,
+        functionName,
+        args: overrideArgs
+      });
+    },
+    [deployedContractData, functionName, args, readContractImperative]
+  );
 
   return {
-    data,
-    isLoading,
+    data: data as ReadContractResult,
+    isLoading: isLoadingDeployedContractData || isReadLoading,
     error,
-    refatch: fetchData,
+    refetch,
     readContract
   };
 }

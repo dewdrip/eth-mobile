@@ -258,7 +258,7 @@ function main() {
 
   writeFileSync(
     `${REACTNATIVE_TARGET_DIR}deployedContracts.ts`,
-    format(fileTemplate("../src/utils/eth-mobile/contract"), {
+    format(fileTemplate("@/utils/eth-mobile"), {
       parser: "typescript",
     })
   );

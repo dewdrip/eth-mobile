@@ -1,8 +1,9 @@
 import { useCryptoPrice, useNetwork } from '@/hooks/eth-mobile';
-import { COLORS, FONT_SIZE } from '@/utils/constants';
+import { useTheme } from '@/theme';
+import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, Pressable, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
 import { formatEther } from 'viem';
@@ -13,6 +14,10 @@ type Props = {
   disabled?: boolean;
   onChange: (value: string) => void;
   onSubmit: () => void;
+  /** Token symbol shown in placeholder (e.g. ETH, MATIC). Defaults to current network token symbol. */
+  symbol?: string;
+  /** Optional URI for token/network icon shown on the left. When omitted, a diamond placeholder is used. */
+  iconUri?: string | null;
 };
 
 /**
@@ -22,21 +27,34 @@ type Props = {
  * @param onChange The function to call when the input value changes
  * @param onSubmit The function to call when the user submits the input value
  * @param balance The user's ETH balance (optional)
+ * @param symbol The symbol of the token to display in the input (optional)
+ * @param iconUri The URI of the icon to display in the input (optional)
  * @returns A component that allows the user to input an amount of ETH
+ * @example
+ * <EtherInput
+ *   value="1"
+ *   onChange={value => console.log(value)}
+ *   onSubmit={() => console.log('submitted')}
+ * />
+ *
  */
 export function EtherInput({
   value,
   disabled,
   onChange,
   onSubmit,
-  balance
+  balance,
+  symbol: symbolProp,
+  iconUri
 }: Props) {
   const [error, setError] = useState('');
   const [dollarValue, setDollarValue] = useState('');
   const [isDollar, setIsDollar] = useState(false);
 
+  const { colors } = useTheme();
   const toast = useToast();
   const network = useNetwork();
+  const symbol = symbolProp ?? network?.token?.symbol ?? 'ETH';
 
   const {
     price: dollarRate,
@@ -46,6 +64,34 @@ export function EtherInput({
     priceID: network.coingeckoPriceId,
     enabled: true
   });
+
+  // Sync dollarValue when value prop changes externally or exchange rate updates.
+  // When isDollar is true, the user is typing in USD and value is derived from that—
+  // do not overwrite dollarValue with .toFixed(2) or we turn "1" into "1.00".
+  useEffect(() => {
+    if (isDollar) return;
+
+    if (!dollarRate) {
+      if (dollarValue) setDollarValue('');
+      return;
+    }
+
+    if (!value || value.trim() === '') {
+      if (dollarValue) setDollarValue('');
+      return;
+    }
+
+    const numericValue = parseFloat(value);
+    if (isNaN(numericValue) || numericValue < 0) {
+      if (dollarValue) setDollarValue('');
+      return;
+    }
+
+    const newDollarValue = (numericValue * dollarRate).toFixed(2);
+    if (dollarValue !== newDollarValue) {
+      setDollarValue(newDollarValue);
+    }
+  }, [value, dollarRate, isDollar]);
 
   const switchCurrency = () => {
     if (!dollarRate) {
@@ -113,10 +159,10 @@ export function EtherInput({
       <TextInput
         value={displayValue}
         mode="outlined"
-        style={{ backgroundColor: '#f5f5f5' }}
-        placeholder={`How much ${isDollar ? 'USD' : 'ETH'}?`}
-        placeholderTextColor="#a3a3a3"
-        textColor="black"
+        style={{ backgroundColor: colors.surfaceVariant }}
+        placeholder={`How much ${isDollar ? 'USD' : symbol}?`}
+        placeholderTextColor={colors.textMuted}
+        textColor={colors.text}
         onChangeText={handleInputChange}
         onSubmitEditing={onSubmit}
         keyboardType="number-pad"
@@ -124,16 +170,32 @@ export function EtherInput({
         disabled={disabled}
         outlineStyle={{
           borderRadius: 12,
-          borderColor: error ? 'rgba(239, 68, 68, 0.6)' : COLORS.gray
+          borderColor: error ? colors.error : colors.border
         }}
         contentStyle={{ fontFamily: 'Poppins', fontSize: FONT_SIZE.lg }}
         left={
           <TextInput.Icon
             icon={() =>
               isDollar ? (
-                <Text className="text-2xl font-[Poppins] text-black">$</Text>
+                <Text
+                  className="text-2xl font-[Poppins]"
+                  style={{ color: colors.text }}
+                >
+                  $
+                </Text>
+              ) : iconUri ? (
+                <Image
+                  source={{ uri: iconUri }}
+                  style={{ width: 24, height: 24, borderRadius: 12 }}
+                  resizeMode="cover"
+                />
               ) : (
-                <Text className="text-3xl font-[Poppins] text-black">♢</Text>
+                <Text
+                  className="text-3xl font-[Poppins]"
+                  style={{ color: colors.text }}
+                >
+                  ♢
+                </Text>
               )
             }
           />
@@ -145,12 +207,12 @@ export function EtherInput({
                 onPress={switchCurrency}
                 disabled={disabled}
                 className="w-full h-full items-center justify-center"
-                style={{ backgroundColor: COLORS.primary }}
+                style={{ backgroundColor: colors.primary }}
               >
                 <Ionicons
                   name="swap-horizontal"
                   size={18}
-                  color={disabled ? COLORS.gray : 'white'}
+                  color={disabled ? colors.textMuted : colors.primaryContrast}
                 />
               </Pressable>
             )}
@@ -159,7 +221,10 @@ export function EtherInput({
       />
 
       {error && (
-        <Text className="text-sm font-[Poppins] text-red-500 mt-1">
+        <Text
+          className="text-sm font-[Poppins] mt-1"
+          style={{ color: colors.error }}
+        >
           {error}
         </Text>
       )}

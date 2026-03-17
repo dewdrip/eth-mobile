@@ -1,3 +1,4 @@
+import { useTheme } from '@/theme';
 import {
   Contract,
   ContractName,
@@ -15,6 +16,7 @@ export default function ContractWriteMethods({
   onChange: () => void;
   deployedContractData: Contract<ContractName>;
 }) {
+  const { colors } = useTheme();
   if (!deployedContractData) {
     return null;
   }
@@ -43,7 +45,11 @@ export default function ContractWriteMethods({
     );
 
   if (!functionsToDisplay.length) {
-    return <Text className="text-lg font-[Poppins]">No write methods</Text>;
+    return (
+      <Text className="text-lg font-[Poppins]" style={{ color: colors.text }}>
+        No write methods
+      </Text>
+    );
   }
 
   return (
@@ -51,7 +57,7 @@ export default function ContractWriteMethods({
       {functionsToDisplay.map(({ fn }, idx) => (
         <WriteOnlyFunctionForm
           abi={deployedContractData.abi as Abi}
-          key={`${fn.name}-${idx}}`}
+          key={`${fn.name}-${idx}`}
           abiFunction={fn}
           contractAddress={deployedContractData.address}
           onChange={onChange}

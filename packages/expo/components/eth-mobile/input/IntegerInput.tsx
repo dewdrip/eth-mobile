@@ -1,4 +1,4 @@
-import { COLORS } from '@/utils/constants';
+import { useTheme } from '@/theme';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, Text } from 'react-native';
 import { InputBase } from '.';
@@ -18,6 +18,7 @@ export function IntegerInput({
   variant = IntegerVariant.UINT256,
   disableMultiplyBy1e18 = false
 }: IntegerInputProps) {
+  const { colors } = useTheme();
   const [inputError, setInputError] = useState(false);
   const multiplyBy1e18 = useCallback(() => {
     if (!value) {
@@ -45,19 +46,23 @@ export function IntegerInput({
       error={inputError}
       onChange={onChange}
       disabled={disabled}
+      keyboardType="decimal-pad"
       suffix={
         !inputError &&
         !disableMultiplyBy1e18 && (
           <Pressable
             onPress={multiplyBy1e18}
             disabled={disabled}
-            className="px-4 flex-row items-start rounded-2xl mr-2"
-            style={{
-              backgroundColor: COLORS.primary
-            }}
+            className="px-3 py-2 rounded-2xl mr-2"
+            style={{ backgroundColor: colors.primary }}
+            accessibilityLabel="Multiply by 10^18 (wei)"
           >
-            <Text className="text-lg text-white font-[Poppins]">10</Text>
-            <Text className="text-xs text-white font-[Poppins]">18</Text>
+            <Text
+              className="text-sm font-[Poppins]"
+              style={{ color: colors.primaryContrast }}
+            >
+              ×10¹⁸
+            </Text>
           </Pressable>
         )
       }

@@ -15,7 +15,7 @@
         "NSLocationWhenInUseUsageDescription": "ETH Mobile needs to access your Location",
         "ITSAppUsesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.dewdrip.ethmobile",
+      "bundleIdentifier": "com.ethmobile",
       "icon": {
         "light": "./assets/icons/ios-light.png",
         "dark": "./assets/icons/ios-dark.png",
@@ -29,7 +29,7 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "resize",
-      "package": "com.dewdrip.ethmobile",
+      "package": "com.ethmobile",
       "intentFilters": [
         {
           "autoVerify": true,

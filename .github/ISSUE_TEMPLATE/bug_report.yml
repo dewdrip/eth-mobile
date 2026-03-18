@@ -12,7 +12,7 @@ body:
       label: Is there an existing issue for this?
       description: Please search to see if an issue already exists for the bug you encountered.
       options:
-        - label: I have looked through the [existing issues](https://github.com/dewdrip/eth-mobile/issues)
+        - label: I have looked through the [existing issues](https://github.com/eth-mobile/eth-mobile/issues)
           required: true
 
   - type: textarea

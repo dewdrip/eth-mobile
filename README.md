@@ -31,14 +31,10 @@ Before you begin, you need to install the following tools:
 
 To get started, follow the steps below:
 
-1. Clone this repo & install dependencies
+1. Install the latest version of ETH Mobile
 
 ```
-git clone https://github.com/dewdrip/eth-mobile.git
-
-cd eth-mobile
-
-yarn
+npx eth-mobile
 ```
 
 2. From the root folder, run a local network in the first terminal

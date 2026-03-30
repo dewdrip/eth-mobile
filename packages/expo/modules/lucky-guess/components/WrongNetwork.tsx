@@ -23,7 +23,7 @@ export function WrongNetwork() {
         className="mt-2 text-center text-base leading-6 font-[Poppins] w-[80%]"
         style={{ color: colors.textMuted }}
       >
-        Switch to Hardhat in your wallet to play this game.
+        Switch to Localhost in your wallet to play this game.
       </Text>
     </View>
   );

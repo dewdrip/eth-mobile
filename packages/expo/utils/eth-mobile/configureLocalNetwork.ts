@@ -35,11 +35,11 @@ function getLocalIPAddress(): string | null {
 }
 
 /**
- * Update the hardhat provider in ethmobile.config.ts with local IP
+ * Update the localhost provider in ethmobile.config.ts with local IP
  * @param {string} ipAddress - The local IP address to use
  * @returns {boolean} Success status
  */
-function updateHardhatProvider(ipAddress: string) {
+function updateLocalhostProvider(ipAddress: string) {
   try {
     // Get the path to ethmobile.config.ts relative to this script
     const configPath = path.join(__dirname, '..', '..', 'ethmobile.config.ts');
@@ -53,7 +53,7 @@ function updateHardhatProvider(ipAddress: string) {
     // Read the current config file
     let configContent = fs.readFileSync(configPath, 'utf8');
 
-    // Replace the hardhat provider with the new IP
+    // Replace the localhost provider with the new IP
     const updatedContent = configContent.replace(
       /provider:\s*'http:\/\/[0-9.]+:8545'/,
       `provider: 'http://${ipAddress}:8545'`
@@ -62,7 +62,7 @@ function updateHardhatProvider(ipAddress: string) {
     // Check if the replacement was successful
     if (updatedContent === configContent) {
       console.log(
-        `👍 Hardhat provider already set to http://${ipAddress}:8545`
+        `👍 Localhost provider already set to http://${ipAddress}:8545`
       );
       process.exit(0);
     }
@@ -71,12 +71,12 @@ function updateHardhatProvider(ipAddress: string) {
     fs.writeFileSync(configPath, updatedContent, 'utf8');
 
     console.log(
-      `✅ Successfully updated hardhat provider to http://${ipAddress}:8545`
+      `✅ Successfully updated localhost provider to http://${ipAddress}:8545`
     );
-    console.log('⚠️  Make sure your Hardhat node is running on port 8545');
+    console.log('⚠️  Make sure your local node is running on port 8545');
   } catch (error) {
     console.error(
-      '❌ Error updating hardhat provider:',
+      '❌ Error updating localhost provider:',
       error instanceof Error ? error.message : String(error)
     );
   }
@@ -84,7 +84,7 @@ function updateHardhatProvider(ipAddress: string) {
 
 /**
  * Main function to configure local network
- * Gets local IP and updates hardhat provider
+ * Gets local IP and updates localhost provider
  */
 function configureLocalNetwork(): void {
   const ipAddress = getLocalIPAddress();
@@ -94,13 +94,13 @@ function configureLocalNetwork(): void {
     process.exit(1);
   }
 
-  updateHardhatProvider(ipAddress);
+  updateLocalhostProvider(ipAddress);
 }
 
 // Export functions for use in other modules
 module.exports = {
   getLocalIPAddress,
-  updateHardhatProvider,
+  updateLocalhostProvider,
   configureLocalNetwork
 };
 

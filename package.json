@@ -68,8 +68,7 @@
   },
   "packageManager": "yarn@3.2.3",
   "devDependencies": {
-    "husky": "9.1.7",
-    "lint-staged": "^16.4.0"
+    "husky": "9.1.7"
   },
   "resolutions": {
     "usehooks-ts@^2.7.2": "patch:usehooks-ts@npm:^2.7.2#./.yarn/patches/usehooks-ts-npm-2.7.2-fceffe0e43.patch"

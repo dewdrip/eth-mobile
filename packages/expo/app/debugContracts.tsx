@@ -31,7 +31,6 @@ export default function DebugContracts() {
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1 }}
       >
         <View className="flex-row items-center justify-between px-4 py-2">
           <Pressable onPress={() => router.back()} hitSlop={12}>
@@ -50,8 +49,8 @@ export default function DebugContracts() {
         {contractNames.length === 0 ? (
           <View className="flex-1 items-center justify-center">
             <Text
-              className="text-xl"
-              style={{ fontFamily: 'Poppins', color: colors.text }}
+              className="text-xl font-[Poppins]"
+              style={{ color: colors.text }}
             >
               No contracts found!
             </Text>
@@ -69,7 +68,7 @@ export default function DebugContracts() {
                 },
                 tabBarLabelStyle: {
                   textTransform: 'none',
-                  fontSize: FONT_SIZE['lg'],
+                  fontSize: FONT_SIZE.lg,
                   fontFamily: 'Poppins'
                 },
                 tabBarActiveTintColor: colors.primary,

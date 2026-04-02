@@ -87,7 +87,7 @@ export const isValidInteger = (
   let valueAsBigInt;
   try {
     valueAsBigInt = BigInt(value);
-  } catch (e) {}
+  } catch {}
   if (typeof valueAsBigInt !== 'bigint') {
     if (strict) {
       return false;

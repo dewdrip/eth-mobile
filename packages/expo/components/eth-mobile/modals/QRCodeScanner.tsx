@@ -1,7 +1,7 @@
 import { FONT_SIZE } from '@/utils/constants';
 import Device from '@/utils/device';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { Camera, CameraType } from 'react-native-camera-kit';
 import { useToast } from 'react-native-toast-notifications';
@@ -22,7 +22,7 @@ export default function QRCodeScanner({
   const [isCameraPermitted, setIsCameraPermitted] = useState(false);
   const toast = useToast();
 
-  const requestCameraPermission = async () => {
+  const requestCameraPermission = useCallback(async () => {
     // check permission
     const cameraPermission = VCamera.getCameraPermissionStatus();
 
@@ -49,14 +49,14 @@ export default function QRCodeScanner({
           );
           closeModal();
         }
-      } catch (error) {
+      } catch {
         toast.show('Go to your device settings to Enable Camera');
         closeModal();
       }
     } else {
       setIsCameraPermitted(true);
     }
-  };
+  }, [closeModal, toast]);
 
   useEffect(() => {
     const backhandler = BackHandler.addEventListener(
@@ -73,7 +73,7 @@ export default function QRCodeScanner({
     })();
 
     return () => backhandler.remove();
-  }, []);
+  }, [closeModal, requestCameraPermission]);
 
   return (
     isCameraPermitted && (

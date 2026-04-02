@@ -2,8 +2,8 @@ import { useCryptoPrice, useNetwork } from '@/hooks/eth-mobile';
 import { useTheme } from '@/theme';
 import { FONT_SIZE } from '@/utils/constants';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { useToast } from 'react-native-toast-notifications';
 import { formatEther } from 'viem';
@@ -56,6 +56,17 @@ export function EtherInput({
   const network = useNetwork();
   const symbol = symbolProp ?? network?.token?.symbol ?? 'ETH';
 
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        inputBg: { backgroundColor: colors.surfaceVariant },
+        outlineBase: { borderRadius: 12 },
+        content: { fontFamily: 'Poppins', fontSize: FONT_SIZE.lg },
+        tokenImage: { width: 24, height: 24, borderRadius: 12 }
+      }),
+    [colors.surfaceVariant]
+  );
+
   const {
     price: dollarRate,
     loading: isFetchingDollarRate,
@@ -91,9 +102,9 @@ export function EtherInput({
     if (dollarValue !== newDollarValue) {
       setDollarValue(newDollarValue);
     }
-  }, [value, dollarRate, isDollar]);
+  }, [value, dollarRate, isDollar, dollarValue]);
 
-  const switchCurrency = () => {
+  const switchCurrency = useCallback(() => {
     if (!dollarRate) {
       toast.show('Loading exchange rate', { type: 'info' });
 
@@ -104,14 +115,14 @@ export function EtherInput({
     }
 
     setIsDollar(prev => !prev);
-  };
+  }, [dollarRate, fetchDollarRate, isFetchingDollarRate, toast]);
 
-  const validateInput = (value: string) => {
+  const validateInput = (nextValue: string) => {
     if (!balance) return;
 
-    let amount = Number(value);
+    let amount = Number(nextValue);
 
-    if (value.trim() && !isNaN(amount)) {
+    if (nextValue.trim() && !isNaN(amount)) {
       if (amount >= Number(formatEther(balance))) {
         setError('Insufficient amount');
       } else if (error) {
@@ -122,8 +133,8 @@ export function EtherInput({
     }
   };
 
-  const handleInputChange = (value: string) => {
-    if (value.trim() === '') {
+  const handleInputChange = (nextValue: string) => {
+    if (nextValue.trim() === '') {
       onChange('');
       setDollarValue('');
       setError('');
@@ -131,8 +142,8 @@ export function EtherInput({
     }
 
     // Ensure only valid floating numbers are parsed
-    const numericValue = value.replace(/[^0-9.]/g, ''); // Remove non-numeric characters except `.`
-    if (!/^\d*\.?\d*$/.test(numericValue) || numericValue == '') return; // Ensure valid decimal format
+    const numericValue = nextValue.replace(/[^0-9.]/g, ''); // Remove non-numeric characters except `.`
+    if (!/^\d*\.?\d*$/.test(numericValue) || numericValue === '') return; // Ensure valid decimal format
 
     let nativeValue = numericValue;
     if (!dollarRate) {
@@ -154,70 +165,78 @@ export function EtherInput({
 
   const displayValue = isDollar ? dollarValue : value;
 
+  const renderLeftIcon = useCallback(() => {
+    if (isDollar) {
+      return (
+        <Text
+          className="text-2xl font-[Poppins]"
+          style={{ color: colors.text }}
+        >
+          $
+        </Text>
+      );
+    }
+    if (iconUri) {
+      return (
+        <Image
+          source={{ uri: iconUri }}
+          style={styles.tokenImage}
+          resizeMode="cover"
+        />
+      );
+    }
+    return (
+      <Text className="text-3xl font-[Poppins]" style={{ color: colors.text }}>
+        ♢
+      </Text>
+    );
+  }, [colors.text, iconUri, isDollar, styles.tokenImage]);
+
+  const renderRightIcon = useCallback(
+    () => (
+      <Pressable
+        onPress={switchCurrency}
+        disabled={disabled}
+        className="w-full h-full items-center justify-center"
+        style={{ backgroundColor: colors.primary }}
+      >
+        <Ionicons
+          name="swap-horizontal"
+          size={18}
+          color={disabled ? colors.textMuted : colors.primaryContrast}
+        />
+      </Pressable>
+    ),
+    [
+      colors.primary,
+      colors.primaryContrast,
+      colors.textMuted,
+      disabled,
+      switchCurrency
+    ]
+  );
+
   return (
     <View>
       <TextInput
         value={displayValue}
         mode="outlined"
-        style={{ backgroundColor: colors.surfaceVariant }}
+        style={styles.inputBg}
         placeholder={`How much ${isDollar ? 'USD' : symbol}?`}
         placeholderTextColor={colors.textMuted}
         textColor={colors.text}
         onChangeText={handleInputChange}
         onSubmitEditing={onSubmit}
-        keyboardType="number-pad"
+        keyboardType="decimal-pad"
         error={!!error}
         disabled={disabled}
-        outlineStyle={{
-          borderRadius: 12,
-          borderColor: error ? colors.error : colors.border
-        }}
-        contentStyle={{ fontFamily: 'Poppins', fontSize: FONT_SIZE.lg }}
-        left={
-          <TextInput.Icon
-            icon={() =>
-              isDollar ? (
-                <Text
-                  className="text-2xl font-[Poppins]"
-                  style={{ color: colors.text }}
-                >
-                  $
-                </Text>
-              ) : iconUri ? (
-                <Image
-                  source={{ uri: iconUri }}
-                  style={{ width: 24, height: 24, borderRadius: 12 }}
-                  resizeMode="cover"
-                />
-              ) : (
-                <Text
-                  className="text-3xl font-[Poppins]"
-                  style={{ color: colors.text }}
-                >
-                  ♢
-                </Text>
-              )
-            }
-          />
-        }
-        right={
-          <TextInput.Icon
-            icon={() => (
-              <Pressable
-                onPress={switchCurrency}
-                disabled={disabled}
-                className="w-full h-full items-center justify-center"
-                style={{ backgroundColor: colors.primary }}
-              >
-                <Ionicons
-                  name="swap-horizontal"
-                  size={18}
-                  color={disabled ? colors.textMuted : colors.primaryContrast}
-                />
-              </Pressable>
-            )}
-          />
-        }
+        outlineStyle={[
+          styles.outlineBase,
+          { borderColor: error ? colors.error : colors.border }
+        ]}
+        contentStyle={styles.content}
+        left={<TextInput.Icon icon={renderLeftIcon} />}
+        right={<TextInput.Icon icon={renderRightIcon} />}
       />
 
       {error && (

@@ -76,14 +76,14 @@ export function AddressInput({
     });
   };
 
-  const handleInputChange = async (value: string) => {
-    onChange(value);
+  const handleInputChange = async (_value: string) => {
+    onChange(_value);
 
     if (error) {
       setError('');
     }
 
-    if (isENS(value)) {
+    if (isENS(_value)) {
       try {
         setIsLoading(true);
 
@@ -91,15 +91,15 @@ export function AddressInput({
           'https://eth-mainnet.g.alchemy.com/v2/_yem4FCVzmN6wbB44mPtF'
         );
 
-        const address = await provider.resolveName(value);
+        const address = await provider.resolveName(_value);
 
         if (address && isAddress(address)) {
           onChange(address);
         } else {
           setError('Invalid ENS');
         }
-      } catch (error) {
-        setError(`Could not resolve ENS: ${error}`);
+      } catch (err) {
+        setError(`Could not resolve ENS: ${String(err)}`);
         return;
       } finally {
         setIsLoading(false);
@@ -110,11 +110,10 @@ export function AddressInput({
   return (
     <View className={`gap-y-2 ${containerClassName}`}>
       <View
-        className={`flex-row items-center gap-x-1 px-3 py-2 rounded-lg ${inputContainerClassName}`}
+        className={`flex-row items-center gap-x-1 px-3 py-2 rounded-lg border ${inputContainerClassName}`}
         style={{
           backgroundColor: colors.surfaceVariant,
-          borderColor: colors.border,
-          borderWidth: 1
+          borderColor: colors.border
         }}
       >
         {isLoading ? (

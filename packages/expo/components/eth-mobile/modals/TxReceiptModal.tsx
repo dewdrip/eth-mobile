@@ -97,7 +97,7 @@ export default function TxReceiptModal({
         </Text>
         <Ionicons
           name="close-outline"
-          size={FONT_SIZE['xl'] * 1.7}
+          size={FONT_SIZE.xl * 1.7}
           color={colors.text}
           onPress={closeModal}
         />
@@ -119,9 +119,9 @@ export default function TxReceiptModal({
         </Text>
       ) : (
         <ScrollView
-          style={{ maxHeight: 400, backgroundColor: colors.background }}
+          style={{ backgroundColor: colors.background }}
           showsVerticalScrollIndicator
-          className="rounded-lg p-3"
+          className="rounded-lg p-3 max-h-[400px]"
         >
           {entries.map(([key, value]) => (
             <View key={key} className="py-1.5">
@@ -149,7 +149,10 @@ export default function TxReceiptModal({
           onPress={openExplorer}
           style={{ backgroundColor: colors.primary }}
         >
-          <Text className="text-base font-[Poppins]" style={{ color: '#fff' }}>
+          <Text
+            className="text-base font-[Poppins]"
+            style={{ color: colors.primaryContrast }}
+          >
             View on Explorer
           </Text>
         </Pressable>

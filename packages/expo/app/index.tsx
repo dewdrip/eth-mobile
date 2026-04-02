@@ -16,7 +16,7 @@ export default function HomeScreen() {
     <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: 48 }}
+        contentContainerClassName="pb-24"
         showsVerticalScrollIndicator={false}
       >
         <View className="flex-row items-center justify-end m-4 gap-3">

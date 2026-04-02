@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/eth-mobile';
 import { useBalance, useNetwork } from '@/hooks/eth-mobile';
 import { useTheme } from '@/theme';
 import { formatBalanceDisplay, parseBalance } from '@/utils/eth-mobile';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Text, TextStyle, View, ViewStyle } from 'react-native';
 
 type Props = {
@@ -48,10 +48,8 @@ export function Balance({
 
   if (isLoading) {
     return (
-      <View style={[{ alignItems: 'center' }, containerStyle]}>
-        <View className="items-center">
-          <Skeleton height={22} minWidth={100} borderRadius={6} />
-        </View>
+      <View className="items-center" style={containerStyle}>
+        <Skeleton height={22} minWidth={100} borderRadius={6} />
       </View>
     );
   }
@@ -72,7 +70,7 @@ export function Balance({
         : '0'));
 
   return (
-    <View style={[{ alignItems: 'center' }, containerStyle]}>
+    <View className="items-center" style={containerStyle}>
       <Text
         className="text-lg font-[Poppins]"
         style={[{ color: colors.text }, style]}

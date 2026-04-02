@@ -29,57 +29,13 @@ Before you begin, you need to install the following tools:
 
 ## Quickstart
 
-To get started, follow the steps below:
-
-1. Install the latest version of ETH Mobile
+To get started, run this command to install the latest version of ETH Mobile
 
 ```
 npx eth-mobile
 ```
 
-2. From the root folder, run a local network in the first terminal
-
-```
-yarn chain
-```
-
-This command starts a local Ethereum network hosted on your local IP address. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
-
-Alternatively, you can use [Ganache](https://archive.trufflesuite.com/ganache/) to persist the blockchain state during development
-
-3. On a second terminal, deploy the test contract:
-
-```
-yarn deploy
-```
-
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
-
-4. Configure the local network provider:
-
-```
-yarn configure-network
-```
-
-This command sets your local IP address as your `hardhat.provider` in `ethmobile.config.ts`. It uses the script located in `packages/expo/utils/eth-mobile/configureLocalNetwork.ts`
-
-5. Prebuild native modules:
-
-```
-yarn prebuild
-```
-
-6. Run on device:
-
-```
-yarn android
-```
-
-```
-yarn ios
-```
-
-> **Note:** if you wish to run your app in a physical device, your device must be connected to the same WIFI
+> **Note:** DON'T FORGET to run `yarn configure-network` each time your WIFI changes. if you wish to run your app in a physical device, your device must be connected to the same WIFI
 
 You can interact with your smart contract using the `debugContracts` screen. You can configure your supported networks in `ethmobile.config.ts`.
 
